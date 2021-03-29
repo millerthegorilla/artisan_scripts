@@ -1,0 +1,1 @@
+podman run -dit --pod=$POD_NAME --name=$SWAG_CONT_NAME --cap-add=NET_ADMIN -e PUID=1000 -e PGID=1000 -e TZ=Europe/London -e URL=$URL  -e VALIDATION=duckdns -e DUCKDNSTOKEN=$DUCKDNS_TOKEN -e EXTRA_DOMAINS=ceramicisles.org --restart unless-stopped $SWAG_IMAGE
