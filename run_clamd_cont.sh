@@ -1,4 +1,4 @@
 #!/bin/bash
 
-podman run -dit --pod $POD_NAME --name $CLAM_NAME $CLAM_IMAGE
+podman run -dit --pod $POD_NAME --name $CLAM_CONT_NAME $CLAM_IMAGE
 
