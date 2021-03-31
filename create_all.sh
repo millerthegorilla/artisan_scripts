@@ -7,7 +7,10 @@ PROJECT_NAME=$project_name
 source .env
 set +a
 
-#podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
+cp settings/settings.py /etc/opt/${PROJECT_NAME}/settings
+cp settings/gunicorn.conf.py /etc/opt/${PROJECT_NAME}/settings
+
+podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
 
 ./run_django_cont.sh
 ./run_duckdns_cont.sh

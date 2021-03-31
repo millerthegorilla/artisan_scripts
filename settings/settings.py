@@ -183,7 +183,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.getenv("STATIC_BASE_ROOT") + STATIC_URL
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(os.getenv("STATIC_BASE_ROOT"), 'media/')
 
 CONTENT_TYPES = ['image', 'video']
 # 2.5MB - 2621440

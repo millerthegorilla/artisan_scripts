@@ -6,7 +6,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 read -p 'Project name:' PROJECT_NAME
-read -p 'Path to code:' code_path
+read -p 'Path to code (the django_artisan folder where manage.py resides):' code_path
 read -p 'Absolute path to User home dir:' user_dir
 
 mkdir -p /etc/opt/${PROJECT_NAME}/settings

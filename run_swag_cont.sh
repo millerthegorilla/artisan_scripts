@@ -3,5 +3,5 @@ podman cp swag/default swag_cont:/config/nginx/site-confs/default
 podman cp swag/nginx swag_cont:/config/nginx/nginx.conf
 podman exec -d swag_cont bash -c "chown abc:users /config/nginx/nginx.conf"
 podman exec -d swag_cont bash -c "chown abc:users /config/nginx/site-confs/default"
-#podman exec -d swag_cont bash -c "mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old"
-#podman exec -d swag_cont bash -c "ln -s /config/nginx/nginx.conf /etc/nginx/nginx.conf"
+podman exec -d swag_cont bash -c "mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old"
+podman exec -d swag_cont bash -c "ln -s /config/nginx/nginx.conf /etc/nginx/nginx.conf"

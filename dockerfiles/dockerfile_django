@@ -3,7 +3,7 @@ FROM docker.io/library/python
 ARG DJANGO_PROJECT_NAME=ceramic_isles
 ENV DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME}
 ENV DJANGO_SETTINGS_MODULE=settings
-ENV PYTHONPATH=/etc/opt/${DJANGO_PROJECT_NAME}:/opt/${DJANGO_PROJECT_NAME}
+ENV PYTHONPATH=/etc/opt/${DJANGO_PROJECT_NAME}/settings/:/opt/${DJANGO_PROJECT_NAME}/
 RUN apt-get update && apt-get upgrade -y
 RUN rm -rf /var/lib/apt/lists/*
 COPY ./pip_requirements /tmp/pip_requirements
