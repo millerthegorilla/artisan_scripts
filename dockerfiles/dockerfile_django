@@ -1,4 +1,4 @@
-# command is: podman build --tag='python:django' -f='dockerfile_django'
+# build command is: podman build --tag='python:django' -f='dockerfile_django'
 FROM docker.io/library/python
 ARG DJANGO_PROJECT_NAME=ceramic_isles
 ENV DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME}
