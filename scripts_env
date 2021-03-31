@@ -1,0 +1,54 @@
+#!/bin/bash
+###
+## This file is named .env and is placed in scripts folder
+###
+
+## SHARED  PROJECT_NAME is set in create_all.sh
+HOST_LOG_DIR=$HOME/${PROJECT_NAME}/logs/
+
+## POD SETTINGS
+POD_NAME=ceramic_isles_pod
+PORT1_DESCRIPTION=0.0.0.0:443:443
+PORT2_DESCRIPTION=0.0.0.0:80:80
+
+## DJANGO
+DJANGO_PROJECT_NAME=${PROJECT_NAME}
+DJANGO_CONT_NAME=django_cont
+DJANGO_IMAGE=python:django
+DJANGO_LOG_DIR=/var/log/django/
+
+## CLAMAV
+CLAM_CONT_NAME=clamav_cont
+CLAM_IMAGE=docker.io/mkodockx/docker-clamav
+
+## DUCKDNS/SWAG
+DUCKDNS_CONT_NAME=duckdns_cont
+DUCKDNS_SUBDOMAIN=ceramicisles
+DUCKDNS_IMAGE=docker.io/linuxserver/duckdns
+DUCKDNS_TOKEN=
+
+## MEMCACHED
+MEMCACHED_CONT_NAME=memcached_cont
+MEMCACHED_IMAGE=docker.io/library/memcached
+
+## ELASTIC SEARCH
+ELASTIC_CONT_NAME=elastic_cont
+ELASTIC_IMAGE=docker.io/library/elasticsearch
+
+## MARIADB
+MARIA_CONT_NAME=mariadb_cont
+MARIA_IMAGE=docker.io/library/mariadb
+DB_ROOT_PASSWORD=
+DB_NAME=ceramic_isles_db
+DB_USER=ceramic_isles_db_user
+DB_PASSWORD=
+
+## SWAG
+SWAG_CONT_NAME=swag_cont
+SWAG_IMAGE=docker.io/linuxserver/swag
+EXTRA_DOMAINS=ceramicisles.org
+URL=ceramicisles.duckdns.org
+SWAG_HOST_VOL_STATIC=/etc/opt/ceramic_isles/static_files/
+SWAG_CONT_VOL_STATIC=/opt/static_files/
+SWAG_CONT_LOG_DIR=/config/logs/
+
