@@ -1,0 +1,9 @@
+wsgi_app=ceramic_isles.wsgi:application
+accesslog=/var/log/${PROJECT_NAME}/gunicorn/access.log
+errorlog=/var/log/${PROJECT_NAME}/gunicorn/error.log
+loglevel='info'
+capture_output=True
+sendfile=on
+user=root
+group=root
+workers=10

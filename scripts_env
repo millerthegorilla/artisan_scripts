@@ -38,7 +38,6 @@ ELASTIC_IMAGE=docker.io/library/elasticsearch
 ## MARIADB
 MARIA_CONT_NAME=mariadb_cont
 MARIA_IMAGE=docker.io/library/mariadb
-DB_ROOT_PASSWORD=
 DB_NAME=ceramic_isles_db
 DB_USER=ceramic_isles_db_user
 DB_PASSWORD=

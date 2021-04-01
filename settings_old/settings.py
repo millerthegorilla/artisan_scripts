@@ -18,7 +18,7 @@ import sys, os
 from django.urls import reverse_lazy
 
 from dotenv import load_dotenv
-project_folder = os.path.expanduser('/etc/opt/$(os.getenv("PROJECT_NAME"))/settings/')
+project_folder = os.path.expanduser('/etc/opt/ceramic_isles/settings/')
 load_dotenv(os.path.join(project_folder, '.env'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,7 +77,7 @@ MIDDLEWARE = [
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-ROOT_URLCONF = '$(os.getenv("PROJECT_NAME")).urls'
+ROOT_URLCONF = 'ceramic_isles.urls'
 TEMPLATE_DIR = 'templates/'
 TEMPLATES = [
     {
@@ -97,6 +97,8 @@ TEMPLATES = [
         },
     },
 ]
+
+#WSGI_APPLICATION = 'ceramic_isles.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -215,6 +217,7 @@ def verified_callback(user):
     user.is_active = True
 
 EMAIL_VERIFIED_CALLBACK = verified_callback
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_ACTIVE_FIELD = 'is_active'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -225,7 +228,7 @@ EMAIL_MAIL_SUBJECT = 'Confirm your email'
 EMAIL_MAIL_HTML = 'emails/mail_body.html'
 EMAIL_MAIL_PLAIN = 'emails/mail_body.txt'
 EMAIL_PAGE_TEMPLATE = 'registration/confirm.html'
-EMAIL_PAGE_DOMAIN = os.getenv("DUCKDNS_FQ_DOMAIN")
+EMAIL_PAGE_DOMAIN = 'https://cisles.duckdns.org/'
 EMAIL_TOKEN_LIFE = 60 * 60 * 24
 EMAIL_USE_TLS = True
 CUSTOM_SALT = os.getenv("CUSTOM_SALT")
@@ -303,9 +306,9 @@ NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
                     which acts as a gallery for member's work.</p>"
 
 ### The following are used by django_artisan and django_forum_app
-SITE_NAME = os.getenv("SITE_NAME")
+SITE_NAME = 'Ceramic Isles'
 SITE_LOGO = 'django_artisan/images/vase.svg'
-SITE_URL = os.getenv("DUCKDNS_FQ_DOMAIN")
+SITE_URL = 'https://ceramicisles.org/' ### change this in production
 
 
 LOGGING = {

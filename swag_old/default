@@ -10,7 +10,7 @@ server {
         listen 80 default_server;                                                                                                                                       
         listen [::]:80 default_server;                                                                                                                                  
         server_name _;                                                                                                                                                  
-        return 301 https://;                                                                                                                           
+        return 301 https://$host$request_uri;                                                                                                                           
 }                                                                                                                                                                       
                                                                                                                                                                         
 # main server block                                                                                                                                                     
@@ -21,8 +21,7 @@ server {
         add_header X-Frame-Options SAMEORIGIN;
         add_header X-Content-Type-Options nosniff;
         add_header X-XSS-Protection "1; mode=block";
-        add_header Content-Security-Policy "default-src https://*.ceramicisles.org https://*.ceramicisles.duckdns.org https://*.gstatic.com https://www.google.com/recaptcha/ https://*.jsdelivr.net https://*.jquery.com 'self'; style-src https://*.ceramicisles.org https://*.ceramicisles.duckdns.org https://*.jsdelivr.net https://*.googleapis.com 'self'; script-src https://*.jquery.com https://*.jsdelivr.net https://*.google.com/recaptcha/ https://*.gstatic.com/recaptcha/ 'self'; img-src 'self' https://*.ceramicisles.org https://*.ceramicisles.duckdns.org data: https://*.ceramicisles.org https://*.ceramicisles.duckdns.org 'self'; object-src 'none'";
-
+        add_header Content-Security-Policy "default-src https://*.ceramicisles.org https://*.cisles.duckdns.org https://*.gstatic.com https://www.google.com/recaptcha/ https://*.jsdelivr.net https://*.jquery.com 'self'; style-src https://*.ceramicisles.org https://*.cisles.duckdns.org https://*.jsdelivr.net https://*.googleapis.com 'self'; script-src https://*.jquery.com https://*.jsdelivr.net https://*.google.com/recaptcha/ https://*.gstatic.com/recaptcha/ 'self'; img-src 'self' https://*.ceramicisles.org https://*.isles.duckdns.org data: https://*.cisles.duckdns.org https://*.ceramicisles.org 'self'; object-src 'none'";                                                                                                                                        
         server_name _;                                                                                                                                                  
 
         include /config/nginx/ssl.conf;                                                                                                                                 
@@ -34,13 +33,13 @@ server {
 #                                                                                                                                                                       
                                                                                                                                                                         
         location / {                                                                                                                                                    
-             try_files  @proxy_to_app;                                                                                                                              
+             try_files $uri @proxy_to_app;                                                                                                                              
         }                                                                                                                                                               
         
         location @proxy_to_app {                                                                                                                                        
-            proxy_set_header X-Forwarded-For ;                                                                                                
-            proxy_set_header X-Forwarded-Proto ;                                                                                                                 
-            proxy_set_header Host ;                                                                                                                           
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;                                                                                                
+            proxy_set_header X-Forwarded-Proto $scheme;                                                                                                                 
+            proxy_set_header Host $http_host;                                                                                                                           
             # we don't want nginx trying to do something clever with                                                                                                    
             # redirects, we set the Host: header above already.                                                                                                         
             proxy_redirect off;                                                                                                                                         
