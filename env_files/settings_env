@@ -1,12 +1,12 @@
 ###
 ## This file is named .env and is placed in the settings folder where django's settings.py resides
 ###
-PROJECT_NAME=ceramic_isles
-BASE_DIR=/opt/ceramic_isles
-SECRET_KEY=
-ALLOWED_HOSTS1=127.0.0.1
-ALLOWED_HOSTS2=ceramicisles.duckdns.org
-ALLOWED_HOSTS3=ceramicisles.org
+PROJECT_NAME=      # this is asked for several times also during scripts running
+BASE_DIR=/opt/${PROJECT_NAME}         # this is the dir where the django_artisan code resides.
+SECRET_KEY=        # DJANGO secret key
+ALLOWED_HOSTS1=127.0.0.1     # localhost 
+ALLOWED_HOSTS2=              # yoursubdomain.duckdns.org
+ALLOWED_HOSTS3=              # your top level domain, if you have one
 DB_ENGINE=django.db.backends.mysql
 DB_NAME=
 DB_USER=
@@ -14,13 +14,13 @@ DB_PASSWORD=
 DB_HOST=127.0.0.1
 DB_PORT=3306
 MEMCACHED_ADDRESS=127.0.0.1:11211
-STATIC_BASE_ROOT=/etc/opt/ceramic_isles/static_files/
-EMAIL_APP_ADDRESS=
-EMAIL_APP_KEY=
-DUCKDNS_FQ_DOMAIN=ceramicisles.duckdns.org
-CUSTOM_SALT=custom_salt
-RECAPTCH_PUBLIC_KEY=
-RECAPTCHA_PRIVATE_KEY=
+STATIC_BASE_ROOT=/etc/opt/${PROJECT_NAME}/static_files/
+EMAIL_APP_ADDRESS=               #most likely something@gmail.com
+EMAIL_APP_KEY=                   #gmail app password https://support.google.com/accounts/answer/185833?hl=en
+DUCKDNS_FQ_DOMAIN=          # yoursubdomain.duckdns.org
+CUSTOM_SALT=               # a custom salt value for email token generation
+RECAPTCH_PUBLIC_KEY=          # google recaptcha pub key  https://developers.google.com/recaptcha/intro
+RECAPTCHA_PRIVATE_KEY=            # google recaptcha priv key
 CLAMAV_ADDRESS=tcp://127.0.0.1:3310
 ELASTIC_SEARCH_ADDRESS=localhost:9200
-SITE_NAME="Ceramic Isles"
+SITE_NAME=             # as used on header of web page

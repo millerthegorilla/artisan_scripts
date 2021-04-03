@@ -7,7 +7,7 @@
 HOST_LOG_DIR=$HOME/${PROJECT_NAME}/logs/
 
 ## POD SETTINGS
-POD_NAME=ceramic_isles_pod
+POD_NAME=
 PORT1_DESCRIPTION=0.0.0.0:443:443
 PORT2_DESCRIPTION=0.0.0.0:80:80
 
@@ -23,7 +23,7 @@ CLAM_IMAGE=docker.io/mkodockx/docker-clamav
 
 ## DUCKDNS/SWAG
 DUCKDNS_CONT_NAME=duckdns_cont
-DUCKDNS_SUBDOMAIN=ceramicisles
+DUCKDNS_SUBDOMAIN=
 DUCKDNS_IMAGE=docker.io/linuxserver/duckdns
 DUCKDNS_TOKEN=
 
@@ -38,16 +38,15 @@ ELASTIC_IMAGE=docker.io/library/elasticsearch
 ## MARIADB
 MARIA_CONT_NAME=mariadb_cont
 MARIA_IMAGE=docker.io/library/mariadb
-DB_NAME=ceramic_isles_db
-DB_USER=ceramic_isles_db_user
+DB_NAME=
+DB_USER=
 DB_PASSWORD=
 
 ## SWAG
 SWAG_CONT_NAME=swag_cont
 SWAG_IMAGE=docker.io/linuxserver/swag
-EXTRA_DOMAINS=ceramicisles.org
-URL=ceramicisles.duckdns.org
-SWAG_HOST_VOL_STATIC=/etc/opt/ceramic_isles/static_files/
+EXTRA_DOMAINS=        # in my case I have a TLD redirecting to my duckdns domain this 'EXTRA_DOMAINS' entry is supposed to help swag generate a certificate that covers the TLD also.
+URL=     # this is yoursubdomain.duckdns.org
+SWAG_HOST_VOL_STATIC=/etc/opt/${PROJECT_NAME}/static_files/
 SWAG_CONT_VOL_STATIC=/opt/static_files/
 SWAG_CONT_LOG_DIR=/config/logs/
-
