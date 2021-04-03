@@ -2,11 +2,14 @@
 
 echo -e "********* WARNING *********\n\nYou must have created the correct directory structure before running this script.  Run the script create_directories.sh as root first to create the directories.\n\n Also, you must edit and complete the two files in the directory env_files, before running this script.\n"
 
-read -p "Have you completed both these steps (y/n):" scripts_done
+echo Have you completed the files in the directory env_files (select a number)?
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) break;;
+        No ) exit;;
+    esac
+done
 
-if [ ! scripts_done == "y" ]; then
-   exit 1
-fi
 
 cp ./env_files/scripts_env ./.env
 
