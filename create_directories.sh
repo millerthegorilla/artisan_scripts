@@ -14,8 +14,10 @@ mkdir -p /etc/opt/${PROJECT_NAME}/settings
 mkdir -p /etc/opt/${PROJECT_NAME}/static_files
 mkdir -p ${user_dir}/${PROJECT_NAME}/logs
 ln -s ${code_path} /opt/${PROJECT_NAME}
+ln -s ${code_path}/static/ /etc/opt/${PROJECT_NAME}/static_files/static
+ln -s ${code_path}/media/ /etc/opt/${PROJECT_NAME}/static_files/media
 
-chcon -R -t container_file_t /opt/${PROJECT_NAME}
+sudo chcon -R -t container_file_t /opt/${PROJECT_NAME}/
 
 sudo chown $user:$user /etc/opt/${PROJECT_NAME}
 sudo chown $user:$user /etc/opt/${PROJECT_NAME}/settings

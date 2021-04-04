@@ -6,13 +6,15 @@ echo -e "save settings_env (choose a number)?"
 
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) cp /etc/opt/${PROJECT_NAME}/settings/.env ./env_files/settings_env
-;;
-        No ) ;;
+        Yes ) save_sets=1;;
+        No )  save_sets=0;;
     esac
 done
 
-exit 0
+if [[ save_sets -eq 1 ]]
+then
+        cp /etc/opt/${project_name}/settings/.env ./env_files/settings_env
+fi
 
 podman pod exists ${pod_name};
 retval=$?
