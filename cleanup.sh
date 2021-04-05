@@ -2,7 +2,7 @@
 read -p "Enter pod name: " pod_name
 read -p "Enter project name " project_name
 
-echo -e "save settings_env (choose a number)?"
+echo -e "save settings_env to ./settings_env_old (choose a number)?"
 
 select yn in "Yes" "No"; do
     case $yn in
@@ -13,7 +13,7 @@ done
 
 if [[ save_sets -eq 1 ]]
 then
-        cp /etc/opt/${project_name}/settings/.env ./env_files/settings_env
+        cp /etc/opt/${project_name}/settings/.env ./settings_env_old
 fi
 
 podman pod exists ${pod_name};
