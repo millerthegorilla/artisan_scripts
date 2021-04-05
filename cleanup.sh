@@ -6,8 +6,8 @@ echo -e "save settings_env (choose a number)?"
 
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) save_sets=1;;
-        No )  save_sets=0;;
+        Yes ) save_sets=1; break;;
+        No )  save_sets=0; break;;
     esac
 done
 
@@ -19,7 +19,7 @@ fi
 podman pod exists ${pod_name};
 retval=$?
 
-if [[ $retval -eq 0 ]]
+if [[ ! $retval -eq 0 ]]
 then
 	echo no such pod!
 else
@@ -31,8 +31,8 @@ echo -e "remove code (choose a number)?"
 
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) code_remove=1;;
-        No ) code_remove=0;;
+        Yes ) code_remove=1; break;;
+        No ) code_remove=0; break;;
     esac
 done
 
@@ -41,25 +41,11 @@ then
 	rm -rf /opt/${project_name}/*
 fi
 
-echo -e "remove directories (choose a number)?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) dirs_remove=1;;
-        No ) dirs_remove=0;;
-    esac
-done
-
-if [[ dirs_remove -eq 1 ]]
-then
-        rm -rf /opt/${project_name}
-	rm -rf /etc/opt/${project_name}
-fi
-
 echo -e "remove podman images (choose a number)?"
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) imgs_remove=1;;
-        No ) imgs_remove=0;;
+        Yes ) imgs_remove=1; break;;
+        No ) imgs_remove=0; break;;
     esac
 done
 
@@ -78,3 +64,5 @@ fi
 rm swag/default
 rm settings/gunicorn.conf.py
 
+echo -e "You will need to remove the following directories as sudo user"
+echo -e "/opt/${project_name} && /etc/opt/${project_name}" 
