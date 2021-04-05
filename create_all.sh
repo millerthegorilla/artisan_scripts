@@ -10,18 +10,22 @@ select yn in "Yes" "No"; do
     esac
 done
 
-read -p "Enter project name:" project_name
+set -a
+SCRIPTS_ROOT=${PWD}
+set +a
+
+./get_variables.sh
+
 mv ./env_files/scripts_env ./.env
 
 set -a
-PROJECT_NAME=$project_name
+SCRIPTS_ROOT=${PWD}
 source .env
 set +a
 
 mv ./env_files/settings_env /etc/opt/${PROJECT_NAME}/settings/.env
 
 podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
-
 
 ./scripts/run_django_cont.sh
 ./scripts/run_duckdns_cont.sh

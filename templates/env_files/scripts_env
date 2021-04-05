@@ -6,19 +6,20 @@
 ## purposes only.
 ###
 
-## SHARED  PROJECT_NAME is set in create_all.sh
-HOST_LOG_DIR=/home/pod_server/ceramic_isles/logs              # $HOME/${PROJECT_NAME}/logs/   ie /home/user_name/logs
+## SHARED
+PROJECT_NAME=${project_name}
+HOST_LOG_DIR=${host_log_dir}              # $HOME/${PROJECT_NAME}/logs/   ie /home/user_name/logs
 
 ## POD SETTINGS
-POD_NAME=ceramic_isles_pod                           # name of the pod
+POD_NAME=${pod_name}                          # name of the pod
 PORT1_DESCRIPTION=0.0.0.0:443:443
 PORT2_DESCRIPTION=0.0.0.0:80:80
 
 ## DJANGO
-DJANGO_PROJECT_NAME=ceramic_isles
+DJANGO_PROJECT_NAME=${project_name}
 DJANGO_CONT_NAME=django_cont
 DJANGO_IMAGE=python:django
-DJANGO_LOG_DIR=/var/log/django/
+DJANGO_CONT_LOG_DIR=/var/log/django/
 
 ## CLAMAV
 CLAM_CONT_NAME=clamav_cont
@@ -26,9 +27,9 @@ CLAM_IMAGE=docker.io/mkodockx/docker-clamav
 
 ## DUCKDNS/SWAG
 DUCKDNS_CONT_NAME=duckdns_cont
-DUCKDNS_SUBDOMAIN=ceramicisles.duckdns.org                        # ie ceramicisles.duckdns.org
+DUCKDNS_SUBDOMAIN=${duckdns_domain}                      # ie ceramicisles.duckdns.org
 DUCKDNS_IMAGE=docker.io/linuxserver/duckdns
-DUCKDNS_TOKEN=duckdns_token                            # your duckdns token
+DUCKDNS_TOKEN=${duckdns_token}                            # your duckdns token
 
 ## MEMCACHED
 MEMCACHED_CONT_NAME=memcached_cont
@@ -41,14 +42,14 @@ ELASTIC_IMAGE=docker.io/library/elasticsearch
 ## MARIADB
 MARIA_CONT_NAME=mariadb_cont
 MARIA_IMAGE=docker.io/library/mariadb
-DB_NAME=ceramic_isles_db                                 # database name for django
-DB_USER=ceramic_isles_db_user                                 # django db user
-DB_PASSWORD=db_password                             # django db password
+DB_NAME=${db_name}                           # database name for django
+DB_USER=${db_user}                                 # django db user
+DB_PASSWORD=${db_password}                             # django db password
 
 ## SWAG
 SWAG_CONT_NAME=swag_cont
 SWAG_IMAGE=docker.io/linuxserver/swag
-EXTRA_DOMAINS=ceramicisles.org        # in my case I have a TLD redirecting to my duckdns domain this 'EXTRA_DOMAINS' entry is supposed to help swag generate a certificate that covers the TLD also.
-SWAG_HOST_VOL_STATIC=/etc/opt/ceramic_isles/static_files/                  # ie /etc/opt/${PROJECT_NAME}/static_files/
+EXTRA_DOMAINS=${tld_domain}       # in my case I have a TLD redirecting to my duckdns domain this 'EXTRA_DOMAINS' entry is supposed to help swag generate a certificate that covers the TLD also.
+SWAG_HOST_VOL_STATIC=${swag_host_static_dir}                  # ie /etc/opt/${PROJECT_NAME}/static_files/
 SWAG_CONT_VOL_STATIC=/opt/static_files/
 SWAG_CONT_LOG_DIR=/config/logs/

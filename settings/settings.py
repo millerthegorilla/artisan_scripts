@@ -76,6 +76,9 @@ MIDDLEWARE = [
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
 
 ROOT_URLCONF = '$(os.getenv("PROJECT_NAME")).urls'
 TEMPLATE_DIR = 'templates/'
@@ -219,13 +222,13 @@ EMAIL_ACTIVE_FIELD = 'is_active'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("EMAIL_APP_ADDRESS")
-EMAIL_FROM_ADDRESS = 'noreply@slomopots.com'
+EMAIL_FROM_ADDRESS = os.getenv("EMAIL_FROM_ADDRESS")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_APP_KEY")
 EMAIL_MAIL_SUBJECT = 'Confirm your email'
 EMAIL_MAIL_HTML = 'emails/mail_body.html'
 EMAIL_MAIL_PLAIN = 'emails/mail_body.txt'
 EMAIL_PAGE_TEMPLATE = 'registration/confirm.html'
-EMAIL_PAGE_DOMAIN = os.getenv("DUCKDNS_FQ_DOMAIN")
+EMAIL_PAGE_DOMAIN = os.getenv("DUCKDNS_DOMAIN")
 EMAIL_TOKEN_LIFE = 60 * 60 * 24
 EMAIL_USE_TLS = True
 CUSTOM_SALT = os.getenv("CUSTOM_SALT")
