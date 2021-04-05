@@ -64,5 +64,28 @@ fi
 rm swag/default
 rm settings/gunicorn.conf.py
 
+echo -e "remove logs or save logs and remove logs dir (choose a number)?"
+select yn in "Yes" "No" "Save"; do
+    case $yn in
+        Yes ) logs_remove=1; break;;
+        No ) logs_remove=0; break;;
+        Save ) logs_remove=2; break;;
+    esac
+done
+
+if [[ logs_remove -eq 2 ]]
+then
+    read -p "absolute path to logs dir : " log_dir
+    mkdir old_logs
+    mv ${log_dir}/* old_logs
+    rm -rf ${log_dir}
+fi
+
+if [[ logs_remove -eq 1 ]]
+then
+    read -p "absolute path to logs dir : " log_dir
+    rm -rf ${log_dir}
+fi
+
 echo -e "You will need to remove the following directories as sudo user"
 echo -e "/opt/${project_name} && /etc/opt/${project_name}" 
