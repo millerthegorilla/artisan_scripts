@@ -61,6 +61,7 @@ then
 	podman rmi mariadb:latest
 fi
 
+rm .env
 rm swag/default
 rm settings/gunicorn.conf.py
 

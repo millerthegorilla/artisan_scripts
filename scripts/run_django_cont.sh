@@ -13,6 +13,8 @@ fi
 
 cat ${SCRIPTS_ROOT}/templates/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
 
+podman cp ${SCRIPTS_ROOT}/env_files/settings_env django_cont:/etc/opt/${PROJECT_NAME}/settings/.env
+
 cp ${SCRIPTS_ROOT}/settings/gunicorn.conf.py /etc/opt/${PROJECT_NAME}/settings/
 cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/
 

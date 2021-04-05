@@ -20,7 +20,7 @@ STATIC_BASE_ROOT=${static_base_root}                                 # this is t
 EMAIL_APP_ADDRESS=${email_app_address}                                #most likely something@gmail.com
 EMAIL_APP_KEY=${email_app_key}                                  #gmail app password https://support.google.com/accounts/answer/185833?hl=en
 EMAIL_FROM_ADDRESS=${email_from_address}
-DUCKDNS_DOMAIN=${duckdns_subdomain}                                # yoursubdomain.duckdns.org
+DUCKDNS_DOMAIN=${duckdns_domain}                                # yoursubdomain.duckdns.org
 CUSTOM_SALT=${custom_salt}                                      # a custom salt value for email token generation
 RECAPTCH_PUBLIC_KEY=${recaptcha_public}                              # google recaptcha pub key  https://developers.google.com/recaptcha/intro
 RECAPTCHA_PRIVATE_KEY=${recaptcha_private}                            # google recaptcha priv key
