@@ -26,12 +26,22 @@ db_user=${db_name}_user
 read -p "Your django database username [${db_user}]: " dbu
 db_user=${dbu:-${db_user}}
 db_password=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
+db_host=127.0.0.1
+read -p "Your django database host address [${db_host}] : " dbh
+db_host=${dbh:-${db_host}}
 echo -e "#************* email settings ***************"
 echo -e "# https://support.google.com/accounts/answer/185833?hl=en"
 echo -e "#********************************************"
 read -p "Your app email server address : " email_app_address
 read -p "Your app email server address secret password : " email_app_key
-read -p "Your app email from address ie no_reply@${project_name}.org : " email_from_address
+if [[ ! -z "$tld_domain" ]]
+then
+    return_mail=noreply@${tld_domain}
+else
+    return_mail=noreply@${duckdns_domain}
+fi
+read -p "Your app email from address ie [${return_mail}] : " efa
+email_from_address=${efa:-${return_mail}}
 custom_salt=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
 echo -e "#************* Google recaptcha settings ***************"
 echo -e "# https://developers.google.com/recaptcha/intro "
@@ -42,6 +52,7 @@ set +a
 
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/env_files/scripts_env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/env_files/settings_env
+cat ${SCRIPTS_ROOT}/templates/archive | envsubst > ${SCRIPTS_ROOT}/.archive
 
 unset site_name
 unset pod_name

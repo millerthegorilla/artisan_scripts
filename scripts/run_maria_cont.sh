@@ -13,4 +13,6 @@ echo -e "\nSo I'm going to configure the database for your webapp - please enter
 
 read -p "Db root password:" DB_ROOT_PASSWORD
 
-podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} -e DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} -d ${MARIA_CONT_NAME} bash -c 'mysql --defaults-file="/defaults.cnf" -uroot -p${DB_ROOT_PASSWORD} -e "CREATE DATABASE ${DB_NAME} CHARSET utf8; grant all privileges on ${DB_NAME}.* TO ${DB_USER}@127.0.0.1 identified by \"${DB_PASSWORD}\";"'
+podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} -e DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} -d ${MARIA_CONT_NAME} bash -c 'mysql --defaults-file="/defaults.cnf" -uroot -p${DB_ROOT_PASSWORD} -h${DB_HOST} -e "CREATE USER ${DB_USER}@${DB_HOST} IDENTIFIED BY ${DB_PASSWORD};"
+
+podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} -e DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} -d ${MARIA_CONT_NAME} bash -c 'mysql --defaults-file="/defaults.cnf" -uroot -p${DB_ROOT_PASSWORD} -h${DB_HOST} -e "CREATE DATABASE ${DB_NAME} CHARSET utf8; grant all privileges on ${DB_NAME}.* TO ${DB_USER}@${DB_HOST} identified by \"${DB_PASSWORD}\";"'

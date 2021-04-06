@@ -23,21 +23,21 @@ DJANGO_CONT_LOG_DIR=/var/log/django/
 
 ## CLAMAV
 CLAM_CONT_NAME=clamav_cont
-CLAM_IMAGE=docker.io/mkodockx/docker-clamav
+CLAM_IMAGE=docker.io/mkodockx/docker-clamav:latest
 
 ## DUCKDNS/SWAG
 DUCKDNS_CONT_NAME=duckdns_cont
 DUCKDNS_SUBDOMAIN=${duckdns_domain}                      # ie ceramicisles.duckdns.org
-DUCKDNS_IMAGE=docker.io/linuxserver/duckdns
+DUCKDNS_IMAGE=docker.io/linuxserver/duckdns:latest
 DUCKDNS_TOKEN=${duckdns_token}                            # your duckdns token
 
 ## MEMCACHED
 MEMCACHED_CONT_NAME=memcached_cont
-MEMCACHED_IMAGE=docker.io/library/memcached
+MEMCACHED_IMAGE=docker.io/library/memcached:latest
 
 ## ELASTIC SEARCH
 ELASTIC_CONT_NAME=elastic_cont
-ELASTIC_IMAGE=docker.io/library/elasticsearch
+ELASTIC_IMAGE=docker.io/library/elasticsearch:7.11.2
 
 ## MARIADB
 MARIA_CONT_NAME=mariadb_cont
@@ -45,10 +45,11 @@ MARIA_IMAGE=docker.io/library/mariadb
 DB_NAME=${db_name}                           # database name for django
 DB_USER=${db_user}                                 # django db user
 DB_PASSWORD=${db_password}                             # django db password
+DB_HOST=${db_host}                           #database host address
 
 ## SWAG
 SWAG_CONT_NAME=swag_cont
-SWAG_IMAGE=docker.io/linuxserver/swag
+SWAG_IMAGE=docker.io/linuxserver/swag:latest
 EXTRA_DOMAINS=${tld_domain}       # in my case I have a TLD redirecting to my duckdns domain this 'EXTRA_DOMAINS' entry is supposed to help swag generate a certificate that covers the TLD also.
 SWAG_HOST_VOL_STATIC=${swag_host_static_dir}                  # ie /etc/opt/${PROJECT_NAME}/static_files/
 SWAG_CONT_VOL_STATIC=/opt/static_files/

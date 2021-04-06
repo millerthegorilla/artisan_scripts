@@ -1,6 +1,13 @@
 #!/bin/bash
-read -p "Enter pod name: " pod_name
-read -p "Enter project name " project_name
+
+if [[ -f ".archive" ]]; then
+   set +a
+   source .archive
+   set -a
+else
+   read -p "Enter pod name: " POD_NAME
+   read -p "Enter project name " PROJECT_NAME
+fi
 
 echo -e "save settings_env to ./settings_env_old (choose a number)?"
 
@@ -13,18 +20,21 @@ done
 
 if [[ save_sets -eq 1 ]]
 then
-        cp /etc/opt/${project_name}/settings/.env ./settings_env_old
+        cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
 fi
 
-podman pod exists ${pod_name};
+rm -rf /etc/opt/${PROJECT_NAME}/settings/*
+rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
+
+podman pod exists ${POD_NAME};
 retval=$?
 
 if [[ ! $retval -eq 0 ]]
 then
 	echo no such pod!
 else
-	podman pod stop ${pod_name}
-	podman pod rm ${pod_name}
+	podman pod stop ${POD_NAME}
+	podman pod rm ${POD_NAME}
 fi
 
 echo -e "remove code (choose a number)?"
@@ -38,7 +48,7 @@ done
 
 if [[ code_remove -eq 1 ]]
 then
-	rm -rf /opt/${project_name}/*
+	rm -rf /opt/${PROJECT_NAME}/*
 fi
 
 echo -e "remove podman images (choose a number)?"
@@ -76,17 +86,25 @@ done
 
 if [[ logs_remove -eq 2 ]]
 then
-    read -p "absolute path to logs dir : " log_dir
+    if [[ -z "$LOG_DIR" ]]
+    then
+    	read -p "absolute path to logs dir : " LOG_DIR
+    fi        	
     mkdir old_logs
-    mv ${log_dir}/* old_logs
-    rm -rf ${log_dir}
+    mv ${LOG_DIR}/* old_logs
+    rm -rf ${LOG_DIR}
 fi
 
 if [[ logs_remove -eq 1 ]]
 then
-    read -p "absolute path to logs dir : " log_dir
-    rm -rf ${log_dir}
+    if [[ -z "$LOG_DIR" ]]
+    then
+        read -p "absolute path to logs dir : " LOG_DIR
+    fi 
+    rm -rf ${LOG_DIR}
 fi
 
+rm .archive
+
 echo -e "You will need to remove the following directories as sudo user"
-echo -e "/opt/${project_name} && /etc/opt/${project_name}" 
+echo -e "/opt/${PROJECT_NAME} && /etc/opt/${PROJECT_NAME}" 

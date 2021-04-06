@@ -18,11 +18,11 @@ import sys, os
 from django.urls import reverse_lazy
 
 from dotenv import load_dotenv
-project_folder = os.path.expanduser('/etc/opt/$(os.getenv("PROJECT_NAME"))/settings/')
-load_dotenv(os.path.join(project_folder, '.env'))
+# project_folder = os.path.expanduser('/etc/opt/$(os.getenv("PROJECT_NAME"))/settings/')
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.getenv("BASE_DIR")
+BASE_DIR = str(os.getenv("BASE_DIR"))
 
 # import os
 # import shutil
@@ -32,18 +32,20 @@ BASE_DIR = os.getenv("BASE_DIR")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS1"), os.getenv("ALLOWED_HOSTS2"), os.getenv("ALLOWED_HOSTS3")]
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django_artisan',
-    'django_forum_app',
-    'django_posts_and_comments',
-    'django_profile',
+    'django_password_validators',
+    'django_password_validators.password_history',
     'django_users_app',
+    'django_profile',
+    'django_posts_and_comments',
+    'django_forum_app',
+    'django_artisan',
     'django_email_verification',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,8 +58,6 @@ INSTALLED_APPS = [
     'tinymce',
     'sorl.thumbnail',
     'django_elasticsearch_dsl',
-    'django_password_validators',
-    'django_password_validators.password_history',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +80,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 
-ROOT_URLCONF = '$(os.getenv("PROJECT_NAME")).urls'
+ROOT_URLCONF = "{}.urls".format(os.getenv("PROJECT_NAME"))
 TEMPLATE_DIR = 'templates/'
 TEMPLATES = [
     {
@@ -118,7 +118,7 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': os.getenv("MEMCACHED_ADDRESS"),
+        'LOCATION': str(os.getenv("MEMCACHED_ADDRESS")),
     }
 }
 
@@ -181,10 +181,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_URL = 'static/'
 
-STATIC_ROOT = os.getenv("STATIC_BASE_ROOT") + STATIC_URL
+STATIC_ROOT = str(os.getenv("STATIC_BASE_ROOT")) + '/' + STATIC_URL
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(os.getenv("STATIC_BASE_ROOT"), 'media/')
+MEDIA_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), 'media/')
 
 CONTENT_TYPES = ['image', 'video']
 # 2.5MB - 2621440
@@ -234,8 +234,8 @@ EMAIL_USE_TLS = True
 CUSTOM_SALT = os.getenv("CUSTOM_SALT")
 
 ## RECAPTCHA SETTINGS
-RECAPTCHA_PUBLIC_KEY = os.getenv("RECAPTCHA_PUBLIC_KEY")
-RECAPTCHA_PRIVATE_KEY = os.getenv("RECAPTCHA_PRIVATE_KEY")
+RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
+RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
 
 # SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
@@ -279,14 +279,14 @@ TINYMCE_DEFAULT_CONFIG = {
 # django crispy forms
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-CLAMAV_SOCKET = os.getenv("CLAMAV_ADDRESS")
+CLAMAV_SOCKET = str(os.getenv("CLAMAV_ADDRESS"))
 
 
 # elastic search
 
 ELASTICSEARCH_DSL={
     'default': {
-        'hosts': os.getenv("ELASTIC_SEARCH_ADDRESS")
+        'hosts': str(os.getenv("ELASTIC_SEARCH_ADDRESS"))
     },
 }
 
@@ -306,9 +306,9 @@ NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
                     which acts as a gallery for member's work.</p>"
 
 ### The following are used by django_artisan and django_forum_app
-SITE_NAME = os.getenv("SITE_NAME")
+SITE_NAME = str(os.getenv("SITE_NAME"))
 SITE_LOGO = 'django_artisan/images/vase.svg'
-SITE_URL = os.getenv("DUCKDNS_FQ_DOMAIN")
+SITE_URL = str(os.getenv("DUCKDNS_DOMAIN"))
 
 
 LOGGING = {
@@ -329,4 +329,3 @@ LOGGING = {
        },
     },
 }
-
