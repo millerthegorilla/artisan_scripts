@@ -1,3 +1,4 @@
+gunicorn
 django
 django-email-verification
 django-recaptcha

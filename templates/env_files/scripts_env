@@ -8,7 +8,7 @@
 
 ## SHARED
 PROJECT_NAME=${project_name}
-HOST_LOG_DIR=${host_log_dir}              # $HOME/${PROJECT_NAME}/logs/   ie /home/user_name/logs
+HOST_LOG_DIR=${host_log_dir}              # $HOME/${PROJECT_NAME}/logs/
 
 ## POD SETTINGS
 POD_NAME=${pod_name}                          # name of the pod

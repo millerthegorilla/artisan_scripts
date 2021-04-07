@@ -24,13 +24,17 @@ ln -s ${CODE_PATH}/media/ /etc/opt/${PROJECT_NAME}/static_files/media
 
 sudo chcon -R -t container_file_t /opt/${PROJECT_NAME}/
 
-sudo chown $USER:$USER /etc/opt/${PROJECT_NAME}
-sudo chown $USER:$USER /etc/opt/${PROJECT_NAME}/settings
-sudo chown $USER:$USER /etc/opt/${PROJECT_NAME}/static_files
-sudo chown $USER:$USER ${USER_DIR}/${PROJECT_NAME}/logs
+sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}
+sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}/settings
+sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}/static_files
+sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}
+sudo chown ${USER}:${USER} ${USER_DIR}/${PROJECT_NAME}/logs
 
 if [[ ! $(sysctl net.ipv4.ip_unprivileged_port_start) == "net.ipv4.ip_unprivileged_port_start = 80" ]]
 then
 	sudo echo net.ipv4.ip_unprivileged_port_start=80 >> /etc/sysctl.conf
 	sudo sysctl --system
 fi
+
+echo $PROJECT_NAME > .proj
+chown ${USER}:${USER} .proj

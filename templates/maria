@@ -1,0 +1,3 @@
+mysql --defaults-file="/root/defaults.cnf" -uroot -p${DB_ROOT_PASSWORD} -h${DB_HOST} -e "CREATE DATABASE ${DB_NAME} CHARSET utf8; grant all privileges on ${DB_NAME}.* TO ${DB_USER}@${DB_HOST} identified by '${DB_PASSWORD}';"
+
+rm -- "$0"

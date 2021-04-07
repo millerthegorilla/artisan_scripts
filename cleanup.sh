@@ -33,6 +33,7 @@ if [[ ! $retval -eq 0 ]]
 then
 	echo no such pod!
 else
+        echo -e "\nshutting down and removing the pod..."
 	podman pod stop ${POD_NAME}
 	podman pod rm ${POD_NAME}
 fi
@@ -104,7 +105,14 @@ then
     rm -rf ${LOG_DIR}
 fi
 
-rm .archive
+if [[ -f "./.archive" ]]
+then
+    rm ./.archive
+fi
+if [[ -f "./.proj" ]]
+then
+    rm ./.proj
+fi
 
 echo -e "You will need to remove the following directories as sudo user"
 echo -e "/opt/${PROJECT_NAME} && /etc/opt/${PROJECT_NAME}" 

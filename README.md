@@ -5,19 +5,22 @@ These scripts are provided as is, with no support, and the author accepts nil re
 
 They are designed to run on a newly installed system, in my case a raspberry pi running Fedora IOT.
 
-Before running the scripts, download them into a directory in your home folder, and git clone the django_artisan code into a directory.  Then, as root, run create_directories.sh.  
+Before running the scripts, download them into a directory in your home folder, and git clone the django_artisan code into a directory.
 
-When the directories have been made, and before any other scripts are run, the two env files need to be copied to their locations and completed.
-The file scripts_env should be named .env and placed in the same directory as the scripts, and completed.
-The file settings_env should be named .env and placed in the same directory as settings.py -> /etc/opt/${PROJECT_NAME}/settings
+Then, as root, run create_directories.sh.  This will create the directories necessary for the volume mounts from the containers which use them.
 
-Chmod the .env files as restrictively as possible.
+When the directories have been made, the create_directories script edits and reloads sysctl to lower the available port numbers to 80.  Be aware that this can be a ***SECURITY ISSUE***.  As long as you manage your firewall sensibly it should be ok.
 
-When that is finished, as a standard user, run initial_provision.sh, and this will pull the container images, and then scripts will be called to make the pod, the containers, and add the necessary files to those containers, building a custom container for django along the way.
+When create_directories is finished, as a standard user, run initial_provision.sh, and this will pull the container images, and build a custom container for django.  This process can take a while.
 
-Because the django container has volume mounts it is necessary to recreate a directory structure on the host machine, that can be referenced by the scripts run_django_cont, and run_swag_cont.  However, I have made a script to be run as root, that creates the directory structure: create_directories.sh
+The script initial_provision.sh calls the script create_all.sh, which will do the rest of the work.  It calls the script get_variables.sh to read input to complete the settings variable to run your project.
+
+If at any point the scripts fail or you break out of them, you can run the script cleanup.sh to remove the containers and to reset the script environment to the beginning.
+Assuming you answer no to the questions about images, code, and logs, you only need to run create_all.sh to begin the process of installation again.
+To clean up completely, run the create_all.sh, answer yes to code removal, and to image removal, and to log removal, and then, as root, delete the directories listed at the end of running the cleanup.sh script.
 
 The directory structure on the host machine is:
+
 for settings.py and gunicorn.conf.py :
     settings files -> /etc/opt/$PROJECT_NAME/settings/
 for static files there is symlink to django code/static and django code/media inthe following location which is referenced by the nginx set up in the swag container which volume mounts static_files:

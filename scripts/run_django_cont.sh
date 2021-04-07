@@ -18,4 +18,6 @@ podman cp ${SCRIPTS_ROOT}/env_files/settings_env django_cont:/etc/opt/${PROJECT_
 cp ${SCRIPTS_ROOT}/settings/gunicorn.conf.py /etc/opt/${PROJECT_NAME}/settings/
 cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/
 
-podman exec -it django_cont bash -c "cd /opt/${PROJECT_NAME}/; python manage.py collectstatic; python manage.py migrate; python manage.py createcachetable; python manage.py search_index --rebuild;"
+podman exec -d django_cont bash -c "mkdir ${HOST_LOG_DIR}/gunicorn"
+
+podman exec -d django_cont bash -c "cd /opt/${PROJECT_NAME}/; python manage.py collectstatic; python manage.py migrate; python manage.py createcachetable"

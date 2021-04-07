@@ -18,7 +18,15 @@ select yn in "Yes" "No"; do
     esac
 done
 
-read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements : " project_name
+if [[ -f "./.proj" ]]
+then
+    project_name=$(cat ./.proj)
+    pname=[${project_name}]
+fi
+
+read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements $pname : " pn
+
+project_name=${pn:-${project_name}}
 
 set -a
 PROJECT_NAME=${project_name}
