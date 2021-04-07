@@ -24,6 +24,7 @@ then
 fi
 
 rm -rf /etc/opt/${PROJECT_NAME}/settings/*
+rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
 rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
 
 podman pod exists ${POD_NAME};
