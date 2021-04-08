@@ -36,5 +36,6 @@ then
 	sudo sysctl --system
 fi
 
-echo $PROJECT_NAME > .proj
-chown ${USER}:${USER} .proj
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+echo $PROJECT_NAME > ${SCRIPTPATH}/.proj
+chown ${USER}:${USER} ${SCRIPTPATH}/.proj

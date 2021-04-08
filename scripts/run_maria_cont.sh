@@ -2,15 +2,21 @@
 
 podman run -dit --name ${MARIA_CONT_NAME} --pod ${POD_NAME} -e MYSQL_ALLOW_EMPTY_PASSWORD=True ${MARIA_IMAGE} 
 
+sleep 2;
+
 echo -e "\nupdating database defaults...\n"
+
 podman cp ${SCRIPTS_ROOT}/settings/defaults.cnf ${MARIA_CONT_NAME}:/root/defaults.cnf
 podman cp ${SCRIPTS_ROOT}/templates/maria ${MARIA_CONT_NAME}:/maria.sh
+
 podman stop ${MARIA_CONT_NAME}
+
 podman start ${MARIA_CONT_NAME}
 
 echo -e "\nYou will need to have the new database root password handy.\n\nThe database root password is not stored anywhere on the file system so take a careful note of what it is and make sure it is a secure password - chars and numbers with a length of greater than 30 if possible.  Try the bash command: \n\n < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;\n\nI am about to run the script mysql_secure_installation.\n\nThe database currently has no root password set, so press enter to the first question, and disable socket authentication for the second question.\n\nMake certain that you then enter the new database root password to secure the database for the third question.\n\nThen press enter through the rest of the questions to accept the defaults.\n\n"
 
 sleep 8;
+while read -t 0.01; do :; done
 
 podman exec -it ${MARIA_CONT_NAME} bash -c "mysql_secure_installation"
 
