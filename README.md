@@ -9,7 +9,7 @@ You will need the following created and ready...
 * google recaptcha private key
 * the path to the directory where you have cloned django_artisan
 
-These scripts are provided as is, with no support, and the author accepts nil responsibility for any damage or otherwise that using these scripts may cause.  They are alpha, permanently, so proceed with care.
+These scripts are provided as is, with no support, and the author accepts nil responsibility for any damage or otherwise that using these scripts may cause.  They are alpha, permanently, so proceed with care.  The scripts have only been tested on machines running Fedora CoreOs, ie Silverblue and Fedora IOT.
 
 They are designed to run on a newly installed system, in my case a raspberry pi running Fedora IOT.
 
