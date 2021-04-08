@@ -7,6 +7,7 @@ You will need the following created and ready...
 * an app password for that account (you need to set up 2 step verification... https://support.google.com/accounts/answer/185833?hl=en")
 * google recaptcha public key   https://developers.google.com/recaptcha/intro
 * google recaptcha private key
+* the path to the directory where you have cloned django_artisan
 
 These scripts are provided as is, with no support, and the author accepts nil responsibility for any damage or otherwise that using these scripts may cause.  They are alpha, permanently, so proceed with care.
 
@@ -36,4 +37,8 @@ for static files there is symlink to django code/static and django code/media in
 log file directories are volume mounted into the same host dir from the swag container and the django container:
     log files -> $HOME/$PROJECT_NAME/logs
 
-django code resides at -> /opt/$PROJECT_NAME/ which is a symbolic link to the code inside the django_artisan repo, whereever you have cloned that to.
+django code resides at -> /opt/$PROJECT_NAME/ which is a symbolic link to the code inside the django_artisan repo, wherever you have cloned that to.
+
+When the scripts have finished running, you will need to open your firewall ports 80 and 443, and make sure that your router firewall is forwarding those two ports to your machine's ip address.
+
+If you make any changes to the code base, and need to reload the server, you can run the script 'reload.sh'.  This will kill the gunicorn process and run it from fresh and then start and stop the swag container to reload nginx.

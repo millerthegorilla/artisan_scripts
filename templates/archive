@@ -1,3 +1,5 @@
 PROJECT_NAME=${project_name}
+DJANGO_CONT_NAME=${DJANGO_CONT_NAME}
+SWAG_CONT_NAME=${SWAG_CONT_NAME}
 POD_NAME=${pod_name}
 LOG_DIR=${host_log_dir}

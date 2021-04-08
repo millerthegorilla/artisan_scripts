@@ -16,3 +16,6 @@ podman exec -d ${SWAG_CONT_NAME} bash -c "chown abc:users /config/nginx/nginx.co
 podman exec -d ${SWAG_CONT_NAME} bash -c "chown abc:users /config/nginx/site-confs/default"
 podman exec -d ${SWAG_CONT_NAME} bash -c "mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old"
 podman exec -d ${SWAG_CONT_NAME} bash -c "ln -s /config/nginx/nginx.conf /etc/nginx/nginx.conf"
+
+podman stop ${SWAG_CONT_NAME}
+podman start ${SWAG_CONT_NAME}

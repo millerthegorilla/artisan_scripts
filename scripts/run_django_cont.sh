@@ -21,3 +21,5 @@ cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/
 podman exec -d django_cont bash -c "mkdir ${HOST_LOG_DIR}/gunicorn"
 
 podman exec -d django_cont bash -c "cd /opt/${PROJECT_NAME}/; python manage.py collectstatic; python manage.py migrate; python manage.py createcachetable"
+
+podman exec -d django_cont bash -c "gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py ceramic_isles.wsgi:application"
