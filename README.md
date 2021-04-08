@@ -1,6 +1,13 @@
 # artisan_scripts
 scripts to provision django_artisan ... https://github.com/millerthegorilla/django_artisan
 
+You will need the following created and ready...
+* a duckdns account, with your token and subdomain address at the ready
+* a gmail account that sends email
+* an app password for that account (you need to set up 2 step verification... https://support.google.com/accounts/answer/185833?hl=en")
+* google recaptcha public key   https://developers.google.com/recaptcha/intro
+* google recaptcha private key
+
 These scripts are provided as is, with no support, and the author accepts nil responsibility for any damage or otherwise that using these scripts may cause.  They are alpha, permanently, so proceed with care.
 
 They are designed to run on a newly installed system, in my case a raspberry pi running Fedora IOT.
