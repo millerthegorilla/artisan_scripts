@@ -36,7 +36,22 @@ fi
 podman image exists python:django
 if [[ ! $? -eq 0 ]]
 then
-        podman build --tag='python:django' -f='./dockerfiles/dockerfile_django'
+    if [[ -f "./.proj" ]]
+    then
+        project_name=$(cat ./.proj)
+        pname=[${project_name}]
+    else
+        pname=""
+    fi
+
+    read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements ${pname} : " pn
+
+    project_name=${pn:-${project_name}}
+
+    set -a
+    PROJECT_NAME=${project_name}
+    set +a
+    podman build --tag='python:django' -f='./dockerfiles/dockerfile_django'
 fi
 
 ./create_all.sh

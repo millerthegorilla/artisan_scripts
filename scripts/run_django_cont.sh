@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [[ ! -f ${HOST_LOG_DIR} ]]
+then
+    mkdir -p ${HOST_LOG_DIR}
+    mkdir ${HOST_LOG_DIR}/django
+    mkdir ${HOST_LOG_DIR}/gunicorn
+fi
+
 podman container exists ${DJANGO_CONT_NAME};
 retval=$?
 if [[ $retval -eq 0 ]]
@@ -18,7 +25,7 @@ podman cp ${SCRIPTS_ROOT}/env_files/settings_env django_cont:/etc/opt/${PROJECT_
 cp ${SCRIPTS_ROOT}/settings/gunicorn.conf.py /etc/opt/${PROJECT_NAME}/settings/
 cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/
 
-podman exec -d django_cont bash -c "mkdir ${HOST_LOG_DIR}/gunicorn"
+# podman exec -d ${DJANGO_CONT_NAME} bash -c "mkdir -p /var/log/${PROJECT_NAME}/gunicorn"
 
 podman exec -d django_cont bash -c "cd /opt/${PROJECT_NAME}/; python manage.py collectstatic; python manage.py migrate; python manage.py createcachetable"
 

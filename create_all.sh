@@ -18,15 +18,22 @@ select yn in "Yes" "No"; do
     esac
 done
 
-if [[ -f "./.proj" ]]
+echo Project name is ${PROJECT_NAME}
+
+if [[ -z "${PROJECT_NAME}" ]]
 then
-    project_name=$(cat ./.proj)
-    pname=[${project_name}]
+    if [[ -f "./.proj" ]]
+    then
+        project_name=$(cat ./.proj)
+        pname=[${project_name}]
+    fi
+
+    read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements ${pname} : " pn
+
+    project_name=${pn:-${project_name}}
+else
+    project_name=$PROJECT_NAME
 fi
-
-read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements $pname : " pn
-
-project_name=${pn:-${project_name}}
 
 set -a
 PROJECT_NAME=${project_name}
@@ -41,13 +48,16 @@ set -a
 source .env
 set +a
 
+echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> .archive
+echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> .archive
+
 podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
 
-./scripts/run_maria_cont.sh
-./scripts/run_duckdns_cont.sh
-./scripts/run_clamd_cont.sh
-./scripts/run_memcached_cont.sh
-./scripts/run_elastic_search_cont.sh
+#./scripts/run_maria_cont.sh
+#./scripts/run_duckdns_cont.sh
+#./scripts/run_clamd_cont.sh
+#./scripts/run_memcached_cont.sh
+#./scripts/run_elastic_search_cont.sh
 ./scripts/run_swag_cont.sh
 ./scripts/run_django_cont.sh
 

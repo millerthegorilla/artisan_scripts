@@ -318,7 +318,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/django/debug.log',
+            'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
         },
     },
     'loggers': {

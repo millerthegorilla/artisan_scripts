@@ -9,7 +9,7 @@ echo -e "#******************************************************************"
 echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
 echo -e "#******************************************************************"
 
-read -p 'Project name : ' PROJECT_NAME
+read -p 'Project name - this is used as a directory name, so must be conformant to bash requirements : ' PROJECT_NAME
 read -p 'Path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
 read -p 'Absolute path to User home dir : ' USER_DIR
 read -p 'User account name : ' USER

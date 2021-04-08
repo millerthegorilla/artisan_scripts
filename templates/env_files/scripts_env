@@ -16,10 +16,9 @@ PORT1_DESCRIPTION=0.0.0.0:443:443
 PORT2_DESCRIPTION=0.0.0.0:80:80
 
 ## DJANGO
-DJANGO_PROJECT_NAME=${project_name}
 DJANGO_CONT_NAME=django_cont
 DJANGO_IMAGE=python:django
-DJANGO_CONT_LOG_DIR=/var/log/django/
+DJANGO_CONT_LOG_DIR=/var/log/${PROJECT_NAME}/   # for mount -bind
 
 ## CLAMAV
 CLAM_CONT_NAME=clamav_cont
@@ -52,5 +51,6 @@ SWAG_CONT_NAME=swag_cont
 SWAG_IMAGE=docker.io/linuxserver/swag:latest
 EXTRA_DOMAINS=${tld_domain}       # in my case I have a TLD redirecting to my duckdns domain this 'EXTRA_DOMAINS' entry is supposed to help swag generate a certificate that covers the TLD also.
 SWAG_HOST_VOL_STATIC=${swag_host_static_dir}                  # ie /etc/opt/${PROJECT_NAME}/static_files/
+SWAG_HOST_LOG_DIR=${swag_host_log_dir}
 SWAG_CONT_VOL_STATIC=/opt/static_files/
-SWAG_CONT_LOG_DIR=/config/logs/
+SWAG_CONT_LOG_DIR=/config/log/

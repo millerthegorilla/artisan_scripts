@@ -5,25 +5,25 @@
 ###
 PROJECT_NAME=ceramic_isles   # this is asked for several times also during scripts running
 BASE_DIR=/opt/ceramic_isles/                                         # this is the dir where the django_artisan code resides, ie /opt/ceramic_isles
-SECRET_KEY=CRW0;SW7SNTZ&5MQ$P618t&P1.L7P+hKvAJw-u7Pj>=+PKCQ>c                      # DJANGO secret key
+SECRET_KEY=[%Kdz4.xaajb!iT#WikJFOw]b1^EV9PH5<Fa0,3n7dK:D9NSvG                      # DJANGO secret key
 ALLOWED_HOSTS1=127.0.0.1                          # localhost 
-ALLOWED_HOSTS2=ceramicisles.duckdns.org                                  # yoursubdomain.duckdns.org
-ALLOWED_HOSTS3=ceramicisles.org                                   # your top level domain, if you have one
+ALLOWED_HOSTS2=                                  # yoursubdomain.duckdns.org
+ALLOWED_HOSTS3=                                   # your top level domain, if you have one
 DB_ENGINE=django.db.backends.mysql
 DB_NAME=ceramic_isles_db                                          # django db name
 DB_USER=ceramic_isles_db_user                                          # django db user
-DB_PASSWORD=am60DBWnYpyvttd-9ZpU2tx6d5m-cMLa                                      # django db password
+DB_PASSWORD=6dB3GQCORMh2WnWoOGdjLl2ukwoW9Sah                                      # django db password
 DB_HOST=127.0.0.1                     # because containers are in a pod, 127.0.0.1 is used to communicate
 DB_PORT=3306
 MEMCACHED_ADDRESS=127.0.0.1:11211
 STATIC_BASE_ROOT=/etc/opt/ceramic_isles/static_files                                 # this is the directory that contains links to the static and media files ie /etc/opt/ceramic_isles/static_files/
-EMAIL_APP_ADDRESS=ceramicisles@gmail.com                                #most likely something@gmail.com
-EMAIL_APP_KEY=email password                                  #gmail app password https://support.google.com/accounts/answer/185833?hl=en
-EMAIL_FROM_ADDRESS=noreply@ceramicisles.org
-DUCKDNS_DOMAIN=ceramicisles.duckdns.org                                # yoursubdomain.duckdns.org
-CUSTOM_SALT=2kxIl0RVUH9r9KtQVZ1yZ3vKW3j-nwsn                                      # a custom salt value for email token generation
-RECAPTCH_PUBLIC_KEY=recaptcha_pub                              # google recaptcha pub key  https://developers.google.com/recaptcha/intro
-RECAPTCHA_PRIVATE_KEY=recaptcha_priv                            # google recaptcha priv key
+EMAIL_APP_ADDRESS=                                #most likely something@gmail.com
+EMAIL_APP_KEY=                                  #gmail app password https://support.google.com/accounts/answer/185833?hl=en
+EMAIL_FROM_ADDRESS=noreply@
+DUCKDNS_DOMAIN=                                # yoursubdomain.duckdns.org
+CUSTOM_SALT=oPCzFRgxT9XsC_z2xvDPyH1EhigmUXKB                                      # a custom salt value for email token generation
+RECAPTCH_PUBLIC_KEY=                              # google recaptcha pub key  https://developers.google.com/recaptcha/intro
+RECAPTCHA_PRIVATE_KEY=                            # google recaptcha priv key
 CLAMAV_ADDRESS=tcp://127.0.0.1:3310
 ELASTIC_SEARCH_ADDRESS=localhost:9200
-SITE_NAME=Ceramic Isles                                        # as used on header of web page eg "Ceramic Isles"
+SITE_NAME=                                        # as used on header of web page eg "Ceramic Isles"

@@ -14,6 +14,8 @@ read -p "Static base root [/etc/opt/${project_name}/static_files] : " sbr
 static_base_root=${sbr:-/etc/opt/${project_name}/static_files}
 read -p "Host log dir [${HOME}/${project_name}/logs/] : " hld
 host_log_dir=${hld:-${HOME}/${project_name}/logs/}
+read -p "Swag Host log dir (must be different to Host Log Dir) [${HOME}/${project_name}/swag_logs] : " shld
+swag_host_log_dir=${shld:-${HOME}/${project_name}/swag_logs}
 swag_host_static_dir=${static_base_root}
 secret_key=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
 read -p "Duckdns token : " duckdns_token

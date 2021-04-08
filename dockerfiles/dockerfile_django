@@ -1,6 +1,6 @@
 # build command is: podman build --tag='python:django' -f='dockerfile_django'
 FROM docker.io/library/python
-ARG DJANGO_PROJECT_NAME=ceramic_isles
+ARG DJANGO_PROJECT_NAME=${PROJECT_NAME}
 ENV DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME}
 ENV DJANGO_SETTINGS_MODULE=settings
 ENV PYTHONPATH=/etc/opt/${DJANGO_PROJECT_NAME}/settings/:/opt/${DJANGO_PROJECT_NAME}/
