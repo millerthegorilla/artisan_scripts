@@ -20,7 +20,9 @@ fi
 
 cat ${SCRIPTS_ROOT}/templates/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
 
-podman cp ${SCRIPTS_ROOT}/env_files/settings_env ${DJANGO_CONT_NAME}:/etc/opt/${PROJECT_NAME}/settings/.env
+podman cp ${SCRIPTS_ROOT}/settings/settings_env ${DJANGO_CONT_NAME}:/etc/opt/${PROJECT_NAME}/settings/.env
+
+rm ${SCRIPTS_ROOT}/settings/settings_env
 
 podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "chmod 0400 /etc/opt/${PROJECT_NAME}/settings/.env"
 

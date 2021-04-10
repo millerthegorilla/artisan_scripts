@@ -42,8 +42,6 @@ set +a
 
 ./get_variables.sh
 
-mv ./env_files/scripts_env ./.env
-
 set -a
 source .env
 set +a

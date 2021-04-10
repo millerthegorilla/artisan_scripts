@@ -52,8 +52,8 @@ read -p "Google Recaptcha public key : " recaptcha_public
 read -p "Google Recaptcha private key : " recaptcha_private
 set +a
 
-cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/env_files/scripts_env
-cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/env_files/settings_env
+cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
+cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
 cat ${SCRIPTS_ROOT}/templates/archive | envsubst > ${SCRIPTS_ROOT}/.archive
 
 unset site_name
