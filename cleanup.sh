@@ -96,6 +96,7 @@ fi
 rm .env
 rm swag/default
 rm settings/gunicorn.conf.py
+rm dockerfiles/dockerfile_django
 
 echo -e "remove logs or save logs and remove logs dir (choose a number)?"
 select yn in "Yes" "No" "Save"; do
