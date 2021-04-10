@@ -66,6 +66,7 @@ If you want to add a container, or customise an existing container, you can eith
 The script create_all.sh shells out to a bunch of scripts in that scripts directory.  In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
 The script get_variables.sh reads user input to get environment variables.  This then uses the envsubst command to complete a ./templates/env_files/scripts_env and ./templates/env_files/settings_env.
 The scripts_env provides environment variables to the scripts, and the settings_env is copied to the directory /etc/opt/$PROJECT_NAME/settings to be read as and when by settings.py.
+If you want to change any image tag then you will need to do so in the script ./initial_provision.sh and also the file ./templates/env_files/scripts_env.
 
 ### customising django_artisan
 
