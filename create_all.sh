@@ -50,7 +50,6 @@ set +a
 
 echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> .archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> .archive
-
 podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
 
 #./scripts/run_maria_cont.sh

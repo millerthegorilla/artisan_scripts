@@ -4,10 +4,17 @@ if [[ -f ".archive" ]]; then
    set +a
    source .archive
    set -a
-else
-   read -p "Enter pod name: " POD_NAME
-   read -p "Enter project name " PROJECT_NAME
 fi
+
+if [[ -z ${POD_NAME} ]]
+then
+    read -p "Enter pod name: " POD_NAME
+fi
+if [[ -z ${PROJECT_NAME} ]]
+then
+    read -p "Enter project name " PROJECT_NAME
+fi
+
 
 echo -e "save settings_env to ./settings_env_old (choose a number)?"
 
@@ -34,6 +41,19 @@ if [[ ! $retval -eq 0 ]]
 then
 	echo no such pod!
 else
+        #chown swag_logs to be able to delete them
+        if [[ -z "${SWAG_CONT_NAME}" ]]
+        then
+	    SN=swag_cont
+        else
+            SN=${SWAG_CONT_NAME}
+        fi
+        podman container exists ${SN}
+        retval=$?
+        if  [[ retval -eq 0 ]]
+        then
+            podman exec -it ${SN} bash -c "chown -R root:root /config/log"
+        fi
         echo -e "\nshutting down and removing the pod..."
 	podman pod stop ${POD_NAME}
 	podman pod rm ${POD_NAME}
@@ -88,22 +108,50 @@ done
 
 if [[ logs_remove -eq 2 ]]
 then
-    if [[ -z "$LOG_DIR" ]]
+    if [[ -n "$LOG_DIR" ]]
     then
     	read -p "absolute path to logs dir : " LOG_DIR
     fi        	
     mkdir old_logs
     mv ${LOG_DIR}/* old_logs
     rm -rf ${LOG_DIR}
+    if [[ -n "$PROJECT_NAME" ]]
+    then
+        echo -e "remove ${HOME}/${PROJECT_NAME} (choose a number)?"
+        select yn in "Yes" "No"; do
+            case $yn in
+                Yes ) remove_home=1; break;;
+                No ) remove_home=0; break;;
+            esac
+        done
+        if [[ remove_home==1 ]]
+        then
+            rm -rf ${HOME}/${PROJECT_NAME}
+        fi
+     fi
 fi
 
 if [[ logs_remove -eq 1 ]]
 then
-    if [[ -z "$LOG_DIR" ]]
+    if [[ -n "$LOG_DIR" ]]
     then
         read -p "absolute path to logs dir : " LOG_DIR
     fi 
     rm -rf ${LOG_DIR}
+    if [[ -n "$PROJECT_NAME" ]]
+    then
+        echo -e "remove ${HOME}/${PROJECT_NAME} (choose a number)?"
+        select yn in "Yes" "No"; do
+            case $yn in
+                Yes ) remove_home=1; break;;
+                No ) remove_home=0; break;;
+            esac
+        done
+        if [[ remove_home==1 ]]
+        then
+            rm -rf ${HOME}/${PROJECT_NAME}
+        fi
+     fi
 fi
 
 if [[ -f "./.archive" ]]

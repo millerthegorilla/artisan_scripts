@@ -10,15 +10,15 @@ podman run -dit --pod=${POD_NAME} --name=${SWAG_CONT_NAME} --cap-add=NET_ADMIN -
 cat ${SCRIPTS_ROOT}/templates/default | envsubst '${EXTRA_DOMAINS} ${DUCKDNS_SUBDOMAIN}' > ${SCRIPTS_ROOT}/swag/default
 
 echo -e "Waiting for swag container to be ready.."
-until podman exec -it swag_cont bash -c "ls /config/nginx/site-confs/default" &>/dev/null;
+until podman exec -it ${SWAG_CONT_NAME} bash -c "ls /config/nginx/site-confs/default" &>/dev/null;
 do
   echo -n "."
 done
 
 echo -e "\n"
 
-podman exec -d ${SWAG_CONT_NAME} bash -c "chown root:users /config/logs/"
-exit
+podman exec -d ${SWAG_CONT_NAME} bash -c "rm -rf /var/run/s6/etc/services.d/php-fpm"
+
 podman cp ${SCRIPTS_ROOT}/swag/default ${SWAG_CONT_NAME}:/config/nginx/site-confs/default
 podman cp ${SCRIPTS_ROOT}/swag/nginx ${SWAG_CONT_NAME}:/config/nginx/nginx.conf
 podman exec -d ${SWAG_CONT_NAME} bash -c "chown abc:users /config/nginx/nginx.conf"

@@ -20,13 +20,15 @@ fi
 
 cat ${SCRIPTS_ROOT}/templates/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
 
-podman cp ${SCRIPTS_ROOT}/env_files/settings_env django_cont:/etc/opt/${PROJECT_NAME}/settings/.env
+podman cp ${SCRIPTS_ROOT}/env_files/settings_env ${DJANGO_CONT_NAME}:/etc/opt/${PROJECT_NAME}/settings/.env
+
+podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "chmod 0400 /etc/opt/${PROJECT_NAME}/settings/.env"
 
 cp ${SCRIPTS_ROOT}/settings/gunicorn.conf.py /etc/opt/${PROJECT_NAME}/settings/
 cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/
 
 # podman exec -d ${DJANGO_CONT_NAME} bash -c "mkdir -p /var/log/${PROJECT_NAME}/gunicorn"
 
-podman exec -d django_cont bash -c "cd /opt/${PROJECT_NAME}/; python manage.py collectstatic; python manage.py migrate; python manage.py createcachetable"
+podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "cd /opt/${PROJECT_NAME}/; python manage.py collectstatic; python manage.py migrate; python manage.py createcachetable"
 
-podman exec -d django_cont bash -c "gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py ceramic_isles.wsgi:application"
+podman exec -e PROJECT_NAME=${PROJECT_NAME} -d  ${DJANGO_CONT_NAME} bash -c "gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py ceramic_isles.wsgi:application &"

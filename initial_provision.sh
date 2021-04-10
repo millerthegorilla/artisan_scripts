@@ -8,15 +8,15 @@ if [[ ! $? -eq 0 ]]
 then
 	podman pull docker.io/library/elasticsearch:7.11.2
 fi
-podman image exists mariadb:latest
+podman image exists mariadb:10.5.9
 if [[ ! $? -eq 0 ]]
 then
-        podman pull docker.io/library/mariadb:latest
+        podman pull docker.io/library/mariadb:10.5.9
 fi
-podman image exists memcached:latest
+podman image exists memcached:1.6.9
 if [[ ! $? -eq 0 ]]
 then
-        podman pull docker.io/library/memcached:latest
+        podman pull docker.io/library/memcached:1.6.9
 fi
 podman image exists docker-clamav:latest
 if [[ ! $? -eq 0 ]]
@@ -28,10 +28,10 @@ if [[ ! $? -eq 0 ]]
 then
         podman pull docker.io/linuxserver/duckdns:latest
 fi
-podman image exists swag:latest
+podman image exists swag:1.13.0-ls46
 if [[ ! $? -eq 0 ]]
 then
-        podman pull docker.io/linuxserver/swag:latest
+        podman pull docker.io/linuxserver/swag:version-1.14.0
 fi
 podman image exists python:django
 if [[ ! $? -eq 0 ]]

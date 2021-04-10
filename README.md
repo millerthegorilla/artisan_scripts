@@ -18,6 +18,10 @@ These scripts are provided as is, with no support, and the author accepts nil re
 
 I have tested them on a newly installed system, in my case a raspberry pi running Fedora IOT.
 
+### Swag - nginx container
+
+The scripts set up containers and environment necessary to run django_artisan as an SSL enabled site.  The SSL service is provided by the LinuxServer team's SWAG image (https://hub.docker.com/r/linuxserver/swag) SWAG stands for Secure Application Gateway, apparently.  Inside the container, letsencrypt certbot runs to ggenerate SSL certificates, and is configured in this instance to provide SSL certs for a duckdns subdomain and for a single extra TLD domain.  I use duckdns subdomain to point at the nginx container, and then use a TLD domain from Namesco, to act as a redirect to the duckdns subdomain.  The site then runs on my home server, and the only cost I have is renewal of the TLD domain name, as it then gets listed in Google search etc, where the duckdns subdomain is ignored.
+
 ### what to do...
 
 Before running the scripts, download them into a directory in your home folder, and git clone the django_artisan code into a directory.
