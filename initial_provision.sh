@@ -51,6 +51,7 @@ then
     set -a
     PROJECT_NAME=${project_name}
     set +a
+    cat ./templates/dockerfile_django | envsubst '${PROJECT_NAME}' > ./dockerfiles/dockerfile_django
     podman build --tag='python:django' -f='./dockerfiles/dockerfile_django'
 fi
 
