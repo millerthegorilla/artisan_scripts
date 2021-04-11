@@ -50,11 +50,11 @@ echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> .archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> .archive
 podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
 
-#./scripts/run_maria_cont.sh
-#./scripts/run_duckdns_cont.sh
-#./scripts/run_clamd_cont.sh
+./scripts/run_maria_cont.sh
+./scripts/run_duckdns_cont.sh
+./scripts/run_clamd_cont.sh
 ./scripts/run_memcached_cont.sh
-#./scripts/run_elastic_search_cont.sh
+./scripts/run_elastic_search_cont.sh
 ./scripts/run_swag_cont.sh
 ./scripts/run_django_cont.sh
 

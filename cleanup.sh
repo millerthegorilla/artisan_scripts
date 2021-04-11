@@ -113,7 +113,7 @@ then
     then
         if [[ -n "${PROJECT_NAME}" ]]
         then
-            pname="[${HOME}/${PROJECT_NAME}]/logs"
+            pname="[${HOME}/${PROJECT_NAME}/logs]"
         fi
     	read -p "absolute path to logs dir ${pname}: " ldir
     fi
@@ -143,7 +143,7 @@ then
     then
         if [[ -n "${PROJECT_NAME}" ]]
         then
-            pname="[${HOME}/${PROJECT_NAME}]/logs"
+            pname="[${HOME}/${PROJECT_NAME}/logs]"
         fi
         read -p "absolute path to logs dir ${pname} : " ldir
         LOG_DIR=${ldir:-${pname}}
