@@ -22,7 +22,7 @@ ln -s ${CODE_PATH} /opt/${PROJECT_NAME}
 ln -s ${CODE_PATH}/static/ /etc/opt/${PROJECT_NAME}/static_files/static
 ln -s ${CODE_PATH}/media/ /etc/opt/${PROJECT_NAME}/static_files/media
 
-sudo chcon -R -t container_file_t /opt/${PROJECT_NAME}/
+sudo chcon -R -t container_file_t /opt/${PROJECT_NAME}
 
 sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}
 sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}/settings
