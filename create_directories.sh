@@ -28,6 +28,7 @@ sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}
 sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}/settings
 sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}/static_files
 sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}
+sudo chown ${USER}:${USER} ${USER_DIR}/${PROJECT_NAME}
 sudo chown ${USER}:${USER} ${USER_DIR}/${PROJECT_NAME}/logs
 
 if [[ ! $(sysctl net.ipv4.ip_unprivileged_port_start) == "net.ipv4.ip_unprivileged_port_start = 80" ]]
