@@ -6,7 +6,7 @@ sleep 2;
 
 echo -e "\nupdating database defaults...\n"
 
-podman cp ${SCRIPTS_ROOT}/settings/defaults.cnf ${MARIA_CONT_NAME}:/root/defaults.cnf
+podman cp ${SCRIPTS_ROOT}/settings/defaults.cnf ${MARIA_CONT_NAME}:/root/.my.cnf
 podman cp ${SCRIPTS_ROOT}/templates/maria ${MARIA_CONT_NAME}:/maria.sh
 
 podman stop ${MARIA_CONT_NAME}
@@ -20,6 +20,7 @@ while read -t 0.01; do :; done
 
 podman exec -it ${MARIA_CONT_NAME} bash -c "mysql_secure_installation"
 
+while read -t 0.01; do :; done
 echo -e "\n\n"
 
 echo -e "\nSo I'm going to configure the database for your webapp - please enter the database root password."
@@ -27,3 +28,6 @@ echo -e "\nSo I'm going to configure the database for your webapp - please enter
 read -p "Db root password:" DB_ROOT_PASSWORD
 
 podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_HOST=${DB_HOST} -e DB_PASSWORD=${DB_PASSWORD} -e DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} -dit ${MARIA_CONT_NAME} bash -c "sh /maria.sh"
+
+podman stop ${MARIA_CONT_NAME}
+podman start ${MARIA_CONT_NAME}

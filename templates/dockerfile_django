@@ -11,5 +11,5 @@ RUN python -m pip install --upgrade pip && pip install --no-cache-dir -r /tmp/pi
 RUN rm -r /tmp/pip_requirements
 RUN mkdir -p /opt/${DJANGO_PROJECT_NAME}
 RUN mkdir -p /var/log/${DJANGO_PROJECT_NAME}
-RUN mkdir -p /etc/opt/${DJANGO_PROJECT_NAME}
+RUN mkdir -p /etc/opt/${DJANGO_PROJECT_NAME}/settings
 

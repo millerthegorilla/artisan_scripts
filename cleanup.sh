@@ -111,8 +111,13 @@ if [[ logs_remove -eq 2 ]]
 then
     if [[ -n "$LOG_DIR" ]]
     then
-    	read -p "absolute path to logs dir : " LOG_DIR
-    fi        	
+        if [[ -n "${PROJECT_NAME}" ]]
+        then
+            pname="[${HOME}/${PROJECT_NAME}]/logs"
+        fi
+    	read -p "absolute path to logs dir ${pname}: " ldir
+    fi
+    LOG_DIR=${ldir:-${pname}}
     mkdir old_logs
     mv ${LOG_DIR}/* old_logs
     rm -rf ${LOG_DIR}
@@ -136,7 +141,12 @@ if [[ logs_remove -eq 1 ]]
 then
     if [[ -n "$LOG_DIR" ]]
     then
-        read -p "absolute path to logs dir : " LOG_DIR
+        if [[ -n "${PROJECT_NAME}" ]]
+        then
+            pname="[${HOME}/${PROJECT_NAME}]/logs"
+        fi
+        read -p "absolute path to logs dir ${pname} : " ldir
+        LOG_DIR=${ldir:-${pname}}
     fi 
     rm -rf ${LOG_DIR}
     if [[ -n "$PROJECT_NAME" ]]
