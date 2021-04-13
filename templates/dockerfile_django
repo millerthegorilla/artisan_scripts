@@ -2,6 +2,7 @@
 FROM docker.io/library/python
 ARG DJANGO_PROJECT_NAME=${PROJECT_NAME}
 ENV DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME}
+ENV DJANGO_CODE_PATH=${DJANGO_CODE_PATH}
 ENV DJANGO_SETTINGS_MODULE=settings
 ENV PYTHONPATH=/etc/opt/${DJANGO_PROJECT_NAME}/settings/:/opt/${DJANGO_PROJECT_NAME}/
 RUN apt-get update && apt-get upgrade -y
@@ -12,4 +13,4 @@ RUN rm -r /tmp/pip_requirements
 RUN mkdir -p /opt/${DJANGO_PROJECT_NAME}
 RUN mkdir -p /var/log/${DJANGO_PROJECT_NAME}
 RUN mkdir -p /etc/opt/${DJANGO_PROJECT_NAME}/settings
-
+RUN mkdir -p /etc/opt/${DJANGO_PROJECT_NAME}/static_files
