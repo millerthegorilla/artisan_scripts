@@ -8,8 +8,8 @@ read -p "Site name as used in the website header/logo : " site_name
 pod_name=${project_name}_pod
 read -p "Pod name [${pod_name}] : " pname
 pod_name=${pname:-${pod_name}}
-read -p "Base code directory [/opt/${project_name}/] : " bdir
-base_dir=${bdir:-/opt/${project_name}/}
+read -p "Base code directory [${CODE_PATH}] : " bdir
+base_dir=${bdir:-${CODE_PATH}}
 read -p "Static base root [/etc/opt/${project_name}/static_files] : " sbr
 static_base_root=${sbr:-/etc/opt/${project_name}/static_files}
 read -p "Host log dir [${HOME}/${project_name}/logs/] : " hld
