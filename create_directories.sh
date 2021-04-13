@@ -15,29 +15,33 @@ read -p "Absolute path to User home dir : " USER_DIR
 read -p 'User account name : ' USER
 
 mkdir -p /etc/opt/${PROJECT_NAME}/settings
-mkdir -p /etc/opt/${PROJECT_NAME}/static_files
+# symlinks not working in podman - swag/django now mount directly to static/media/logs
+# mkdir -p /etc/opt/${PROJECT_NAME}/static_files
+
 mkdir -p ${USER_DIR}/${PROJECT_NAME}/logs
 
-if [[ -L /opt/${PROJECT_NAME} ]]
-then
-    echo "**WARNING** /opt/${PROJECT_NAME} exists already!"
-else
-    ln -s ${CODE_PATH} /opt/${PROJECT_NAME}
-fi
-if [[ -L /etc/opt/${PROJECT_NAME}/static_files/static ]]
-then
-    echo "**WARNING** /etc/opt/${PROJECT_NAME}/static_files/static exists!"
-else
-    ln -s ${CODE_PATH}/static/ /etc/opt/${PROJECT_NAME}/static_files/static
-fi
-if [[ -L /etc/opt/${PROJECT_NAME}/static_files/media ]]
-then
-    echo "**WARNING** /etc/opt/${PROJECT_NAME}/static_files/media exists!"
-else
-    ln -s ${CODE_PATH}/media/ /etc/opt/${PROJECT_NAME}/static_files/media
-fi
+# symlinks not working in podman
+#
+# if [[ -L /opt/${PROJECT_NAME} ]]
+# then
+#     echo "**WARNING** /opt/${PROJECT_NAME} exists already!"
+# else
+#     ln -s ${CODE_PATH} /opt/${PROJECT_NAME}
+# fi
+# if [[ -L /etc/opt/${PROJECT_NAME}/static_files/static ]]
+# then
+#     echo "**WARNING** /etc/opt/${PROJECT_NAME}/static_files/static exists!"
+# else
+#     ln -s ${CODE_PATH}/static/ /etc/opt/${PROJECT_NAME}/static_files/static
+# fi
+# if [[ -L /etc/opt/${PROJECT_NAME}/static_files/media ]]
+# then
+#     echo "**WARNING** /etc/opt/${PROJECT_NAME}/static_files/media exists!"
+# else
+#     ln -s ${CODE_PATH}/media/ /etc/opt/${PROJECT_NAME}/static_files/media
+# fi
 
-sudo chcon -R -t container_file_t /opt/${PROJECT_NAME}
+sudo chcon -R -t container_file_t ${CODE_PATH}
 
 sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}
 sudo chown ${USER}:${USER} /etc/opt/${PROJECT_NAME}/settings
