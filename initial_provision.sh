@@ -41,20 +41,23 @@ if [[ ! $? -eq 0 ]]
 then
     if [[ -f "./.proj" ]]
     then
-        project_name=$(cat ./.proj)
-        pname=[${project_name}]
-    else
-        pname=""
+        source ./.proj
     fi
 
-    read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements ${pname} : " pn
+    read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements [${PROJECT_NAME}] : " pn
 
-    project_name=${pn:-${project_name}}
+    project_name=${pn:-${PROJECT_NAME}}
+
+    read -p "Enter the absolute path to the directory where you have cloned django_artisan, ie where manage.py resides. [${CODE_PATH}] : " cp
+    code_path=${cp:-${CODE_PATH}}
 
     set -a
+    CODE_PATH=${code_path}
     PROJECT_NAME=${project_name}
     set +a
-    cat ./templates/dockerfile_django | envsubst '${PROJECT_NAME}' > ./dockerfiles/dockerfile_django
+    
+    cat ./templates/dockerfile_django | envsubst '${CODE_PATH} ${PROJECT_NAME}' > ./dockerfiles/dockerfile_django
+    
     podman build --tag='python:django' -f='./dockerfiles/dockerfile_django'
 fi
 
