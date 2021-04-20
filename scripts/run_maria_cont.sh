@@ -6,8 +6,6 @@ sleep 2;
 
 echo -e "\nupdating database defaults...\n"
 
-#podman cp ${SCRIPTS_ROOT}/settings/defaults.cnf ${MARIA_CONT_NAME}:/root/.my.cnf
-#podman cp ${SCRIPTS_ROOT}/settings/etc.mysql.mariadb.cnf ${MARIA_CONT_NAME}:/etc/mysql/mariadb.cnf
 podman cp ${SCRIPTS_ROOT}/templates/maria ${MARIA_CONT_NAME}:/maria.sh
 
 podman stop ${MARIA_CONT_NAME}
