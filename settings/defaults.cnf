@@ -1,11 +1,10 @@
 [mysqld]
 skip-host-cache
-bind-address = 127.0.0.1
-
-[client-server]
-socket = ''
+# bind-address = 127.0.0.1
 
 [client]
 # Port or socket location where to connect
-port = 3306
-protocol = TCP
+# port = 3306
+# protocol = TCP
+# host = 127.0.0.1
+

@@ -8,10 +8,11 @@ read -p "Site name as used in the website header/logo : " site_name
 pod_name=${project_name}_pod
 read -p "Pod name [${pod_name}] : " pname
 pod_name=${pname:-${pod_name}}
+# base dir is used in settings_env for base_dir in settings.py
 read -p "Base code directory [/opt/${project_name}/] : " bdir
 base_dir=${bdir:-/opt/${project_name}/}
-read -p "Static base root [/etc/opt/${project_name}/static_files] : " sbr
-static_base_root=${sbr:-/etc/opt/${project_name}/static_files}
+read -p "Static base root [${CODE_PATH}] : " sbr
+static_base_root=${sbr:-${CODE_PATH}}
 read -p "Host log dir [${HOME}/${project_name}/logs/] : " hld
 host_log_dir=${hld:-${HOME}/${project_name}/logs/}
 read -p "Swag Host log dir (must be different to Host Log Dir) [${HOME}/${project_name}/swag_logs] : " shld

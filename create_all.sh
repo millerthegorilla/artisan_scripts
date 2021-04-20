@@ -18,24 +18,36 @@ select yn in "Yes" "No"; do
     esac
 done
 
-echo Project name is ${PROJECT_NAME}
-
 if [[ -z "${PROJECT_NAME}" ]]
 then
     if [[ -f "./.proj" ]]
     then
-        project_name=$(cat ./.proj)
-        pname=[${project_name}]
+        source ./.proj
     fi
+    
+    if [[ -n "$PROJECT_NAME" ]]
+    then
+        echo "Project name is ${PROJECT_NAME}"
+    else
+        echo "*** PROJECT NAME IS NOT SET ***"
+    fi
+    
+    read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements [${PROJECT_NAME}] : " pn
 
-    read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements ${pname} : " pn
-
-    project_name=${pn:-${project_name}}
+    project_name=${pn:-${PROJECT_NAME}}
 else
     project_name=$PROJECT_NAME
 fi
 
+if [[ -z "$CODE_PATH" ]]
+then
+    read -p 'Path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
+else
+    echo "CODE PATH is ${CODE_PATH}"
+fi
+
 set -a
+CODE_PATH=${CODE_PATH}
 PROJECT_NAME=${project_name}
 SCRIPTS_ROOT=${PWD}
 set +a
@@ -51,11 +63,11 @@ echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> .archive
 podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
 
 ./scripts/run_maria_cont.sh
-#./scripts/run_duckdns_cont.sh
-#./scripts/run_clamd_cont.sh
-#./scripts/run_memcached_cont.sh
-#./scripts/run_elastic_search_cont.sh
-#./scripts/run_swag_cont.sh
+./scripts/run_duckdns_cont.sh
+./scripts/run_clamd_cont.sh
+./scripts/run_memcached_cont.sh
+./scripts/run_elastic_search_cont.sh
+./scripts/run_swag_cont.sh
 ./scripts/run_django_cont.sh
 
 rm .env

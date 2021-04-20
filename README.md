@@ -72,4 +72,15 @@ If you want to change any image tag then you will need to do so in the script ./
 
 You can customise the settings of django_artisan, by editing the file settings.py in the settings directory.  Make certain that you don't delete and of the environment variables eg anywhere that os.getenv is used, as these are completed by the script get_variables.sh.   Places to customise are the text that is displayed in the header and in the about page - NAVBAR_SPIEL and ABOUT_US_SPIEL or the SITE_LOGO for example.
 
+### NB.
+
+During the process of container creation you may see an error such as the following:
+```
+`WARN[0000] Error resizing exec session 327f2113dc9789d1b333000bc8296ace49ce4532`
+`3ef0aa99ec2e4170e2e041fc: could not open ctl file for terminal resize for container`
+` a5c87d9fdacfa546f648cedd43fba7d15a828e35b777e4bed3015dba9cd2d991: open /var/home`
+`/pod_server/.local/share/containers/storage/overlay-containers/a5c87d9fdacfa54``6f648cedd43fba7d15a828e35b777e4bed3015dba9cd2d991/userdata/327f2113dc9789d1b33``3000bc8296ace49ce45323ef0aa99ec2e4170e2e041fc/ctl: no such device or address` 
+```
+This is due to a known bug in podman regarding the way it creates tty sizes.
+
 Have fun!

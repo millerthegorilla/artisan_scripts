@@ -16,7 +16,7 @@ then
 fi
 
 
-echo -e "save settings_env to ./settings_env_old (choose a number)?"
+echo -e "save settings/.env to ./settings_env_old (choose a number)?"
 
 select yn in "Yes" "No"; do
     case $yn in
@@ -96,6 +96,7 @@ fi
 rm .env
 rm swag/default
 rm settings/gunicorn.conf.py
+rm settings/settings_env
 rm dockerfiles/dockerfile_django
 
 echo -e "remove logs or save logs and remove logs dir (choose a number)?"
@@ -175,4 +176,4 @@ then
 fi
 
 echo -e "You will need to remove the following directories as sudo user"
-echo -e "/opt/${PROJECT_NAME} && /etc/opt/${PROJECT_NAME}" 
+echo -e "/opt/${PROJECT_NAME} && /etc/opt/${PROJECT_NAME}.  Watch out for trailing slashes - you might not want to deletet the django_artisan code just yet!" 

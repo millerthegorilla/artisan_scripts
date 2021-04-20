@@ -32,7 +32,7 @@ DUCKDNS_TOKEN=${duckdns_token}                            # your duckdns token
 
 ## MEMCACHED
 MEMCACHED_CONT_NAME=memcached_cont
-MEMCACHED_IMAGE=docker.io/library/memcached:10.5.9
+MEMCACHED_IMAGE=docker.io/library/memcached:1.6.9
 
 ## ELASTIC SEARCH
 ELASTIC_CONT_NAME=elastic_cont

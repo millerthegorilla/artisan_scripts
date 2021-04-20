@@ -7,6 +7,12 @@ then
     mkdir ${HOST_LOG_DIR}/gunicorn
 fi
 
+if [[ -z "${CODE_PATH}" ]]
+then
+	read -p 'Path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
+fi
+
+echo "CODE_PATH is ${CODE_PATH}"
 podman container exists ${DJANGO_CONT_NAME};
 retval=$?
 if [[ $retval -eq 0 ]]
@@ -15,7 +21,7 @@ then
 	podman start ${DJANGO_CONT_NAME};
 else
 	echo ${DJANGO_CONT_NAME} DOESN\'T EXIST, creating....;
-	podman run -d -it --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v /opt/${PROJECT_NAME}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}
+	podman run -d -it --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}
 fi
 
 cat ${SCRIPTS_ROOT}/templates/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
