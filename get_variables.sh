@@ -8,15 +8,18 @@ read -p "Site name as used in the website header/logo : " site_name
 pod_name=${project_name}_pod
 read -p "Pod name [${pod_name}] : " pname
 pod_name=${pname:-${pod_name}}
-read -p "Base code directory [${CODE_PATH}] : " bdir
-base_dir=${bdir:-${CODE_PATH}}
+# base dir is used in settings_env for base_dir in settings.py
+read -p "Base code directory [/opt/${project_name}/] : " bdir
+base_dir=${bdir:-/opt/${project_name}/}
+# static base root is in the container
 read -p "Static base root [/etc/opt/${project_name}/static_files] : " sbr
-static_base_root=${sbr:-/etc/opt/${project_name}/static_files}
+static_base_root=${sbr:-"/etc/opt/${project_name}/static_files"}
 read -p "Host log dir [${HOME}/${project_name}/logs/] : " hld
 host_log_dir=${hld:-${HOME}/${project_name}/logs/}
 read -p "Swag Host log dir (must be different to Host Log Dir) [${HOME}/${project_name}/swag_logs] : " shld
 swag_host_log_dir=${shld:-${HOME}/${project_name}/swag_logs}
-swag_host_static_dir=${static_base_root}
+# host static dir mounts on to static base root from django and swag conts.
+host_static_dir=/etc/opt/${project_name}/static_files/
 secret_key=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
 read -p "Duckdns token : " duckdns_token
 read -p "Duckdns domain : " duckdns_domain
