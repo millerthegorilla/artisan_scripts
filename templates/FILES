@@ -1,0 +1,11 @@
+archive is a templated file filled by envsubst to be used by cleanup.sh to locate assets
+
+default is a swag file
+
+dockerfile_django is the dockerfile spec for building the custom django podman image.  Envsubst completes it from initial_provision.sh
+
+the env_files directory holds the templated env_files, scripts_env and settings_env.  These are completed using envsubst from get_variables.sh, and then scripts_env is copied to the main scripts directory where it is used by all the scripts, and settings_env is copied to container settings directory as .env for settings.py
+
+gunicorn.conf.py is completed and copied to settings dir and then to /etc/opt/${PROJECT_NAME}/settings
+
+maria is a small shell script copied into the root of the maria container, which is then run to create the database and user in the mysql there, and then deletes itself on completion.
