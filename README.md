@@ -70,7 +70,7 @@ If you want to change any image tag then you will need to do so in the script ./
 
 ### customising django_artisan
 
-You can customise the settings of django_artisan, by editing the file settings.py in the settings directory.  Make certain that you don't delete and of the environment variables eg anywhere that os.getenv is used, as these are completed by the script get_variables.sh.   Places to customise are the text that is displayed in the header and in the about page - NAVBAR_SPIEL and ABOUT_US_SPIEL or the SITE_LOGO for example.
+You can customise the settings of django_artisan, by editing the file settings.py in the settings directory.  Make certain that you don't delete any of the environment variables eg anywhere that os.getenv is used, as these are completed by the script get_variables.sh.   Places to customise are the text that is displayed in the header and in the about page - NAVBAR_SPIEL and ABOUT_US_SPIEL or the SITE_LOGO for example.
 
 ### NB.
 
