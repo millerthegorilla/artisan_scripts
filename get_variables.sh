@@ -12,8 +12,14 @@ pod_name=${pname:-${pod_name}}
 read -p "Base code directory [/opt/${project_name}/] : " bdir
 base_dir=${bdir:-/opt/${project_name}/}
 # static base root is in the container
-read -p "Static base root [/etc/opt/${project_name}/static_files] : " sbr
-static_base_root=${sbr:-"/etc/opt/${project_name}/static_files"}
+if [[ ${DEBUG} == "TRUE" ]]
+then
+	SBR="/opt/${project_name}/"
+else
+	SBR="/etc/opt/${project_name}/static_files/"
+fi
+read -p "Static base root [${SBR}] : " sbr
+static_base_root=${sbr:-${SBR}}
 read -p "Host log dir [${HOME}/${project_name}/logs/] : " hld
 host_log_dir=${hld:-${HOME}/${project_name}/logs/}
 read -p "Swag Host log dir (must be different to Host Log Dir) [${HOME}/${project_name}/swag_logs] : " shld

@@ -11,9 +11,10 @@ echo -e "#******************************************************************"
 
 read -p 'Project name - this is used as a directory name, so must be conformant to bash requirements : ' PROJECT_NAME
 read -p 'Path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
-read -p "Absolute path to User home dir : " USER_DIR
-read -p 'User account name : ' USER
-
+read -p "Absolute path to User home dir [$(echo ${CODE_PATH} | cut -d/ -f 1-4)] : " USER_DIR
+USER_DIR=${USER_DIR:-$(echo ${CODE_PATH} | cut -d/ -f 1-4)}
+read -p 'User account name ['$(echo ${CODE_PATH} | cut -d/ -f 4)'] : ' USER
+USER=${USER:-$(echo ${CODE_PATH} | cut -d/ -f 4)}
 mkdir -p /etc/opt/${PROJECT_NAME}/settings
 # symlinks not working in podman - swag/django now mount directly to static/media/logs
 mkdir -p /etc/opt/${PROJECT_NAME}/static_files

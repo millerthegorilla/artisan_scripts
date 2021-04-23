@@ -18,20 +18,35 @@ select yn in "Yes" "No"; do
     esac
 done
 
+echo -e "Is this development ie debug? : "
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) DEBUG="TRUE"; break;;
+        No ) DEBUG="FALSE"; break;;
+    esac
+done
+
+if [[ ${DEBUG} == "TRUE" ]]
+then
+    cp ./settings/settings_debug.py ./settings/settings.py 
+else
+    cp ./settings/settings_production.py ./settings/settings.py
+fi
+
+if [[ -f "./.proj" ]]
+then
+    source ./.proj
+fi
+
+if [[ -n "${PROJECT_NAME}" ]]
+then
+    echo "Project name is ${PROJECT_NAME}"
+else
+    echo "*** PROJECT NAME IS NOT SET ***"
+fi
+
 if [[ -z "${PROJECT_NAME}" ]]
 then
-    if [[ -f "./.proj" ]]
-    then
-        source ./.proj
-    fi
-    
-    if [[ -n "$PROJECT_NAME" ]]
-    then
-        echo "Project name is ${PROJECT_NAME}"
-    else
-        echo "*** PROJECT NAME IS NOT SET ***"
-    fi
-    
     read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements [${PROJECT_NAME}] : " pn
 
     project_name=${pn:-${PROJECT_NAME}}
@@ -47,6 +62,7 @@ else
 fi
 
 set -a
+DEBUG=${DEBUG}
 CODE_PATH=${CODE_PATH}
 PROJECT_NAME=${project_name}
 SCRIPTS_ROOT=${PWD}
@@ -60,14 +76,30 @@ set +a
 
 echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> .archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> .archive
-podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
+echo CODE_PATH=${CODE_PATH} >> .archive
+
+if [[ ${DEBUG} == "TRUE" ]]
+then
+   podman pod create --name $POD_NAME -p 8000:8000
+else
+   podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
+fi
 
 ./scripts/run_maria_cont.sh
-./scripts/run_duckdns_cont.sh
+
+if [[ ${DEBUG} == "FALSE" ]]
+then
+   ./scripts/run_duckdns_cont.sh
+fi
+
 ./scripts/run_clamd_cont.sh
 ./scripts/run_memcached_cont.sh
 ./scripts/run_elastic_search_cont.sh
-./scripts/run_swag_cont.sh
+
+if [[ ${DEBUG} == "FALSE" ]]
+then
+   ./scripts/run_swag_cont.sh
+fi
 ./scripts/run_django_cont.sh
 
 rm .env

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+DEBUG=True
 
 ## TODO: clearsessions cron job
 
@@ -18,16 +18,10 @@ import sys, os
 from django.urls import reverse_lazy
 
 from dotenv import load_dotenv
-# project_folder = os.path.expanduser('/etc/opt/$(os.getenv("PROJECT_NAME"))/settings/')
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = str(os.getenv("BASE_DIR"))
-
-# import os
-# import shutil
-
-#DEBUG=True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -126,41 +120,41 @@ CACHES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 12,
-         }
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-    {
-        'NAME': 'django_password_validators.password_history.password_validation.UniquePasswordsValidator',
-        'OPTIONS': {
-                 # How many recently entered passwords matter.
-                 # Passwords out of range are deleted.
-                 # Default: 0 - All passwords entered by the user. All password hashes are stored.
-            'last_passwords': 5 # Only the last 5 passwords entered by the user
-        }
-    },
-    {
-        'NAME': 'django_password_validators.password_character_requirements.password_validation.PasswordCharacterValidator',
-        'OPTIONS': {
-            'min_length_digit': 1,
-            'min_length_alpha': 1,
-            'min_length_special': 0,
-            'min_length_lower': 1,
-            'min_length_upper': 1,
-            'special_characters': ""
-        }
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    #     'OPTIONS': {
+    #         'min_length': 12,
+    #      }
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django_password_validators.password_history.password_validation.UniquePasswordsValidator',
+    #     'OPTIONS': {
+    #              # How many recently entered passwords matter.
+    #              # Passwords out of range are deleted.
+    #              # Default: 0 - All passwords entered by the user. All password hashes are stored.
+    #         'last_passwords': 5 # Only the last 5 passwords entered by the user
+    #     }
+    # },
+    # {
+    #     'NAME': 'django_password_validators.password_character_requirements.password_validation.PasswordCharacterValidator',
+    #     'OPTIONS': {
+    #         'min_length_digit': 1,
+    #         'min_length_alpha': 1,
+    #         'min_length_special': 0,
+    #         'min_length_lower': 1,
+    #         'min_length_upper': 1,
+    #         'special_characters': ""
+    #     }
+    # },
 ]
 
 ### TODO: consider using shadowd web app firewall, if there is enough power...
@@ -180,11 +174,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), STATIC_URL)
 
-STATIC_ROOT = str(os.getenv("STATIC_BASE_ROOT")) + '/' + STATIC_URL
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), 'media/')
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), MEDIA_URL)
 
 CONTENT_TYPES = ['image', 'video']
 # 2.5MB - 2621440
@@ -217,6 +210,8 @@ IMAGE_UPLOAD_PATH = '/uploads/users/'
 def verified_callback(user):
     user.is_active = True
 
+if DEBUG is True:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_VERIFIED_CALLBACK = verified_callback
 EMAIL_ACTIVE_FIELD = 'is_active'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -234,8 +229,8 @@ EMAIL_USE_TLS = True
 CUSTOM_SALT = os.getenv("CUSTOM_SALT")
 
 ## RECAPTCHA SETTINGS
-RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
-RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
+RECAPTCHA_PUBLIC_KEY = 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
+RECAPTCHA_PRIVATE_KEY = 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
 
 # SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
@@ -316,7 +311,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
         },
@@ -324,7 +319,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['file'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True,
        },
     },

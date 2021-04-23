@@ -70,7 +70,7 @@ done
 
 if [[ code_remove -eq 1 ]]
 then
-	rm -rf /opt/${PROJECT_NAME}/*
+	rm -rf ${CODE_PATH}
 fi
 
 echo -e "remove podman images (choose a number)?"
@@ -83,10 +83,10 @@ done
 
 if [[ imgs_remove -eq 1 ]]
 then
-        podman rmi python:django
+    podman rmi python:django
 	podman rmi python:latest
 	podman rmi swag:latest
-        podman rmi duckdns:latest
+    podman rmi duckdns:latest
 	podman rmi memcached:latest
 	podman rmi elasticsearch:7.11.2
 	podman rmi docker-clamav:latest
@@ -96,6 +96,7 @@ fi
 rm .env
 rm swag/default
 rm settings/gunicorn.conf.py
+rm settings/settings.py
 rm settings/settings_env
 rm dockerfiles/dockerfile_django
 
