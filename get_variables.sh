@@ -28,7 +28,12 @@ swag_host_log_dir=${shld:-${HOME}/${project_name}/swag_logs}
 host_static_dir=/etc/opt/${project_name}/static_files/
 secret_key=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
 read -p "Duckdns token : " duckdns_token
-read -p "Duckdns domain : " duckdns_domain
+if [[ ${DEBUG} == "True" ]]
+then
+    duckdns_domain="127.0.0.1:8000"
+else
+    read -p "Duckdns domain : " duckdns_domain
+fi
 read -p "Your top level domain that points at your duckdns domain : " tld_domain
 db_name=${project_name}_db
 read -p "Your django database name [${db_name}] : " dbn

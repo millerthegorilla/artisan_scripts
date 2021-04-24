@@ -19,7 +19,6 @@ while read -t 0.01; do :; done
 
 podman exec -it ${MARIA_CONT_NAME} bash -c "mysql_secure_installation"
 
-while read -t 0.01; do :; done
 echo -e "\n\n"
 
 echo -e "\nSo I'm going to configure the database for your webapp - please enter the database root password."

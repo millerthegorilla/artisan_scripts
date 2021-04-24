@@ -24,6 +24,10 @@ else
 	podman run -d -it --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}
 fi
 
+podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "mkdir -p /opt/${PROJECT_NAME}; mkdir -p /var/log/${PROJECT_NAME}; mkdir -p /etc/opt/${PROJECT_NAME}/settings; mkdir -p /etc/opt/${PROJECT_NAME}/static_files;"
+
+podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c 'echo -e export PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" >> /root/.bashrc'
+
 echo -e "\n"
 
 read -p "Enter the name of the django project ie the folder in which wsgi.py resides [${PROJECT_NAME}] : " django_proj_name
@@ -43,9 +47,7 @@ podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "chmo
 cp ${SCRIPTS_ROOT}/settings/gunicorn.conf.py /etc/opt/${PROJECT_NAME}/settings/
 cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/
 
-# podman exec -d ${DJANGO_CONT_NAME} bash -c "mkdir -p /var/log/${PROJECT_NAME}/gunicorn"
-
-podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "cd /opt/${PROJECT_NAME}/; python manage.py collectstatic; python manage.py migrate; python manage.py createcachetable;"
+podman exec -e PROJECT_NAME=${PROJECT_NAME} -di ${DJANGO_CONT_NAME} bash -c "cd /opt/${PROJECT_NAME}/ && python manage.py collectstatic && python manage.py migrate && python manage.py createcachetable;"
 
 # copy media files to media_root
 podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "cp -ar /opt/${PROJECT_NAME}/media /etc/opt/${PROJECT_NAME}/static_files/media;"

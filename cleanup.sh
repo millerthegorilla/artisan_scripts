@@ -70,7 +70,21 @@ done
 
 if [[ code_remove -eq 1 ]]
 then
-	rm -rf ${CODE_PATH}
+    echo -e "**** WARNING ****\n"
+    echo -e "This will irretrievably remove your django code.\n"
+    echo -e "Make sure you have run git commit!\n"
+    echo -e "Are you certain you want to remove code??"
+
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) code_remove=1; break;;
+            No ) code_remove=0; break;;
+        esac
+    done
+    if [[ code_remove -eq 1 ]]
+    then
+	   rm -rf ${CODE_PATH}
+    fi
 fi
 
 echo -e "remove podman images (choose a number)?"
@@ -98,7 +112,6 @@ rm swag/default
 rm settings/gunicorn.conf.py
 rm settings/settings.py
 rm settings/settings_env
-rm dockerfiles/dockerfile_django
 
 echo -e "remove logs or save logs and remove logs dir (choose a number)?"
 select yn in "Yes" "No" "Save"; do
