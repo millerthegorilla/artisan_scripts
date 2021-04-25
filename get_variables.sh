@@ -5,6 +5,13 @@ set -a
 project_name=${PROJECT_NAME}
 echo -e "Enter your....\n"
 read -p "Site name as used in the website header/logo : " site_name
+if [[ ${DEBUG} == "TRUE" ]]
+then
+	echo -e "\n*************************************************************************************************"
+	echo -e " Since this is a development install you can safely press enter through the rest of the questions."
+	echo -e " But you will need to complete the mysql_secure_installation questions and following..."
+	echo -e "*************************************************************************************************"
+fi
 pod_name=${project_name}_pod
 read -p "Pod name [${pod_name}] : " pname
 pod_name=${pname:-${pod_name}}
@@ -28,12 +35,7 @@ swag_host_log_dir=${shld:-${HOME}/${project_name}/swag_logs}
 host_static_dir=/etc/opt/${project_name}/static_files/
 secret_key=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
 read -p "Duckdns token : " duckdns_token
-if [[ ${DEBUG} == "True" ]]
-then
-    duckdns_domain="127.0.0.1:8000"
-else
-    read -p "Duckdns domain : " duckdns_domain
-fi
+read -p "Duckdns domain : " duckdns_domain
 read -p "Your top level domain that points at your duckdns domain : " tld_domain
 db_name=${project_name}_db
 read -p "Your django database name [${db_name}] : " dbn

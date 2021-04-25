@@ -190,4 +190,4 @@ then
 fi
 
 echo -e "You will need to remove the following directory as sudo user"
-echo -e "/etc/opt/${PROJECT_NAME}.  Watch out for trailing slashes - you might not want to deletet the django_artisan code just yet!" 
+echo -e "/etc/opt/${PROJECT_NAME}.  Watch out for trailing slashes - you might not want to delete the django_artisan code just yet!" 

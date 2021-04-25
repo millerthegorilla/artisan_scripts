@@ -210,22 +210,23 @@ IMAGE_UPLOAD_PATH = '/uploads/users/'
 def verified_callback(user):
     user.is_active = True
 
-if DEBUG is True:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_VERIFIED_CALLBACK = verified_callback
 EMAIL_ACTIVE_FIELD = 'is_active'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv("EMAIL_APP_ADDRESS")
-EMAIL_FROM_ADDRESS = os.getenv("EMAIL_FROM_ADDRESS")
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+EMAIL_HOST_USER = "development@django_artisan.com"
+# os.getenv("EMAIL_APP_ADDRESS")
+EMAIL_FROM_ADDRESS = "noreply@django_artisan.com"
+# os.getenv("EMAIL_FROM_ADDRESS")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_APP_KEY")
 EMAIL_MAIL_SUBJECT = 'Confirm your email'
 EMAIL_MAIL_HTML = 'emails/mail_body.html'
 EMAIL_MAIL_PLAIN = 'emails/mail_body.txt'
 EMAIL_PAGE_TEMPLATE = 'registration/confirm.html'
-EMAIL_PAGE_DOMAIN = os.getenv("DUCKDNS_DOMAIN")
+EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000'
 EMAIL_TOKEN_LIFE = 60 * 60 * 24
-EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = True
 CUSTOM_SALT = os.getenv("CUSTOM_SALT")
 
 ## RECAPTCHA SETTINGS

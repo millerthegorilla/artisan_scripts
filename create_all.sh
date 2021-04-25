@@ -80,12 +80,10 @@ echo CODE_PATH=${CODE_PATH} >> .archive
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-   podman pod create --name $POD_NAME -p 8000:8000
+   podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000
 else
-   podman pod create --name $POD_NAME -p $PORT1_DESCRIPTION -p $PORT2_DESCRIPTION
+   podman pod create --name ${POD_NAME} -p ${PORT1_DESCRIPTION} -p ${PORT2_DESCRIPTION} # --dns-search=${POD_NAME} --dns-opt=timeout:30 --dns-opt=attempts:5
 fi
-
-./scripts/run_maria_cont.sh
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
@@ -95,6 +93,7 @@ fi
 ./scripts/run_clamd_cont.sh
 ./scripts/run_memcached_cont.sh
 ./scripts/run_elastic_search_cont.sh
+./scripts/run_maria_cont.sh
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
