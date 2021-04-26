@@ -1,3 +1,5 @@
+.proj
+.archive
 .env
 */.env
 */**/.env
