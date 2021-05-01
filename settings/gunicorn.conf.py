@@ -1,6 +1,6 @@
 wsgi_app='ceramic_isles.wsgi:application'
-accesslog='/var/log/ceramic_isles/gunicorn/access.log'
-errorlog='/var/log/ceramic_isles/gunicorn/error.log'
+accesslog='/var/log/ceramic_isles_dev/gunicorn/access.log'
+errorlog='/var/log/ceramic_isles_dev/gunicorn/error.log'
 loglevel='info'
 capture_output=True
 sendfile=True

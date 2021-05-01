@@ -30,5 +30,4 @@ six==1.15.0
 sorl-thumbnail==12.7.0
 sqlparse==0.4.1
 urllib3==1.26.4
-Wand==0.6.6
 webencodings==0.5.1

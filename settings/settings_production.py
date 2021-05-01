@@ -210,8 +210,6 @@ IMAGE_UPLOAD_PATH = '/uploads/users/'
 def verified_callback(user):
     user.is_active = True
 
-if DEBUG is True:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_VERIFIED_CALLBACK = verified_callback
 EMAIL_ACTIVE_FIELD = 'is_active'
 EMAIL_HOST = 'smtp.gmail.com'
