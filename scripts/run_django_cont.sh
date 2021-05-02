@@ -28,16 +28,6 @@ podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "mkdi
 
 podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c 'echo -e export PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" >> /root/.bashrc'
 
-echo -e "\n"
-
-read -p "Enter the name of the django project ie the folder in which wsgi.py resides [${PROJECT_NAME}] : " django_proj_name
-
-set -a
-DJANGO_PROJECT_NAME=${django_proj_name:-${PROJECT_NAME}}
-set +a
-
-cat ${SCRIPTS_ROOT}/templates/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
-
 podman cp ${SCRIPTS_ROOT}/settings/settings_env ${DJANGO_CONT_NAME}:/etc/opt/${PROJECT_NAME}/settings/.env
 
 rm ${SCRIPTS_ROOT}/settings/settings_env

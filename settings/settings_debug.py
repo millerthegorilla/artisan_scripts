@@ -74,7 +74,8 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 
-ROOT_URLCONF = "{}.urls".format(os.getenv("PROJECT_NAME"))
+ROOT_URLCONF = "{}.urls".format(os.getenv("DJANGO_PROJECT_NAME"))
+
 TEMPLATE_DIR = 'templates/'
 TEMPLATES = [
     {
@@ -110,9 +111,12 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': str(os.getenv("MEMCACHED_ADDRESS")),
+     "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 
@@ -315,6 +319,10 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
         },
     },
     'loggers': {

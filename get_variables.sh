@@ -3,13 +3,18 @@ echo -e "The following questions are to fill out the env files that are called u
 
 set -a
 project_name=${PROJECT_NAME}
+echo -e "\n"
+
+read -p "Enter the name of the django project ie the folder in which wsgi.py resides [${PROJECT_NAME}] : " django_project_name
+django_project_name=${django_project_name:-${PROJECT_NAME}}
+
 echo -e "Enter your....\n"
 read -p "Site name as used in the website header/logo : " site_name
 if [[ ${DEBUG} == "TRUE" ]]
 then
 	echo -e "\n*************************************************************************************************"
 	echo -e " Since this is a development install you can safely press enter through the rest of the questions."
-	echo -e " But you will need to complete the mysql_secure_installation questions and following..."
+	echo -e " But you will need to complete the mysql_secure_installation that follow the google recaptcha questions."
 	echo -e "*************************************************************************************************"
 fi
 pod_name=${project_name}_pod
@@ -85,13 +90,16 @@ echo -e "# https://developers.google.com/recaptcha/intro "
 echo -e "#*****************************************************"
 read -p "Google Recaptcha public key : " recaptcha_public
 read -p "Google Recaptcha private key : " recaptcha_private
-recaptcha_public = "${recaptcha_public}"
-recaptcha_private = "${recaptcha_private}"
+recaptcha_public="${recaptcha_public}"
+recaptcha_private="${recaptcha_private}"
 set +a
 
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
 cat ${SCRIPTS_ROOT}/templates/archive | envsubst > ${SCRIPTS_ROOT}/.archive
+cat ${SCRIPTS_ROOT}/templates/manage.py | envsubst > ${CODE_PATH}/manage.py
+cat ${SCRIPTS_ROOT}/templates/wsgi.py | envsubst > ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+cat ${SCRIPTS_ROOT}/templates/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
 
 unset site_name
 unset pod_name

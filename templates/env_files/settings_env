@@ -5,6 +5,8 @@
 ###
 PROJECT_NAME=${project_name}
 # this is asked for several times also during scripts running
+DJANGO_PROJECT_NAME=${django_project_name}
+# this is the root urlconf in settings.py
 BASE_DIR=${base_dir}
 # this is the dir where the django_artisan code resides, ie /opt/${PROJECT_NAME}
 SECRET_KEY=${secret_key}

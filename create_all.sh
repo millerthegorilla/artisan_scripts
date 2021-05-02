@@ -91,7 +91,7 @@ then
 fi
 
 ./scripts/run_clamd_cont.sh
-./scripts/run_memcached_cont.sh
+./scripts/run_redis_cont.sh
 ./scripts/run_elastic_search_cont.sh
 ./scripts/run_maria_cont.sh
 

@@ -13,10 +13,10 @@ if [[ ! $? -eq 0 ]]
 then
         podman pull docker.io/library/mariadb:10.5.9 &
 fi
-podman image exists memcached:1.6.9
+podman image exists redis:6.2.2-buster
 if [[ ! $? -eq 0 ]]
 then
-        podman pull docker.io/library/memcached:1.6.9 &
+        podman pull docker.io/library/redis:6.2.2-buster &
 fi
 podman image exists docker-clamav:latest
 if [[ ! $? -eq 0 ]]
