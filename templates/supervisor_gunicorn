@@ -1,0 +1,6 @@
+[program:gunicorn]
+command=/usr/local/bin/gunicorn -c /etc/opt/${project_name}/settings/gunicorn.conf.py ${django_project_name}.wsgi:application &
+numprocs=1
+stdout_logfile=/dev/fd/1
+stdout_logfile_maxbytes=0
+environment=PYTHONPATH=/etc/opt/ceramic_isles_staging/settings/:/opt/ceramic_isles_staging/

@@ -1,0 +1,18 @@
+
+[Unit]
+Description=Gunicorn start service
+Documentation=http://github.com/millerthegorilla/artisan_scripts
+Wants=network.target
+After=network-online.target
+BindsTo=${django_service}
+After=${django_service}
+
+[Service]
+Restart=on-failure
+TimeoutStopSec=70
+ExecStart=/usr/bin/podman exec -dit ${django_cont_name} bash -c "supervisord"
+ExecStop=/usr/bin/podman exec -dit ${django_cont_name} bash -c "supervisorctl stop gunicorn"
+ExecStopPost=/usr/bin/podman exec -dit ${django_cont_name} bash -c "supervisorctl stop gunicorn"
+
+[Install]
+WantedBy=multi-user.target default.target
