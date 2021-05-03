@@ -21,7 +21,7 @@ then
 	podman start ${DJANGO_CONT_NAME};
 else
 	echo ${DJANGO_CONT_NAME} DOESN\'T EXIST, creating....;
-	podman run -d -it --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}
+	podman run -d -it --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE} > ${SCRIPTS_ROOT}/systemd/.django_container_id
 fi
 
 podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "mkdir -p /opt/${PROJECT_NAME}; mkdir -p /var/log/${PROJECT_NAME}; mkdir -p /etc/opt/${PROJECT_NAME}/settings; mkdir -p /etc/opt/${PROJECT_NAME}/static_files;"
@@ -41,9 +41,11 @@ podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NA
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-	podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "cd /opt/${PROJECT_NAME} && python manage.py runserver 0.0.0.0:8000"
+	podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "cd /opt/${PROJECT_NAME} && python manage.py runserver 0.0.0.0:8000" &
 else
     # copy media files to media_root
 	podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "cp -ar /opt/${PROJECT_NAME}/media /etc/opt/${PROJECT_NAME}/static_files/media;"
-    podman exec -e PROJECT_NAME=${PROJECT_NAME} -d  ${DJANGO_CONT_NAME} bash -c "gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py ${DJANGO_PROJECT_NAME}.wsgi:application &"
+	podman cp ${SCRIPTS_ROOT}/settings/supervisor_gunicorn ${DJANGO_CONT_NAME}:/etc/supervisor/conf.d/gunicorn_supervisord.conf
+    podman exec -d ${DJANGO_CONT_NAME} bash -c "supervisord"
+    #podman exec -e PROJECT_NAME=${PROJECT_NAME} -d  ${DJANGO_CONT_NAME} bash -c "gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py ${DJANGO_PROJECT_NAME}.wsgi:application &"
 fi

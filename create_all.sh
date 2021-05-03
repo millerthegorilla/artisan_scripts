@@ -99,6 +99,17 @@ if [[ ${DEBUG} == "FALSE" ]]
 then
    ./scripts/run_swag_cont.sh
 fi
+
 ./scripts/run_django_cont.sh
 
+## systemd generate files
+cd ${SCRIPTS_ROOT}/systemd/
+podman generate systemd --files ${POD_NAME}
+set -a
+ django_service=$(cat .django_container_id)
+ django_cont_name=$DJANGO_CONT_NAME
+set +a
+cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > gunicorn_start.service 
+
+echo -e "Now run the script systemd_init.sh as root to install and enable the systemd unit files"
 rm .env

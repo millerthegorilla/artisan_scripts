@@ -15,7 +15,6 @@ then
     read -p "Enter project name " PROJECT_NAME
 fi
 
-
 echo -e "save settings/.env to ./settings_env_old (choose a number)?"
 
 select yn in "Yes" "No"; do
@@ -30,9 +29,8 @@ then
         cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
 fi
 
-rm -rf /etc/opt/${PROJECT_NAME}/settings/*
-rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
-rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
+podman pod exists ${POD_NAME};
+retval=$?
 
 podman pod exists ${POD_NAME};
 retval=$?
@@ -58,6 +56,10 @@ else
 	podman pod stop ${POD_NAME}
 	podman pod rm ${POD_NAME}
 fi
+
+rm -rf /etc/opt/${PROJECT_NAME}/settings/*
+rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
+rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
 
 echo -e "remove code (choose a number)?"
 
@@ -189,5 +191,6 @@ then
     rm ./.proj
 fi
 
-echo -e "You will need to remove the following directory as sudo user"
-echo -e "/etc/opt/${PROJECT_NAME}.  Watch out for trailing slashes - you might not want to delete the django_artisan code just yet!" 
+echo -e "You will need to remove the following directory as sudo user:"
+echo -e "/etc/opt/${PROJECT_NAME}."
+echo -e "And you will want to run the script systemd_remove.sh as sudo user."

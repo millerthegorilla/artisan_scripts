@@ -98,8 +98,9 @@ cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
 cat ${SCRIPTS_ROOT}/templates/archive | envsubst > ${SCRIPTS_ROOT}/.archive
 cat ${SCRIPTS_ROOT}/templates/manage.py | envsubst > ${CODE_PATH}/manage.py
-cat ${SCRIPTS_ROOT}/templates/wsgi.py | envsubst > ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+cat ${SCRIPTS_ROOT}/templates/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
 cat ${SCRIPTS_ROOT}/templates/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
+cat ${SCRIPTS_ROOT}/templates/supervisor_gunicorn | envsubst > ${SCRIPTS_ROOT}/settings/supervisor_gunicorn
 
 unset site_name
 unset pod_name
