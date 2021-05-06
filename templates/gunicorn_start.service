@@ -4,13 +4,13 @@ Description=Gunicorn start service
 Documentation=http://github.com/millerthegorilla/artisan_scripts
 Wants=network.target
 After=network-online.target
-BindsTo=${django_service}
-After=${django_service}
+BindsTo=container-${django_service}.service
+After=container-${django_service}.service
 
 [Service]
 Restart=on-failure
 TimeoutStopSec=70
-ExecStart=/usr/bin/podman exec -dit ${django_cont_name} bash -c "supervisord"
+ExecStart=/usr/bin/podman exec -dit $(django_cont_name) bash -c "if [ $(ps -A |grep supervisord &>/dev/null; echo $?) -eq 1 ];then supervisord -c /etc/supervisor/supervisord.conf; else supervisorctl start gunicorn; fi"
 ExecStop=/usr/bin/podman exec -dit ${django_cont_name} bash -c "supervisorctl stop gunicorn"
 ExecStopPost=/usr/bin/podman exec -dit ${django_cont_name} bash -c "supervisorctl stop gunicorn"
 

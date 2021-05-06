@@ -68,7 +68,7 @@ PROJECT_NAME=${project_name}
 SCRIPTS_ROOT=${PWD}
 set +a
 
-./get_variables.sh
+./scripts/get_variables.sh
 
 set -a
 source .env
@@ -87,29 +87,53 @@ fi
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
-   ./scripts/run_duckdns_cont.sh
+   ./container_scripts/run_duckdns_cont.sh
 fi
 
-./scripts/run_clamd_cont.sh
-./scripts/run_redis_cont.sh
-./scripts/run_elastic_search_cont.sh
-./scripts/run_maria_cont.sh
+./container_scripts/run_clamd_cont.sh
+./container_scripts/run_redis_cont.sh
+./container_scripts/run_elastic_search_cont.sh
+./container_scripts/run_maria_cont.sh
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
-   ./scripts/run_swag_cont.sh
+   ./container_scripts/run_swag_cont.sh
 fi
 
-./scripts/run_django_cont.sh
+./container_scripts/run_django_cont.sh
 
 ## systemd generate files
-cd ${SCRIPTS_ROOT}/systemd/
-podman generate systemd --files ${POD_NAME}
-set -a
- django_service=$(cat .django_container_id)
- django_cont_name=$DJANGO_CONT_NAME
-set +a
-cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > gunicorn_start.service 
 
-echo -e "Now run the script systemd_init.sh as root to install and enable the systemd unit files"
+echo -e "Generate and install systemd --user unit files? : "
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) SYSD="TRUE"; break;;
+        No ) SYSD="FALSE"; break;;
+    esac
+done
+
+if [[ ${SYSD} == "TRUE" ]]
+then
+    cd ${SCRIPTS_ROOT}/systemd/
+    podman generate systemd --files ${POD_NAME}
+    set -a
+     django_service=$(cat .django_container_id)
+     django_cont_name=$DJANGO_CONT_NAME
+    set +a
+    cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
+    cp -a  ./systemd/* ${HOME}/.config/systemd/user/
+
+    cd ${SCRIPTS_ROOT}/systemd
+    FILES=*
+    for f in ${FILES}
+    do
+      if [[ -e /etc/systemd/system/${f} ]]
+      then
+          chcon -t systemd_unit_file_t /etc/systemd/system/${f}
+      fi
+    done
+
+    systemctl --user enable $(ls -p . | grep -v / | tr '\n' ' ')
+fi
+
 rm .env

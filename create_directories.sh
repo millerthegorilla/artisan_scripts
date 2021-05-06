@@ -61,4 +61,5 @@ fi
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 echo "PROJECT_NAME=${PROJECT_NAME}" > ${SCRIPTPATH}/.proj
 echo "CODE_PATH=${CODE_PATH}" >> ${SCRIPTPATH}/.proj
+echo "USER=${USER}" >> ${SCRIPTPATH}/.proj
 chown ${USER}:${USER} ${SCRIPTPATH}/.proj

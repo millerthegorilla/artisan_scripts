@@ -115,6 +115,18 @@ rm settings/gunicorn.conf.py
 rm settings/settings.py
 rm settings/settings_env
 
+if [[ ! -n "$CODE_PATH" ]]
+then
+    read -p "enter path to code (where manage.py resides) : " CODE_PATH
+fi
+if [[ ! -n "$DJANGO_PROJECT_NAME" ]]
+then
+    read -p "enter the name of the django project folder (where wsgi.py resides) : " DJANGO_PROJECT_NAME
+fi
+
+rm ${CODE_PATH}/manage.py
+rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+
 echo -e "remove logs or save logs and remove logs dir (choose a number)?"
 select yn in "Yes" "No" "Save"; do
     case $yn in
@@ -182,15 +194,38 @@ then
      fi
 fi
 
+echo -e "Uninstall and remove systemd --user unit files? : "
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) SYSD="TRUE"; break;;
+        No ) SYSD="FALSE"; break;;
+    esac
+done
+
+if [[ ${SYSD} == "TRUE" ]]
+then
+    cd ./systemd
+    systemctl --user disable $(ls -p . | grep -v / | tr '\n' ' ')
+    cd ../
+    rm -rf ./systemd 
+    mkdir systemd
+    touch ./systemd/.gitignore
+fi
+
+
+echo -e "You will need to remove the following directory as sudo user:"
+echo -e "/etc/opt/${PROJECT_NAME}."
+if [[ -n ${DEBUG} && ${DEBUG}=="FAlSE" ]]
+then
+    echo -e "{HOME}/${PROJECT_NAME}/"
+fi
+
 if [[ -f "./.archive" ]]
 then
     rm ./.archive
 fi
+
 if [[ -f "./.proj" ]]
 then
     rm ./.proj
 fi
-
-echo -e "You will need to remove the following directory as sudo user:"
-echo -e "/etc/opt/${PROJECT_NAME}."
-echo -e "And you will want to run the script systemd_remove.sh as sudo user."

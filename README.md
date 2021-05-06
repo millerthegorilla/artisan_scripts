@@ -1,6 +1,9 @@
 # artisan_scripts
 scripts to provision django_artisan ... https://github.com/millerthegorilla/django_artisan
 
+### license
+As poor as these scripts are, and keeping in mind I accept no responsibility for any errors or headaches they may create, they are released, like Django Artisan, under an MIT license.
+
 ### requirements...
 
 You will need the following created and ready...
@@ -18,7 +21,7 @@ These scripts are provided as is, with no support, and the author accepts nil re
 
 I have tested them on a newly installed system, in my case a raspberry pi running Fedora IOT.
 
-### Swag - nginx container
+### Swag Secure Web Application Gateway - nginx container
 
 The scripts set up containers and environment necessary to run django_artisan as an SSL enabled site.  The SSL service is provided by the LinuxServer team's SWAG image (https://hub.docker.com/r/linuxserver/swag) SWAG stands for Secure Application Gateway, apparently.  Inside the container, letsencrypt certbot runs to ggenerate SSL certificates, and is configured in this instance to provide SSL certs for a duckdns subdomain and for a single extra TLD domain.  I use duckdns subdomain to point at the nginx container, and then use a TLD domain from Namesco, to act as a redirect to the duckdns subdomain.  The site then runs on my home server, and the only cost I have is renewal of the TLD domain name, as it then gets listed in Google search etc, where the duckdns subdomain is ignored.
 
@@ -36,7 +39,7 @@ The script initial_provision.sh calls the script create_all.sh, which will do th
 
 If at any point the scripts fail or you break out of them, you can run the script cleanup.sh to remove the containers and to reset the script environment to the beginning.
 Assuming you answer no to the questions about images, code, and logs, you only need to run create_all.sh to begin the process of installation again.
-To clean up completely, run the create_all.sh, answer yes to code removal, and to image removal, and to log removal, and then, as root, delete the directories listed at the end of running the cleanup.sh script.
+To clean up completely, run the cleanup.sh, answer yes to code removal, and to image removal, and to log removal, and then, as root, delete the directories listed at the end of running the cleanup.sh script.
 
 ### directory structure 
 
@@ -62,15 +65,19 @@ If you make any changes to the code base, and need to reload the server, you can
 
 ### customising scripts
 
-If you want to add a container, or customise an existing container, you can either edit initial_provision.sh to install a new image, or customise/add a script to the scripts directory.
-The script create_all.sh shells out to a bunch of scripts in that scripts directory.  In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
+If you want to add a container, or customise an existing container, you can either edit initial_provision.sh to install a new image, or customise/add a script to the container_scripts directory.
+The script create_all.sh shells out to a bunch of scripts in that container_scripts directory.  In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
 The script get_variables.sh reads user input to get environment variables.  This then uses the envsubst command to complete a ./templates/env_files/scripts_env and ./templates/env_files/settings_env.
 The scripts_env provides environment variables to the scripts, and the settings_env is copied to the directory /etc/opt/$PROJECT_NAME/settings to be read as and when by settings.py.
 If you want to change any image tag then you will need to do so in the script ./initial_provision.sh and also the file ./templates/env_files/scripts_env.
 
 ### customising django_artisan
 
-You can customise the settings of django_artisan, by editing the file settings.py in the settings directory.  Make certain that you don't delete any of the environment variables eg anywhere that os.getenv is used, as these are completed by the script get_variables.sh.   Places to customise are the text that is displayed in the header and in the about page - NAVBAR_SPIEL and ABOUT_US_SPIEL or the SITE_LOGO for example.
+You can customise the settings of django_artisan, by editing the file settings.py in the settings directory.  Be aware that anywhere that os.getenv is used, are completed by the script ./scripts/get_variables.sh.   Places to customise are the text that is displayed in the header and in the about page - NAVBAR_SPIEL and ABOUT_US_SPIEL or the SITE_LOGO for example.
+
+### make_manage_wsgi.sh
+
+When the script create_all.sh is run (or called by initial_provision.sh) the entered project name is used to generate the files manage.py, and wsgi.py that are then copied over to the django_artisan folders.   Should you lose those files through a git pull of the django artisan code, you can recreate them using the script make_manage_wsgi.sh
 
 ### NB.
 
