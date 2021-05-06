@@ -114,6 +114,7 @@ rm swag/default
 rm settings/gunicorn.conf.py
 rm settings/settings.py
 rm settings/settings_env
+rm settings/supervisor_gunicorn
 
 if [[ ! -n "$CODE_PATH" ]]
 then
