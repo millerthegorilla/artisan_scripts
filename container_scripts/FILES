@@ -1,0 +1,5 @@
+These scripts run each container, creating it from an image and passing in varioous environment variables, mounting volumes from the host to the container, and then initialising various settings/copying in config files etc.
+
+Each script is called from the script create_all.sh in the root artisan_scripts directory, which passes in environment variables from /templates/env_files/scripts_env
+
+You can, in create_all.sh, comment out all the scripts except for the one that recreates the container that you want to adjust, and then run create_all.sh to get_variables, and create that specific container.
