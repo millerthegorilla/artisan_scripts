@@ -10,9 +10,8 @@ After=container-${django_service}.service
 [Service]
 Restart=on-failure
 TimeoutStopSec=70
-ExecStart=/usr/bin/podman exec -dit $(django_cont_name) bash -c "if [ $(ps -A |grep supervisord &>/dev/null; echo $?) -eq 1 ];then supervisord -c /etc/supervisor/supervisord.conf; else supervisorctl start gunicorn; fi"
-ExecStop=/usr/bin/podman exec -dit ${django_cont_name} bash -c "supervisorctl stop gunicorn"
-ExecStopPost=/usr/bin/podman exec -dit ${django_cont_name} bash -c "supervisorctl stop gunicorn"
+ExecStart=/usr/bin/podman exec -it ${django_cont_name} bash -c "killall5 -9 gunicorn; killall5 -9 supervisord; rm /var/run/supervisor.sock; rm /var/run/supervisord.pid; supervisord; supervisorctl start gunicorn"
+ExecStop=/usr/bin/podman exec -it ${django_cont_name} bash -c "supervisorctl stop gunicorn"
 
 [Install]
 WantedBy=multi-user.target default.target

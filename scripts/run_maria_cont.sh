@@ -25,23 +25,13 @@ done
 
 podman exec -it ${MARIA_CONT_NAME} bash -c "mysql_secure_installation"
 
-echo -e "\nIf the mysql_secure_installation script failed and you didn't see the message \n\n'Thanks for using MariaDB!' \n then you will need to exec into the mysql container (start it if necessary) and run the script again, before continuing."
-
 echo -e "\n\n"
 
 echo -e "\nSo I'm going to configure the database for your webapp - please enter the database root password."
 
 read -p "Db root password:" DB_ROOT_PASSWORD
 
-echo -e "Waiting for mysql to be ready.."
-until podman exec -it ${MARIA_CONT_NAME} bash -c "ls /run/mysqld/mysqld.sock" &>/dev/null;
-do
-  echo -n "."
-done
-
 podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_HOST=${DB_HOST} -e DB_PASSWORD=${DB_PASSWORD} -e DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} -it ${MARIA_CONT_NAME} bash -c "sh /maria.sh"
-
-sleep 8;
 
 podman stop ${MARIA_CONT_NAME}
 podman start ${MARIA_CONT_NAME}

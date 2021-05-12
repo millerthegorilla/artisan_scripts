@@ -2,7 +2,6 @@
 
 if [[ -n "${SWAG_HOST_LOG_DIR}" && ! -f ${SWAG_HOST_LOG_DIR} ]]
 then
-    echo "WAHEY"
     mkdir -p ${SWAG_HOST_LOG_DIR}
 fi
 

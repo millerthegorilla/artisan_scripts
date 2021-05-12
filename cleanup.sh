@@ -195,30 +195,47 @@ then
      fi
 fi
 
-echo -e "Uninstall and remove systemd --user unit files? : "
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) SYSD="TRUE"; break;;
-        No ) SYSD="FALSE"; break;;
-    esac
-done
+# echo -e "Uninstall and remove systemd --user unit files? : "
+# select yn in "Yes" "No"; do
+#     case $yn in
+#         Yes ) SYSD="TRUE"; break;;
+#         No ) SYSD="FALSE"; break;;
+#     esac
+# done
 
-if [[ ${SYSD} == "TRUE" ]]
-then
-    cd ./systemd
-    systemctl --user disable $(ls -p . | grep -v / | tr '\n' ' ')
-    cd ../
-    rm -rf ./systemd 
-    mkdir systemd
-    touch ./systemd/.gitignore
-fi
+# if [[ ${SYSD} == "TRUE" ]]
+# then
+#     cd ./systemd
+#     if [[ $(ls | wc -l) != 0 ]]
+#     then
+#         systemctl --user disable $(ls -p . | grep -v / | tr '\n' ' ')
+#     fi
+
+#     FILES=*
+#     for f in ${FILES}
+#     do
+#       if [[ -e ${HOME}/.config/systemd/user/${f} ]]
+#       then
+#           rm -rf ${HOME}/.config/systemd/user/${f}
+#       fi
+#     done
+
+#     cd ../
+#     rm -rf ./systemd 
+#     mkdir systemd
+#     touch ./systemd/.gitignore
+# fi
 
 
 echo -e "You will need to remove the following directory as sudo user:"
 echo -e "/etc/opt/${PROJECT_NAME}."
+echo -e "\nand run the script 'systemd_cleanup.sh' as sudo user."
 if [[ -n ${DEBUG} && ${DEBUG}=="FAlSE" ]]
 then
-    echo -e "{HOME}/${PROJECT_NAME}/"
+    if [[ -e ${HOME}/${PROJECT_NAME} ]]
+    then
+        echo -e "{HOME}/${PROJECT_NAME}/"
+    fi
 fi
 
 if [[ -f "./.archive" ]]

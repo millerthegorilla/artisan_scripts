@@ -114,26 +114,37 @@ done
 
 if [[ ${SYSD} == "TRUE" ]]
 then
-    cd ${SCRIPTS_ROOT}/systemd/
+    cd ${SCRIPTS_ROOT}/systemd/   ## DIRECTORY CHANGE HERE
+
     podman generate systemd --files ${POD_NAME}
     set -a
      django_service=$(cat .django_container_id)
      django_cont_name=$DJANGO_CONT_NAME
     set +a
+
+    ### TEMPLATE
     cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
-    cp -a  ./systemd/* ${HOME}/.config/systemd/user/
+    
+    echo -e "You will need to run the script 'systemd_init.sh' as sudo user."
+    # if [[ ! -e ${HOME}/.config/systemd/user ]]
+    # then
+    #     mkdir -p ${HOME}/.config/systemd/user
+    # fi
 
-    cd ${SCRIPTS_ROOT}/systemd
-    FILES=*
-    for f in ${FILES}
-    do
-      if [[ -e /etc/systemd/system/${f} ]]
-      then
-          chcon -t systemd_unit_file_t /etc/systemd/system/${f}
-      fi
-    done
+    # cp -a * ${HOME}/.config/systemd/user/
 
-    systemctl --user enable $(ls -p . | grep -v / | tr '\n' ' ')
+    # FILES=*
+    # for f in ${FILES}
+    # do
+    #   if [[ -e ${HOME}/.config/systemd/user/${f} ]]
+    #   then
+    #       chcon -t systemd_unit_file_t ${HOME}/.config/systemd/user/${f}
+    #   fi
+    # done
+
+    # systemctl --user enable $(ls -p . | grep -v / | tr '\n' ' ')
 fi
+
+cd ${SCRIPTS_ROOT}   ## DIRECTORY CHANGE HERE
 
 rm .env

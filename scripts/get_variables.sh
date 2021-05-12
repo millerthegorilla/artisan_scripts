@@ -5,8 +5,10 @@ set -a
 project_name=${PROJECT_NAME}
 echo -e "\n"
 
-read -p "Enter the name of the django project ie the folder in which wsgi.py resides [${PROJECT_NAME}] : " django_project_name
-django_project_name=${django_project_name:-${PROJECT_NAME}}
+PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
+
+read -p "Enter the name of the django project ie the folder in which wsgi.py resides [${PN}] : " django_project_name
+django_project_name=${django_project_name:-${PN}}
 
 echo -e "Enter your....\n"
 read -p "Site name as used in the website header/logo : " site_name
@@ -93,6 +95,8 @@ read -p "Google Recaptcha private key : " recaptcha_private
 recaptcha_public="${recaptcha_public}"
 recaptcha_private="${recaptcha_private}"
 set +a
+
+### TEMPLATES
 
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
