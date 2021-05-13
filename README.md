@@ -44,6 +44,10 @@ When the django_artisan code is installed, the files 'manage.py' and 'wsgi.py' a
 
 In the case of a production setup, you can reload the gunicorn instance, by using artisan_run with the reload verb.  This simply uses podman exec to shell into the django container, and runs supervisorctl reload. 
 
+### super user
+
+from time to time the scripts will prompt for your superuser (sudo) account name, and you will have to enter your password twice, once to shell into the superuser account, and the second time to run the sudo command.
+
 ### directory structure 
 
 The directory structure on the host machine is:
