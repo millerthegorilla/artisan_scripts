@@ -120,9 +120,12 @@ if [[ ! -n "$CODE_PATH" ]]
 then
     read -p "enter path to code (where manage.py resides) : " CODE_PATH
 fi
+
 if [[ ! -n "$DJANGO_PROJECT_NAME" ]]
 then
-    read -p "enter the name of the django project folder (where wsgi.py resides) : " DJANGO_PROJECT_NAME
+    PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
+    read -p "enter the name of the django project folder (where wsgi.py resides) [${PN}] : " DJANGO_PROJECT_NAME
+    DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME:-${PN}}
 fi
 
 rm ${CODE_PATH}/manage.py
@@ -137,21 +140,24 @@ select yn in "Yes" "No" "Save"; do
     esac
 done
 
-if [[ logs_remove -eq 2 ]]
-then
-    if [[ -n "$LOG_DIR" ]]
+read -p "Enter the name of your sudo user account : " SUNAME
+
+su ${SUNAME} -c "sudo -S rm -rf /etc/opt/${PROJECT_NAME}"
+
+remove_logs_dir()
+{
+    if [[ -n ${DEBUG} && ${DEBUG} == "FALSE" ]]
     then
-        if [[ -n "${PROJECT_NAME}" ]]
+        if [[ -e ${HOME}/${PROJECT_NAME} ]]
         then
-            pname="[${HOME}/${PROJECT_NAME}/logs]"
+            echo -e "removing swag logs - enter your sudo user password..."
+            su ${SUNAME} -c "sudo -S rm -rf ${HOME}/${PROJECT_NAME}/logs"
         fi
-    	read -p "absolute path to logs dir ${pname}: " ldir
+    else
+        rm -rf ${HOME}/${PROJECT_NAME}/logs
     fi
-    LOG_DIR=${ldir:-${pname}}
-    mkdir old_logs
-    mv ${LOG_DIR}/* old_logs
-    rm -rf ${LOG_DIR}
-    if [[ -n "$PROJECT_NAME" ]]
+        
+    if [[ -n "${PROJECT_NAME}" ]]
     then
         echo -e "remove ${HOME}/${PROJECT_NAME} (choose a number)?"
         select yn in "Yes" "No"; do
@@ -162,88 +168,62 @@ then
         done
         if [[ remove_home==1 ]]
         then
-            rm -rf ${HOME}/${PROJECT_NAME}
+            if [[ -n ${DEBUG} && ${DEBUG} == "FAlSE" ]]
+            then
+                if [[ -e ${HOME}/${PROJECT_NAME} ]]
+                then
+                    echo -e "removing swag logs"
+                    su ${SUNAME} -c "sudo -S rm -rf ${HOME}/${PROJECT_NAME}"
+                fi
+            else
+                rm -rf ${HOME}/${PROJECT_NAME}
+            fi
         fi
-     fi
+    fi
+}
+
+if [[ logs_remove -eq 2 ]]
+then
+    mkdir ${SCRIPTS_ROOT}/old_logs
+    mv ${HOME}/${PROJECT_NAME}/logs/* ${SCRIPTS_ROOT}/old_logs/
+    remove_logs_dir
 fi
 
 if [[ logs_remove -eq 1 ]]
 then
-    if [[ -n "$LOG_DIR" ]]
-    then
-        if [[ -n "${PROJECT_NAME}" ]]
-        then
-            pname="[${HOME}/${PROJECT_NAME}/logs]"
-        fi
-        read -p "absolute path to logs dir ${pname} : " ldir
-        LOG_DIR=${ldir:-${pname}}
-    fi 
-    rm -rf ${LOG_DIR}
-    if [[ -n "$PROJECT_NAME" ]]
-    then
-        echo -e "remove ${HOME}/${PROJECT_NAME} (choose a number)?"
-        select yn in "Yes" "No"; do
-            case $yn in
-                Yes ) remove_home=1; break;;
-                No ) remove_home=0; break;;
-            esac
-        done
-        if [[ remove_home==1 ]]
-        then
-            rm -rf ${HOME}/${PROJECT_NAME}
-        fi
-     fi
+    remove_logs_dir
 fi
 
-# echo -e "Uninstall and remove systemd --user unit files? : "
-# select yn in "Yes" "No"; do
-#     case $yn in
-#         Yes ) SYSD="TRUE"; break;;
-#         No ) SYSD="FALSE"; break;;
-#     esac
-# done
 
-# if [[ ${SYSD} == "TRUE" ]]
-# then
-#     cd ./systemd
-#     if [[ $(ls | wc -l) != 0 ]]
-#     then
-#         systemctl --user disable $(ls -p . | grep -v / | tr '\n' ' ')
-#     fi
+echo -e "Uninstall and remove systemd --user unit files? : "
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) SYSD="TRUE"; break;;
+        No ) SYSD="FALSE"; break;;
+    esac
+done
 
-#     FILES=*
-#     for f in ${FILES}
-#     do
-#       if [[ -e ${HOME}/.config/systemd/user/${f} ]]
-#       then
-#           rm -rf ${HOME}/.config/systemd/user/${f}
-#       fi
-#     done
-
-#     cd ../
-#     rm -rf ./systemd 
-#     mkdir systemd
-#     touch ./systemd/.gitignore
-# fi
-
-
-echo -e "You will need to remove the following directory as sudo user:"
-echo -e "/etc/opt/${PROJECT_NAME}."
-echo -e "\nand run the script 'systemd_cleanup.sh' as sudo user."
-if [[ -n ${DEBUG} && ${DEBUG}=="FAlSE" ]]
+if [[ ${SYSD} == "TRUE" ]]
 then
-    if [[ -e ${HOME}/${PROJECT_NAME} ]]
+    
+    if [[ $(ls ${SCRIPTS_ROOT}/systemd/ | wc -l) != 0 ]]
     then
-        echo -e "{HOME}/${PROJECT_NAME}/"
+        systemctl --user disable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')
     fi
+
+    su ${SUNAME} -c "sudo -S SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh"
+    
+    rm -rf ${SCRIPTS_ROOT}/systemd 
+    mkdir ${SCRIPTS_ROOT}/systemd
+    touch ${SCRIPTS_ROOT}/systemd/.gitignore
 fi
 
-if [[ -f "./.archive" ]]
+if [[ -f "${SCRIPTS_ROOT}/.archive" ]]
 then
-    rm ./.archive
+    rm ${SCRIPTS_ROOT}/.archive
 fi
 
-if [[ -f "./.proj" ]]
+if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
 then
-    rm ./.proj
+    rm ${SCRIPTS_ROOT}/.proj
 fi

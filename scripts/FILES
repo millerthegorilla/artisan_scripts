@@ -1,0 +1,2 @@
+The files in this directory are scripts that manage the creation or destruction and deletion of containers and the pod that holds them, as well as systemd init files.
+They are called by artisan_run.sh, depending on the verb you pass in.

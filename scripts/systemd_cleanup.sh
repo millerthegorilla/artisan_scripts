@@ -5,11 +5,13 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-cd ./systemd
-if [[ $(ls | wc -l) != 0 ]]
+if [[ -z "${SCRIPTS_ROOT}" ]]
 then
-    systemctl --user disable $(ls -p . | grep -v / | tr '\n' ' ')
+    echo "Error!  SCRIPTS_ROOT must be defined"
+    exit 1
 fi
+
+cd ${SCRIPTS_ROOT}/systemd
 
 FILES=*
 for f in ${FILES}
@@ -20,7 +22,4 @@ do
   fi
 done
 
-cd ../
-rm -rf ./systemd 
-mkdir systemd
-touch ./systemd/.gitignore
+cd ${SCRIPTS_ROOT}

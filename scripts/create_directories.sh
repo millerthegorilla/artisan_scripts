@@ -5,6 +5,12 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+if [[ -z "${SCRIPTS_ROOT}" ]]
+then
+    echo "Error!  SCRIPTS_ROOT must be defined"
+    exit 1
+fi
+
 echo -e "#******************************************************************"
 echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
 echo -e "#******************************************************************"
@@ -20,27 +26,6 @@ mkdir -p /etc/opt/${PROJECT_NAME}/settings
 mkdir -p /etc/opt/${PROJECT_NAME}/static_files
 
 mkdir -p ${USER_DIR}/${PROJECT_NAME}/logs
-
-# symlinks not working in podman
-#
-# if [[ -L /opt/${PROJECT_NAME} ]]
-# then
-#     echo "**WARNING** /opt/${PROJECT_NAME} exists already!"
-# else
-#     ln -s ${CODE_PATH} /opt/${PROJECT_NAME}
-# fi
-# if [[ -L /etc/opt/${PROJECT_NAME}/static_files/static ]]
-# then
-#     echo "**WARNING** /etc/opt/${PROJECT_NAME}/static_files/static exists!"
-# else
-#     ln -s ${CODE_PATH}/static/ /etc/opt/${PROJECT_NAME}/static_files/static
-# fi
-# if [[ -L /etc/opt/${PROJECT_NAME}/static_files/media ]]
-# then
-#     echo "**WARNING** /etc/opt/${PROJECT_NAME}/static_files/media exists!"
-# else
-#     ln -s ${CODE_PATH}/media/ /etc/opt/${PROJECT_NAME}/static_files/media
-# fi
 
 sudo chcon -R -t container_file_t ${CODE_PATH}
 
@@ -58,8 +43,7 @@ then
 	sudo sysctl --system
 fi
 
-SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-echo "PROJECT_NAME=${PROJECT_NAME}" > ${SCRIPTPATH}/.proj
-echo "CODE_PATH=${CODE_PATH}" >> ${SCRIPTPATH}/.proj
-echo "USER=${USER}" >> ${SCRIPTPATH}/.proj
-chown ${USER}:${USER} ${SCRIPTPATH}/.proj
+echo "PROJECT_NAME=${PROJECT_NAME}" > ${SCRIPTS_ROOT}/.proj
+echo "CODE_PATH=${CODE_PATH}" >> ${SCRIPTS_ROOT}/.proj
+echo "USER=${USER}" >> ${SCRIPTS_ROOT}/.proj
+chown ${USER}:${USER} ${SCRIPTS_ROOT}/.proj

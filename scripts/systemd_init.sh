@@ -5,7 +5,13 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-cd ./systemd
+if [[ -z "${SCRIPTS_ROOT}" ]]
+then
+    echo "Error!  SCRIPTS_ROOT must be defined"
+    exit 1
+fi
+
+cd ${SCRIPTS_ROOT}/systemd
 cp -a * /etc/systemd/user/
 
 FILES=*
@@ -16,7 +22,4 @@ do
       chcon -t systemd_unit_file_t /etc/systemd/user/${f}
   fi
 done
-
-echo -e "now run the following command as the standard user, from within the systemd directory - systemctl --user enable $(ls -p . | grep -v / | tr '\n' ' ')"
-
-cd ../
+cd ${SCRIPTS_ROOT}

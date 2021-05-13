@@ -29,17 +29,20 @@ The scripts set up containers and environment necessary to run django_artisan as
 
 Before running the scripts, download them into a directory in your home folder, and git clone the django_artisan code into a directory.
 
-Then, as root, run create_directories.sh.  This will create the directories necessary for the volume mounts from the containers which use them.
+Then run the script artisan_run.sh which takes one command to direct it to the correct scripts.
+The commands are 'create', 'clean', 'replace', 'reload' or 'help'.
 
-When the directories have been made, the create_directories script edits and reloads sysctl to lower the available port numbers to 80.  Be aware that this can be a ***SECURITY ISSUE***.  As long as you manage your firewall sensibly it should be ok.
+eg   $ ./artisan_run create
 
-When create_directories is finished, as a standard user, run initial_provision.sh, and this will pull the container images, and build a custom container for django.  This process can take a while.
-
-The script initial_provision.sh calls the script create_all.sh, which will do the rest of the work.  It calls the script get_variables.sh to read input to complete the settings variable to run your project.
+The create verb runs the script create_directories.sh and then checks the podman images, and downloads them and/or builds them as necessary, in the script initial_provision.sh.  Then the script 'create_all.sh' is called which creates and provisions the containers.  Depending on your options, either a development setup will be created, running manage.py on port 8000, or a production setup will be created, opening ports 443 and 80.  In any case the create_directories.sh script will edit and reload sysctl to lower the available port numbers to 80.  Be aware that this can be a ***SECURITY ISSUE***.  As long as you manage your firewall sensibly it should be ok.
 
 If at any point the scripts fail or you break out of them, you can run the script cleanup.sh to remove the containers and to reset the script environment to the beginning.
-Assuming you answer no to the questions about images, code, and logs, you only need to run create_all.sh to begin the process of installation again.
-To clean up completely, run the cleanup.sh, answer yes to code removal, and to image removal, and to log removal, and then, as root, delete the directories listed at the end of running the cleanup.sh script.
+
+To clean up completely, run the cleanup.sh, answer yes to code removal, and to image removal, and to log removal.
+
+When the django_artisan code is installed, the files 'manage.py' and 'wsgi.py' are not present.  They are created by running these artisan_scripts.  If you lose the 'manage.py' and/or 'wsgi.py' files then you can recreate them by running artisan_run with the replace verb.
+
+In the case of a production setup, you can reload the gunicorn instance, by using artisan_run with the reload verb.  This simply uses podman exec to shell into the django container, and runs supervisorctl reload. 
 
 ### directory structure 
 
@@ -57,11 +60,11 @@ The directory structure on the host machine is:
 
 ### firewall and router...
 
-When the scripts have finished running, you will need to open your firewall ports 80 and 443, and make sure that your router firewall is forwarding those two ports to your machine's ip address.
+In the case of a production setup, when the scripts have finished running, you will need to open your firewall ports 80 and 443, and make sure that your router firewall is forwarding those two ports to your machine's ip address.
 
 ### server reload...
 
-If you make any changes to the code base, and need to reload the server, you can run the script 'reload.sh'.  This will kill the gunicorn process and run it from fresh and then start and stop the swag container to reload nginx.
+In the case of a production setup, if you make any changes to the code base, and need to reload the server, you can run the script 'reload.sh'.  This will call supervisorctl to reload the gunicorn process and then start and stop the swag container to reload nginx.
 
 ### customising scripts
 

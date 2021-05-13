@@ -5,9 +5,9 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-if [[ -e .archive ]]
+if [[ -e ${SCRIPTS_ROOT}/.archive ]]
 then
-	source .archive
+    source ${SCRIPTS_ROOT}/.archive
 fi
 
 if [[ ! -n ${PROJECT_NAME} ]]
