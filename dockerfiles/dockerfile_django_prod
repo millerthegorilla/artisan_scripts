@@ -1,0 +1,9 @@
+# build command is: podman build --tag='python:django' -f='dockerfile_django'
+FROM docker.io/library/python
+ENV DJANGO_SETTINGS_MODULE=settings
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y supervisor libmagic1 libmagickwand-dev libjpeg62-turbo-dev zlib1g-dev python3-pil python3-pil.imagetk
+RUN rm -rf /var/lib/apt/lists/*
+COPY ./pip_requirements_prod /tmp/pip_requirements
+RUN python -m pip install --upgrade pip && pip install --no-cache-dir -r /tmp/pip_requirements
+RUN rm -r /tmp/pip_requirements

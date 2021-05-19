@@ -29,7 +29,7 @@ if [[ $? -ne 0 ]]
 then
 	echo -e "\n\n************************* WARNING **************************"
 	echo -e "\nIt looks like the mysql_secure_installation script failed ie you didn't see the message \n\n'Thanks for using MariaDB!' \n so you will need to exec into the mysql container (start it if necessary) and run the script mysql_secure_installation again, before continuing.\n"
-	read -p "Press enter to continue" buttox
+	read -p "Press enter to continue" buttoxx
 	echo -e "\n\n"
 
 fi

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 set -a
 SCRIPTS_ROOT=${SCRIPTS_ROOT}
 set +a
@@ -50,10 +48,27 @@ fi
 
 wait
 
+echo -e "\nIs this development ie debug? : "
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) DEBUG="TRUE"; break;;
+        No ) DEBUG="FALSE"; break;;
+    esac
+done
+
+set -a
+DEBUG=${DEBUG}
+set +a
+
 podman image exists python:django
 if [[ ! $? -eq 0 ]]
-then  
-    podman build --tag='python:django' -f='./dockerfiles/dockerfile_django'
+then
+    if [[ ${DEBUG} == "TRUE" ]]
+    then  
+        podman build --tag='python:django' -f='./dockerfiles/dockerfile_django_dev'
+    else
+        podman build --tag='python:django' -f='./dockerfiles/dockerfile_django_prod'
+    fi
 fi
 
 echo -e "\nI will now create and provision the containers."

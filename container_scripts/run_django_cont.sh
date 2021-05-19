@@ -41,7 +41,7 @@ podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NA
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-	podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "cd /opt/${PROJECT_NAME} && python manage.py runserver 0.0.0.0:8000" &
+	${TERMINAL_CMD} podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "cd /opt/${PROJECT_NAME} && python manage.py runserver 0.0.0.0:8000"
 else
     # copy media files to media_root
 	podman exec -e PROJECT_NAME=${PROJECT_NAME} -d ${DJANGO_CONT_NAME} bash -c "cp -ar /opt/${PROJECT_NAME}/media /etc/opt/${PROJECT_NAME}/static_files/media;"

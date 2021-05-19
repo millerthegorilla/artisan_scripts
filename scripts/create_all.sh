@@ -18,13 +18,16 @@
 #     esac
 # done
 
-echo -e "\nIs this development ie debug? : "
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) DEBUG="TRUE"; break;;
-        No ) DEBUG="FALSE"; break;;
-    esac
-done
+if [[ -z "${DEBUG}" ]]
+then
+    echo -e "\nIs this development ie debug? : "
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) DEBUG="TRUE"; break;;
+            No ) DEBUG="FALSE"; break;;
+        esac
+    done
+fi
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
@@ -119,15 +122,21 @@ then
     podman generate systemd --files ${POD_NAME}
     set -a
      django_service=$(cat .django_container_id)
-     django_cont_name=$DJANGO_CONT_NAME
+     django_cont_name=${DJANGO_CONT_NAME}
+     project_name=${PROJECT_NAME}
+     terminal_cmd=${TERMINAL_CMD}
     set +a
 
-    ### TEMPLATE
-    cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
-    
+    ## TEMPLATE
+    if [[ ${DEBUG} == "TRUE" ]]
+    then
+        cat ${SCRIPTS_ROOT}/templates/manage_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/manage_start.service 
+    else
+        cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
+    fi
+
     read -p "Enter the name of your sudo user account : " SUNAME
     
-    echo -e "I am here $(pwd)"
     su ${SUNAME} -c "sudo -S SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
 
     systemctl --user enable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')

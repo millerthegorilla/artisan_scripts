@@ -4,6 +4,7 @@ PARAMS=""
 
 set -a
 SCRIPTS_ROOT=$(pwd)
+source ${SCRIPTS_ROOT}/options
 set +a
 
 while (( "$#" )); do

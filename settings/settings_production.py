@@ -162,6 +162,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ### TODO: consider using shadowd web app firewall, if there is enough power...
 
+# primary key
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 

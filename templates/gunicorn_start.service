@@ -1,7 +1,7 @@
 
 [Unit]
 Description=Gunicorn start service
-Documentation=http://github.com/millerthegorilla/artisan_scripts
+Documentation=https://github.com/millerthegorilla/artisan_scripts
 Wants=network.target
 After=network-online.target
 BindsTo=container-${django_service}.service

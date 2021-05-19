@@ -70,9 +70,6 @@ MIDDLEWARE = [
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_BROWSER_XSS_FILTER = True
 
 ROOT_URLCONF = "{}.urls".format(os.getenv("DJANGO_PROJECT_NAME"))
 
@@ -174,6 +171,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# primary key
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
