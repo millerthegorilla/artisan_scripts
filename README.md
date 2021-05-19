@@ -46,7 +46,12 @@ In the case of a production setup, you can reload the gunicorn instance, by usin
 
 ### super user
 
-from time to time the scripts will prompt for your superuser (sudo) account name, and you will have to enter your password twice, once to shell into the superuser account, and the second time to run the sudo command.
+From time to time the scripts will prompt for your superuser (sudo) account name, and you will have to enter your password twice, once to shell into the superuser account, and the second time to run the sudo command.
+
+### options
+
+There is a file in the root directory called 'options'.  It currently only has one line which is the command to run a terminal.  I am using Gnome 3, so the TERMINAL_CMD is set to 'gnome-terminal --'.   If you are using xterm, then you will want to edit the file and change TERMINAL_CMD to 'xterm -e' etc etc.
+The TERMINAL_CMD is used to spawn a terminal in the case of using a development install.  In this case when you start your machine, or more likely VM, then as soon as you login a terminal will spawn running the manage.py runserver command.  When you ctrl-C to kill the runserver command, the terminal will shutdown.  If you have systemd unit files installed, then you can simply run 'systemctl --user start manage_start.service' to spawn a new terminal running the dev server.
 
 ### directory structure 
 
