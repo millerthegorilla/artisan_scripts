@@ -311,14 +311,39 @@ SITE_LOGO = 'django_artisan/images/vase.svg'
 SITE_URL = str(os.getenv("DUCKDNS_DOMAIN"))
 
 
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+class CATEGORY(models.TextChoices):
+    EVENT = 'EV', _('Event')
+    QUESTION = 'QN', _('Question')
+    GENERAL = 'GL', _('General')
+    PICTURES = 'PS', _('Pictures')
+    FORSALE = 'FS', _('For Sale')
+
+#CATEGORY = Category
+
+def skip_mtime_seen(record):
+    if 'mtime' in record.getMessage():  # filter whatever you want
+        breakpoint()
+        return False
+    return True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        # use Django's built in CallbackFilter to point to your filter
+        'skip_mtime_seen': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_mtime_seen
+        }
+    },
     'handlers': {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
+            'filters': ['skip_mtime_seen'],
         },
         'console': {
             'level': 'DEBUG',
@@ -326,10 +351,11 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-       },
-    },
-}
+            'django': {
+                'handlers': ['file'],
+                'level': 'DEBUG',
+                'propagate': True,
+           },
+        },
+    }
+

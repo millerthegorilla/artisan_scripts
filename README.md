@@ -48,10 +48,27 @@ In the case of a production setup, you can reload the gunicorn instance, by usin
 
 From time to time the scripts will prompt for your superuser (sudo) account name, and you will have to enter your password twice, once to shell into the superuser account, and the second time to run the sudo command.
 
+### systemd files
+
+If you elect to, you can create and install systemd unit files, for both production and development installs.
+In the case of development builds, manage.py runserver is created in a terminal which is created when you log in to your user account.  This is primarily for VMS.  If you want to restart the manage.py runserver, you can either use artisan_run with the manage verb, or you can run the command:
+```
+systemctl --user start manage_start.service
+```
+When you run artisan_run with the clean verb, you will be prompted to remove the systemd files.  This should really be mandatory, since they will refer to a pod that is no longer in existence if you leave them there.
+
 ### options
 
 There is a file in the root directory called 'options'.  It currently only has one line which is the command to run a terminal.  I am using Gnome 3, so the TERMINAL_CMD is set to 'gnome-terminal --'.   If you are using xterm, then you will want to edit the file and change TERMINAL_CMD to 'xterm -e' etc etc.
 The TERMINAL_CMD is used to spawn a terminal in the case of using a development install.  In this case when you start your machine, or more likely VM, then as soon as you login a terminal will spawn running the manage.py runserver command.  When you ctrl-C to kill the runserver command, the terminal will shutdown.  If you have systemd unit files installed, then you can simply run 'systemctl --user start manage_start.service' to spawn a new terminal running the dev server.
+
+### error output and logs
+
+If you want to see error output whilst in development mode, then you can open a terminal and run the command
+```
+tail -f ${HOME}/${PROJECT_NAME}/logs/django/debug.log
+```
+In either a production or development install logs are stored in that location.  You can access django logs from that location, according to the settings at the end of settings.py.
 
 ### directory structure 
 
@@ -90,6 +107,33 @@ You can customise the settings of django_artisan, by editing the file settings.p
 ### make_manage_wsgi.sh
 
 When the script create_all.sh is run (or called by initial_provision.sh) the entered project name is used to generate the files manage.py, and wsgi.py that are then copied over to the django_artisan folders.   Should you lose those files through a git pull of the django artisan code, you can recreate them using the script make_manage_wsgi.sh
+
+### Podman and django management commands
+
+The project uses podman to create a django site using rootless containers.  So, to execute a django management command, you will need to exec into the django container, and then cd to the correct directory, and then run the management command.
+```
+podman exec -it django_cont bash
+```
+This opens a bash session inside the django container, named django_cont.  Then
+```
+cd /opt/${PROJECT_NAME}/
+```
+changes directory to the location of manage.py.
+``
+python manage.py COMMAND
+```
+runs the command.   Type 'exit' to leave the django_cont container.
+
+You will want to read about podman generally, http://docs.podman.io/en/latest/index.html, 
+but to list the containers, on your host machine or VM type in a terminal
+```
+podman ps
+```
+You can then see the list of active containers, and establish the name of the container you wish to exec into.
+```
+podman exec -it mariadb_cont bash
+```
+for example, to inspect the database.   http://docs.podman.io/en/latest/markdown/podman-exec.1.html
 
 ### NB.
 

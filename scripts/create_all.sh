@@ -29,11 +29,39 @@ then
     done
 fi
 
-if [[ ${DEBUG} == "TRUE" ]]
+if [[ ${DEBUG} == "TRUE" ]]   ## TODO function 
 then
-    cp ${SCRIPTS_ROOT}/settings/settings_debug.py ${SCRIPTS_ROOT}/settings/settings.py 
+    echo "Please select the settings file from the list"
+
+    files=$(ls ${SCRIPTS_ROOT}/settings/development)
+    i=1
+
+    for j in $files
+    do
+    echo "$i.$j"
+    file[i]=$j
+    i=$(( i + 1 ))
+    done
+
+    echo "Enter number"
+    read input
+    cp ${SCRIPTS_ROOT}/settings/development/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
 else
-    cp ${SCRIPTS_ROOT}/settings/settings_production.py ${SCRIPTS_ROOT}/settings/settings.py
+    echo "Please select the settings file from the list"
+
+    files=$(ls ${SCRIPTS_ROOT}/settings/production)
+    i=1
+
+    for j in $files
+    do
+    echo "$i.$j"
+    file[i]=$j
+    i=$(( i + 1 ))
+    done
+
+    echo "Enter number"
+    read input
+    cp ${SCRIPTS_ROOT}/settings/production/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
 fi
 
 if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
@@ -77,6 +105,7 @@ source ${SCRIPTS_ROOT}/.env
 set +a
 
 echo -e "\n" >> ${SCRIPTS_ROOT}/.archive
+echo CURRENT_SETTINGS=${file[${input}]} >> .archive 
 echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 echo CODE_PATH=${CODE_PATH} >> ${SCRIPTS_ROOT}/.archive
