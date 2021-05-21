@@ -142,7 +142,17 @@ done
 
 read -p "Enter the name of your sudo user account : " SUNAME
 
-su ${SUNAME} -c "sudo -S rm -rf /etc/opt/${PROJECT_NAME}"
+i=0
+until su ${SUNAME} -c "sudo -S rm -rf /etc/opt/${PROJECT_NAME} || exit 123;"
+do
+    EXITCODE=$?
+    i=$(( i + 1 ))
+    if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
+    then
+        echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
+        exit 1
+    fi
+done
 
 remove_logs_dir()
 {
@@ -151,7 +161,17 @@ remove_logs_dir()
         if [[ -e ${HOME}/${PROJECT_NAME} ]]
         then
             echo -e "removing swag logs - enter your sudo user password..."
-            su ${SUNAME} -c "sudo -S rm -rf ${HOME}/${PROJECT_NAME}/logs"
+            i=0
+            until su ${SUNAME} -c "sudo -S rm -rf ${HOME}/${PROJECT_NAME}/logs || exit 123;"
+            do
+                EXITCODE=$?
+                i=$(( i + 1 ))
+                if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
+                then
+                    echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
+                    exit 1
+                fi
+            done
         fi
     else
         rm -rf ${HOME}/${PROJECT_NAME}/logs
@@ -173,7 +193,17 @@ remove_logs_dir()
                 if [[ -e ${HOME}/${PROJECT_NAME} ]]
                 then
                     echo -e "removing swag logs"
-                    su ${SUNAME} -c "sudo -S rm -rf ${HOME}/${PROJECT_NAME}"
+                    i=0
+                    until su ${SUNAME} -c "sudo -S rm -rf ${HOME}/${PROJECT_NAME} || exit 123;"
+                    do
+                        EXITCODE=$?
+                        i=$(( i + 1 ))
+                        if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
+                        then
+                            echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
+                            exit 1
+                        fi
+                    done
                 fi
             else
                 rm -rf ${HOME}/${PROJECT_NAME}
@@ -211,7 +241,17 @@ then
         systemctl --user disable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')
     fi
 
-    su ${SUNAME} -c "sudo -S SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh"
+    i=0
+    until su ${SUNAME} -c "sudo -S SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh || exit 123;"
+    do
+        EXITCODE=$?
+        i=$(( i + 1 ))
+        if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
+        then
+            echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
+            exit 1
+        fi
+    done
     
     rm -rf ${SCRIPTS_ROOT}/systemd 
     mkdir ${SCRIPTS_ROOT}/systemd

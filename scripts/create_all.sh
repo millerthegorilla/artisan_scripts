@@ -165,8 +165,18 @@ then
     fi
 
     read -p "Enter the name of your sudo user account : " SUNAME
-    
-    su ${SUNAME} -c "sudo -S SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
+
+    i=0
+    until su ${SUNAME} -c "sudo -S SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh || exit 123;"
+    do
+        EXITCODE=$?
+        i=$(( i + 1 ))
+        if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
+        then
+            echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
+            exit 1
+        fi
+    done
 
     systemctl --user enable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')
 

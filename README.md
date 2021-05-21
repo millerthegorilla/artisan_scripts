@@ -42,7 +42,19 @@ To clean up completely, run the cleanup.sh, answer yes to code removal, and to i
 
 When the django_artisan code is installed, the files 'manage.py' and 'wsgi.py' are not present.  They are created by running these artisan_scripts.  If you lose the 'manage.py' and/or 'wsgi.py' files then you can recreate them by running artisan_run with the replace verb.
 
-In the case of a production setup, you can reload the gunicorn instance, by using artisan_run with the reload verb.  This simply uses podman exec to shell into the django container, and runs supervisorctl reload. 
+In the case of a production setup, you can reload the gunicorn instance, by using artisan_run with the reload verb.  This simply uses podman exec to shell into the django container, and runs supervisorctl reload.
+
+You can use the 'manage' verb with artisan_run.sh to send manage.py commands to the container.
+
+You can use the 'settings' verb with artisan_run.sh to copy in a new settings file.
+
+### settings
+
+Because the settings.py file for django_artisan code base is stored in this codebase, you can create different settings files for different git branches of django_artisan.  So, if you switch to a branch of django_artisan that has a requirement per branch for a different setting, you can run the command
+```
+./artisan_run.sh settings
+```
+which will prompt for the settings file that you want to use.  To create a settings file, simply copy an existing one and paste it into the appropriate directory, either ${SCRIPTS_ROOT}/settings/development or ${SCRIPTS_ROOT}/settings/production 
 
 ### super user
 
