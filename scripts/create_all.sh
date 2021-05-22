@@ -1,23 +1,5 @@
 #!/bin/bash
 
-# echo -e "********* WARNING *********\n\nYou must have created the correct directory structure before running this script.  Run the script create_directories.sh as root first to create the directories, lower the ports open to rootless in sysctl and open the firewall ports.\n\nAlso, you must run the script initial_provision.sh, which will call this script when it has finished installing the podman images and building the django enabled image.  You can interrupt the script at any time and cleanup using the script cleanup.sh"
-
-# echo -e "Are the directories created and the sysctl ports lowered (select a number)?"
-# select yn in "Yes" "No"; do
-#     case $yn in
-#         Yes ) break;;
-#         No ) echo -e "\nOkay... run the script create_directories.sh as root, and then run initial_provision.sh as standard user to install the podman images and build the custom django image.  It will call this script when it finishes.\n" && exit 1;;
-#     esac
-# done
-
-# echo -e "Are the podman images installed (select a number)?"
-# select yn in "Yes" "No"; do
-#     case $yn in
-#         Yes ) break;;
-#         No ) echo -e "\nOkay... run the script initial_provision.sh which will download the images and build the custom image, and which will then call this script.\n" && exit 1;;
-#     esac
-# done
-
 if [[ -z "${DEBUG}" ]]
 then
     echo -e "\nIs this development ie debug? : "
@@ -31,25 +13,16 @@ fi
 
 if [[ ${DEBUG} == "TRUE" ]]   ## TODO function 
 then
-    echo "Please select the settings file from the list"
-
-    files=$(ls ${SCRIPTS_ROOT}/settings/development)
-    i=1
-
-    for j in $files
-    do
-    echo "$i.$j"
-    file[i]=$j
-    i=$(( i + 1 ))
-    done
-
-    echo "Enter number"
-    read input
-    cp ${SCRIPTS_ROOT}/settings/development/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
+    settings_copy "development"
 else
+    settings_copy "production"
+fi
+
+function settings_copy()
+{
     echo "Please select the settings file from the list"
 
-    files=$(ls ${SCRIPTS_ROOT}/settings/production)
+    files=$(ls ${SCRIPTS_ROOT}/settings/${1})
     i=1
 
     for j in $files
@@ -61,8 +34,8 @@ else
 
     echo "Enter number"
     read input
-    cp ${SCRIPTS_ROOT}/settings/production/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
-fi
+    cp ${SCRIPTS_ROOT}/settings/${1}/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
+}
 
 if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
 then
@@ -163,20 +136,11 @@ then
     else
         cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
     fi
-
+    
+    source ./utils.sh
     read -p "Enter the name of your sudo user account : " SUNAME
-
-    i=0
-    until su ${SUNAME} -c "sudo -S SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh || exit 123;"
-    do
-        EXITCODE=$?
-        i=$(( i + 1 ))
-        if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
-        then
-            echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
-            exit 1
-        fi
-    done
+    
+    super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
 
     systemctl --user enable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')
 

@@ -6,6 +6,10 @@ if [[ -f ".archive" ]]; then
    set -a
 fi
 
+if [[ -z ${SCRIPTS_ROOT} ]]
+then
+    ${SCRIPTS_ROOT}=${PWD%/*}
+fi
 if [[ -z ${POD_NAME} ]]
 then
     read -p "Enter pod name: " POD_NAME
@@ -131,6 +135,13 @@ fi
 rm ${CODE_PATH}/manage.py
 rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
 
+echo -e "removing /etc/opt/${PROJECT_NAME}..."
+
+source ./utils.sh
+read -p "Enter the name of your sudo user account : " SUNAME
+
+super_access "rm -rf /etc/opt/${PROJECT_NAME}"
+
 echo -e "remove logs or save logs and remove logs dir (choose a number)?"
 select yn in "Yes" "No" "Save"; do
     case $yn in
@@ -140,20 +151,6 @@ select yn in "Yes" "No" "Save"; do
     esac
 done
 
-read -p "Enter the name of your sudo user account : " SUNAME
-
-i=0
-until su ${SUNAME} -c "sudo -S rm -rf /etc/opt/${PROJECT_NAME} || exit 123;"
-do
-    EXITCODE=$?
-    i=$(( i + 1 ))
-    if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
-    then
-        echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
-        exit 1
-    fi
-done
-
 remove_logs_dir()
 {
     if [[ -n ${DEBUG} && ${DEBUG} == "FALSE" ]]
@@ -161,17 +158,7 @@ remove_logs_dir()
         if [[ -e ${HOME}/${PROJECT_NAME} ]]
         then
             echo -e "removing swag logs - enter your sudo user password..."
-            i=0
-            until su ${SUNAME} -c "sudo -S rm -rf ${HOME}/${PROJECT_NAME}/logs || exit 123;"
-            do
-                EXITCODE=$?
-                i=$(( i + 1 ))
-                if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
-                then
-                    echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
-                    exit 1
-                fi
-            done
+            super_access "rm -rf ${HOME}/${PROJECT_NAME}/logs"
         fi
     else
         rm -rf ${HOME}/${PROJECT_NAME}/logs
@@ -193,17 +180,7 @@ remove_logs_dir()
                 if [[ -e ${HOME}/${PROJECT_NAME} ]]
                 then
                     echo -e "removing swag logs"
-                    i=0
-                    until su ${SUNAME} -c "sudo -S rm -rf ${HOME}/${PROJECT_NAME} || exit 123;"
-                    do
-                        EXITCODE=$?
-                        i=$(( i + 1 ))
-                        if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
-                        then
-                            echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
-                            exit 1
-                        fi
-                    done
+                    super_access "rm -rf ${HOME}/${PROJECT_NAME}"
                 fi
             else
                 rm -rf ${HOME}/${PROJECT_NAME}
@@ -224,7 +201,6 @@ then
     remove_logs_dir
 fi
 
-
 echo -e "Uninstall and remove systemd --user unit files? : "
 select yn in "Yes" "No"; do
     case $yn in
@@ -241,17 +217,7 @@ then
         systemctl --user disable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')
     fi
 
-    i=0
-    until su ${SUNAME} -c "sudo -S SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh || exit 123;"
-    do
-        EXITCODE=$?
-        i=$(( i + 1 ))
-        if [[ ${i} -eq 3 || EXITCODE -eq 123 ]]
-        then
-            echo -e "3 Incorrect password attempts! Sorry you will have to run the script again."
-            exit 1
-        fi
-    done
+    super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh"
     
     rm -rf ${SCRIPTS_ROOT}/systemd 
     mkdir ${SCRIPTS_ROOT}/systemd
