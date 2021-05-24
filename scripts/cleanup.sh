@@ -15,20 +15,6 @@ then
     read -p "Enter project name " PROJECT_NAME
 fi
 
-echo -e "save settings/.env to ./settings_env_old (choose a number)?"
-
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) save_sets=1; break;;
-        No )  save_sets=0; break;;
-    esac
-done
-
-if [[ save_sets -eq 1 ]]
-then
-        cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
-fi
-
 podman pod exists ${POD_NAME};
 retval=$?
 
@@ -115,6 +101,20 @@ rm settings/gunicorn.conf.py
 rm settings/settings.py
 rm settings/settings_env
 rm settings/supervisor_gunicorn
+
+echo -e "save settings/.env to ./settings_env_old (choose a number)?"
+
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) save_sets=1; break;;
+        No )  save_sets=0; break;;
+    esac
+done
+
+if [[ save_sets -eq 1 ]]
+then
+        cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
+fi
 
 if [[ ! -n "$CODE_PATH" ]]
 then
