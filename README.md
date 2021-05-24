@@ -38,7 +38,7 @@ The create verb runs the script create_directories.sh and then checks the podman
 
 If at any point the scripts fail or you break out of them, you can run the script cleanup.sh to remove the containers and to reset the script environment to the beginning.
 
-To clean up completely, run the cleanup.sh, answer yes to code removal, and to image removal, and to log removal.
+To clean up completely, run the `./artisan_run clean`, answer yes to code removal, and to image removal, and to log removal.
 
 When the django_artisan code is installed, the files 'manage.py' and 'wsgi.py' are not present.  They are created by running these artisan_scripts.  If you lose the 'manage.py' and/or 'wsgi.py' files then you can recreate them by running artisan_run with the replace verb.
 
@@ -47,6 +47,12 @@ In the case of a production setup, you can reload the gunicorn instance, by usin
 You can use the 'manage' verb with artisan_run.sh to send manage.py commands to the container.
 
 You can use the 'settings' verb with artisan_run.sh to copy in a new settings file.
+
+You can use the 'reload' verb to reload the server, whether it is manage.py dev server or gunicorn.
+
+### django_artisan development
+
+It is a sensible idea to only make changes to the django_artisan codebase when the development server is up and running.  If you run `artisan_run clean` and take down and remove the pod and containers, and then make changes to the django_artisan codebase, then if there are any bugs, then when you run `artisan_run create` the script will fail if there are any bugs.  You can comment changes or fix the bugs, but until either of these `artisan_run create` will fail.
 
 ### settings
 
@@ -102,15 +108,7 @@ In the case of a production setup, when the scripts have finished running, you w
 
 ### server reload...
 
-In the case of a production setup, if you make any changes to the code base, and need to reload the server, you can run the script 'reload.sh'.  This will call supervisorctl to reload the gunicorn process and then start and stop the swag container to reload nginx.
-
-### customising scripts
-
-If you want to add a container, or customise an existing container, you can either edit initial_provision.sh to install a new image, or customise/add a script to the container_scripts directory.
-The script create_all.sh shells out to a bunch of scripts in that container_scripts directory.  In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
-The script get_variables.sh reads user input to get environment variables.  This then uses the envsubst command to complete a ./templates/env_files/scripts_env and ./templates/env_files/settings_env.
-The scripts_env provides environment variables to the scripts, and the settings_env is copied to the directory /etc/opt/$PROJECT_NAME/settings to be read as and when by settings.py.
-If you want to change any image tag then you will need to do so in the script ./initial_provision.sh and also the file ./templates/env_files/scripts_env.
+In the case of a production setup, if you make any changes to the code base, and need to reload the server, you can run the script ./artisan_run with the reload verb.  This will call supervisorctl to reload the gunicorn process and then start and stop the swag container to reload nginx.
 
 ### customising django_artisan
 
@@ -146,6 +144,14 @@ You can then see the list of active containers, and establish the name of the co
 podman exec -it mariadb_cont bash
 ```
 for example, to inspect the database.   http://docs.podman.io/en/latest/markdown/podman-exec.1.html
+
+### customising scripts
+
+If you want to add a container, or customise an existing container, you can either edit initial_provision.sh to install a new image, or customise/add a script to the container_scripts directory.
+The script create_all.sh shells out to a bunch of scripts in that container_scripts directory.  In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
+The script get_variables.sh reads user input to get environment variables.  This then uses the envsubst command to complete a ./templates/env_files/scripts_env and ./templates/env_files/settings_env.
+The scripts_env provides environment variables to the scripts, and the settings_env is copied to the directory /etc/opt/$PROJECT_NAME/settings to be read as and when by settings.py.
+If you want to change any image tag then you will need to do so in the script ./initial_provision.sh and also the file ./templates/env_files/scripts_env.
 
 ### NB.
 

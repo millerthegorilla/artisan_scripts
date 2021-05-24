@@ -6,10 +6,6 @@ if [[ -f ".archive" ]]; then
    set -a
 fi
 
-if [[ -z ${SCRIPTS_ROOT} ]]
-then
-    ${SCRIPTS_ROOT}=${PWD%/*}
-fi
 if [[ -z ${POD_NAME} ]]
 then
     read -p "Enter pod name: " POD_NAME
@@ -137,7 +133,7 @@ rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
 
 echo -e "removing /etc/opt/${PROJECT_NAME}..."
 
-source ./utils.sh
+source ${SCRIPTS_ROOT}/scripts/utils.sh
 read -p "Enter the name of your sudo user account : " SUNAME
 
 super_access "rm -rf /etc/opt/${PROJECT_NAME}"

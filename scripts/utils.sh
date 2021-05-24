@@ -1,7 +1,6 @@
 function super_access()
 {
     local command="${1} || exit 123;"
-    echo $command
     i=0
     until su ${SUNAME} -c "sudo -S ${command}"
     do

@@ -6,10 +6,10 @@ set +a
 
 echo -e "\nI will first create the directories.\n"
 
-source ./utils.sh
+source ${SCRIPTS_ROOT}/scripts/utils.sh
 read -p "Enter the name of your sudo user account : " SUNAME
 
-super_access SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/create_directories.sh 
+SUNAME=${SUNAME} super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/create_directories.sh" 
 
 echo -e "\nI will now download and provision container images, if they are not already present.\n"
 

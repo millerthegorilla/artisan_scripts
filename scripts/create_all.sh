@@ -11,13 +11,6 @@ then
     done
 fi
 
-if [[ ${DEBUG} == "TRUE" ]]   ## TODO function 
-then
-    settings_copy "development"
-else
-    settings_copy "production"
-fi
-
 function settings_copy()
 {
     echo "Please select the settings file from the list"
@@ -36,6 +29,13 @@ function settings_copy()
     read input
     cp ${SCRIPTS_ROOT}/settings/${1}/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
 }
+
+if [[ ${DEBUG} == "TRUE" ]]   ## TODO function 
+then
+    settings_copy "development"
+else
+    settings_copy "production"
+fi
 
 if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
 then
@@ -137,7 +137,7 @@ then
         cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
     fi
     
-    source ./utils.sh
+    source ${SCRIPTS_ROOT}/scripts/utils.sh
     read -p "Enter the name of your sudo user account : " SUNAME
     
     super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"

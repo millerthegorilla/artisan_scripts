@@ -1,0 +1,4 @@
+# settings/.gitignore
+settings.py
+gunicorn.conf.py
+supervisor_gunicorn

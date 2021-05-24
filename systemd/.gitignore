@@ -1,0 +1,4 @@
+.django_container_id
+container-*
+manage_start.service
+pod-*

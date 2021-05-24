@@ -23,16 +23,21 @@ do
   echo -n "."
 done
 
-podman exec -it ${MARIA_CONT_NAME} bash -c "mysql_secure_installation"
-
-if [[ $? -ne 0 ]]
-then
+until podman exec -it ${MARIA_CONT_NAME} bash -c "mysql_secure_installation"
+do
+#if [[ $? -ne 0 ]]
+#then
+	if [[ $(podman ps -f name=${MARIA_CONT_NAME} | wc -l) -eq 1 ]]
+	then
+		podman start ${MARIA_CONT_NAME}
+	fi
 	echo -e "\n\n************************* WARNING **************************"
 	echo -e "\nIt looks like the mysql_secure_installation script failed ie you didn't see the message \n\n'Thanks for using MariaDB!' \n so you will need to exec into the mysql container (start it if necessary) and run the script mysql_secure_installation again, before continuing.\n"
 	read -p "Press enter to continue" buttoxx
 	echo -e "\n\n"
 
-fi
+#fi
+done
 
 echo -e "\nSo I'm going to configure the database for your webapp - please enter the database root password."
 
@@ -42,11 +47,20 @@ echo -e "Waiting for mysql to be ready.."
 
 until podman exec -it ${MARIA_CONT_NAME} bash -c "ls /run/mysqld/mysqld.sock" &>/dev/null;
 do
-  echo -n "."
+    if [[ $(podman ps -f name=${MARIA_CONT_NAME} | wc -l) -eq 1 ]]
+    then
+    	podman start ${MARIA_CONT_NAME} &>/dev/null;
+    fi
+    echo -n "."
 done
 
-podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_HOST=${DB_HOST} -e DB_PASSWORD=${DB_PASSWORD} -e DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} -it ${MARIA_CONT_NAME} bash -c "sh /maria.sh"
-
+until podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_HOST=${DB_HOST} -e DB_PASSWORD=${DB_PASSWORD} -e DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} -it ${MARIA_CONT_NAME} bash -c "sh /maria.sh"
+do
+   if [[ $(podman ps -f name=${MARIA_CONT_NAME} | wc -l) -eq 1 ]]
+   then
+   	podman start ${MARIA_CONT_NAME} &>/dev/null;
+   fi
+done	
 sleep 8;
 
 podman stop ${MARIA_CONT_NAME}

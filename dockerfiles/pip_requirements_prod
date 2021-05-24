@@ -31,3 +31,4 @@ sorl-thumbnail==12.7.0
 sqlparse==0.4.1
 urllib3==1.26.4
 webencodings==0.5.1
+random_username==1.0.2
