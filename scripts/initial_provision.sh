@@ -6,8 +6,11 @@ set +a
 
 echo -e "\nI will first create the directories.\n"
 
-source ${SCRIPTS_ROOT}/scripts/utils.sh
-read -p "Enter the name of your sudo user account : " SUNAME
+exists=$(type -t super_access)
+if [[ ${exists} != "function " ]]
+then
+    source ${SCRIPTS_ROOT}/scripts/utils.sh
+fi
 
 SUNAME=${SUNAME} super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/create_directories.sh" 
 

@@ -43,10 +43,6 @@ else
 	podman pod rm ${POD_NAME}
 fi
 
-rm -rf /etc/opt/${PROJECT_NAME}/settings/*
-rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
-rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
-
 echo -e "remove code (choose a number)?"
 
 select yn in "Yes" "No"; do
@@ -95,13 +91,6 @@ then
 	podman rmi mariadb:latest
 fi
 
-rm .env
-rm swag/default
-rm settings/gunicorn.conf.py
-rm settings/settings.py
-rm settings/settings_env
-rm settings/supervisor_gunicorn
-
 echo -e "save settings/.env to ./settings_env_old (choose a number)?"
 
 select yn in "Yes" "No"; do
@@ -111,10 +100,22 @@ select yn in "Yes" "No"; do
     esac
 done
 
+source ${SCRIPTS_ROOT}/scripts/utils.sh
+
 if [[ save_sets -eq 1 ]]
 then
-        cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
+        super_access "cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old"
 fi
+
+rm .env
+rm swag/default
+rm settings/gunicorn.conf.py
+rm settings/settings.py
+rm settings/settings_env
+rm settings/supervisor_gunicorn
+rm -rf /etc/opt/${PROJECT_NAME}/settings/*
+rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
+rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
 
 if [[ ! -n "$CODE_PATH" ]]
 then
@@ -132,9 +133,6 @@ rm ${CODE_PATH}/manage.py
 rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
 
 echo -e "removing /etc/opt/${PROJECT_NAME}..."
-
-source ${SCRIPTS_ROOT}/scripts/utils.sh
-read -p "Enter the name of your sudo user account : " SUNAME
 
 super_access "rm -rf /etc/opt/${PROJECT_NAME}"
 

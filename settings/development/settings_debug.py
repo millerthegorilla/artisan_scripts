@@ -310,8 +310,9 @@ NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
 ### The following are used by django_artisan and django_forum_app
 SITE_NAME = str(os.getenv("SITE_NAME"))
 SITE_LOGO = 'django_artisan/images/vase.svg'
-SITE_URL = str(os.getenv("DUCKDNS_DOMAIN"))
-
+SITE_DOMAIN = '127.0.0.1:8000'
+#for the sites framework so that sitemaps will work
+SITE_ID = 1
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _

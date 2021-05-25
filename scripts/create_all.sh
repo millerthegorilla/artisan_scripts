@@ -138,7 +138,6 @@ then
     fi
     
     source ${SCRIPTS_ROOT}/scripts/utils.sh
-    read -p "Enter the name of your sudo user account : " SUNAME
     
     super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
 
