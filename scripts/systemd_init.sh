@@ -19,7 +19,7 @@ for f in ${FILES}
 do
   if [[ -e /etc/systemd/user/${f} ]]
   then
-      chcon -t systemd_unit_file_t /etc/systemd/user/${f}
+      chcon -u system_u -t systemd_unit_file_t /etc/systemd/user/${f}
   fi
 done
 cd ${SCRIPTS_ROOT}

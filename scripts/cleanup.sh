@@ -215,7 +215,7 @@ then
     
     rm -rf ${SCRIPTS_ROOT}/systemd 
     mkdir ${SCRIPTS_ROOT}/systemd
-    touch ${SCRIPTS_ROOT}/systemd/.gitignore
+    cp ${SCRIPTS_ROOT}/templates/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore
 fi
 
 if [[ -f "${SCRIPTS_ROOT}/.archive" ]]
