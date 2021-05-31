@@ -95,6 +95,9 @@ read -p "Google Recaptcha public key : " recaptcha_public
 read -p "Google Recaptcha private key : " recaptcha_private
 recaptcha_public="${recaptcha_public}"
 recaptcha_private="${recaptcha_private}"
+
+## DROPBOX
+read -p "Dropbox OAuth Token : " dropbox_oauth_token
 set +a
 
 ### TEMPLATES

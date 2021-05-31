@@ -3,4 +3,11 @@ command=/usr/local/bin/gunicorn -c /etc/opt/${project_name}/settings/gunicorn.co
 numprocs=1
 stdout_logfile=/dev/fd/1
 stdout_logfile_maxbytes=0
-environment=PYTHONPATH=/etc/opt/ceramic_isles_staging/settings/:/opt/ceramic_isles_staging/
+environment=PYTHONPATH=/etc/opt/${project_name}/settings/:/opt/${project_name}/
+
+[program:djangoq]
+command=/usr/local/bin/python /opt/${project_name}/manage.py qcluster
+numprocs=1
+stdout_logfile=/dev/fd/1
+stdout_logfile_maxbytes=0
+environment=PYTHONPATH=/etc/opt/${project_name}/settings/:/opt/${project_name}/

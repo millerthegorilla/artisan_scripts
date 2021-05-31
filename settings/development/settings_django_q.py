@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'tinymce',
     'sorl.thumbnail',
     'django_elasticsearch_dsl',
-    'django_extensions',
+    'django_q',
+    'dbbackup'
 ]
 
 MIDDLEWARE = [

@@ -133,6 +133,7 @@ then
     if [[ ${DEBUG} == "TRUE" ]]
     then
         cat ${SCRIPTS_ROOT}/templates/manage_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/manage_start.service 
+        cat ${SCRIPTS_ROOT}/templates/qcluster_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
     else
         cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
     fi

@@ -69,10 +69,12 @@ From time to time the scripts will prompt for your superuser (sudo) account name
 ### systemd files
 
 If you elect to, you can create and install systemd unit files, for both production and development installs.
-In the case of development builds, manage.py runserver is created in a terminal which is created when you log in to your user account.  This is primarily for VMS.  If you want to restart the manage.py runserver, you can either use artisan_run with the manage verb, or you can run the command:
+In the case of development builds, manage.py runserver is created in a terminal which is created when you log in to your user account.  This is primarily so that you can develop inside a Virtual Machine (I use gnome boxes).  If you want to restart the manage.py runserver, you can either use artisan_run with the manage verb, or preferably you can run the command:
 ```
 systemctl --user start manage_start.service
 ```
+In the case of production builds, the systemd unit file calls supervisord which is installed in the python:django container, and supervisord then calls its configuration files, which are derived from the file ${SCRIPTS_ROOT}/templates/supervisor_gunicorn.
+
 When you run artisan_run with the clean verb, you will be prompted to remove the systemd files.  This should really be mandatory, since they will refer to a pod that is no longer in existence if you leave them there.
 
 ### options
@@ -120,19 +122,11 @@ When the script create_all.sh is run (or called by initial_provision.sh) the ent
 
 ### Podman and django management commands
 
-The project uses podman to create a django site using rootless containers.  So, to execute a django management command, you will need to exec into the django container, and then cd to the correct directory, and then run the management command.
+If you want to run a manage.py management command you can use the artisan_run.sh with the 'manage' verb, followed by the command you want issue.  For example...
+
 ```
-podman exec -it django_cont bash
+./artisan_run.sh manage collectstatic
 ```
-This opens a bash session inside the django container, named django_cont.  Then
-```
-cd /opt/${PROJECT_NAME}/
-```
-changes directory to the location of manage.py.
-``
-python manage.py COMMAND
-```
-runs the command.   Type 'exit' to leave the django_cont container.
 
 You will want to read about podman generally, http://docs.podman.io/en/latest/index.html, 
 but to list the containers, on your host machine or VM type in a terminal
@@ -148,10 +142,25 @@ for example, to inspect the database.   http://docs.podman.io/en/latest/markdown
 ### customising scripts
 
 If you want to add a container, or customise an existing container, you can either edit initial_provision.sh to install a new image, or customise/add a script to the container_scripts directory.
-The script create_all.sh shells out to a bunch of scripts in that container_scripts directory.  In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
-The script get_variables.sh reads user input to get environment variables.  This then uses the envsubst command to complete a ./templates/env_files/scripts_env and ./templates/env_files/settings_env.
+The script create_all.sh shells out to a bunch of scripts in that container_scripts directory.  
+
+In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
+
+The script get_variables.sh reads user input to get environment variables.  
+
+This then uses the envsubst command to complete a ./templates/env_files/scripts_env and ./templates/env_files/settings_env.
+
 The scripts_env provides environment variables to the scripts, and the settings_env is copied to the directory /etc/opt/$PROJECT_NAME/settings to be read as and when by settings.py.
-If you want to change any image tag then you will need to do so in the script ./initial_provision.sh and also the file ./templates/env_files/scripts_env.
+
+If you want to change any podman image tag then you will need to do so in the script ./initial_provision.sh and also the file ./templates/env_files/scripts_env.
+
+So, the workflow to add some feature to django_artisan, is,
+1. customize the file ${SCRIPTS_ROOT}/container_scripts/run_django_cont.sh
+2. if necessary add pip installation package name to ${SCRIPTS_ROOT}/dockerfiles/pip_requirements*
+3. if necessary add apt package to ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django*
+4. if necessary add a question within the set-a and set+a commands of the script ${SCRIPTS_ROOT}/scripts/get_variables.sh
+5. if you do so, then add to the appropriate template, such as ${SCRIPTS_ROOT}/templates/env_files/settings_env, and put a corresponding import into settings.py ie if you are installing a new setting into settings.py
+6. update the systemd unit file if neccessary.
 
 ### NB.
 

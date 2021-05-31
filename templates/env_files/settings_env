@@ -47,3 +47,4 @@ CLAMAV_ADDRESS=tcp://127.0.0.1:3310
 ELASTIC_SEARCH_ADDRESS=localhost:9200
 SITE_NAME=${site_name}                                        
 # as used on header of web page eg "Ceramic Isles"
+DROPBOX_OAUTH_TOKEN=${dropbox_oauth_token}
