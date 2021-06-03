@@ -13,8 +13,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 ## TODO: clearsessions cron job
 
-from pathlib import Path
 import sys, os
+import datetime
+from pathlib import Path
 from django.urls import reverse_lazy
 
 from dotenv import load_dotenv
@@ -110,6 +111,9 @@ DATABASES = {
           'PORT': os.getenv("DB_PORT")
       }
 }
+
+## Soft deletion
+DELETION_TIMEOUT = datetime.timedelta(days=21)
 
 CACHES = {
      "default": {

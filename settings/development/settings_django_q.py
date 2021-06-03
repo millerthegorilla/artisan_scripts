@@ -13,8 +13,9 @@ DEBUG=True
 
 ## TODO: clearsessions cron job
 
-from pathlib import Path
 import sys, os
+import datetime
+from pathlib import Path
 from django.urls import reverse_lazy
 
 from dotenv import load_dotenv
@@ -97,6 +98,22 @@ TEMPLATES = [
     },
 ]
 
+# django-q
+Q_CLUSTER = {
+    'name': 'DJRedis',
+    'workers': 4,
+    'timeout': 20,
+    'retry': 60,
+    'django_redis': 'default'
+}
+
+# dbbackup
+DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'oauth2_access_token': 'my_token',
+}
+
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -110,6 +127,9 @@ DATABASES = {
           'PORT': os.getenv("DB_PORT")
       }
 }
+
+## Soft deletion
+DELETION_TIMEOUT = datetime.timedelta(days=21)
 
 CACHES = {
      "default": {
@@ -169,7 +189,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-gb'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Jersey'
 USE_I18N = True
 
 USE_L10N = True
