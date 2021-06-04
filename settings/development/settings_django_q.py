@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'crispy_forms',
+    'crispy_bootstrap5',
     'captcha', #django-recaptcha
     'tinymce',
     'sorl.thumbnail',
@@ -112,7 +113,6 @@ DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
 DBBACKUP_STORAGE_OPTIONS = {
     'oauth2_access_token': 'my_token',
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -301,7 +301,8 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # django crispy forms
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 CLAMAV_SOCKET = str(os.getenv("CLAMAV_ADDRESS"))
 
