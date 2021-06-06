@@ -339,12 +339,29 @@ SITE_ID = 1
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] - [{levelname}] - {message}',
+            'style': '{',
+        },
+        'verbose': {
+            'format': '{levelname} {asctime} {pathname} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
+            'formatter': 'verbose',
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'verbose',
+        }
     },
     'loggers': {
         'django': {
@@ -352,5 +369,30 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
        },
+       'django.request': {
+           'handlers': ['mail_admins', 'file'],
+           'level': 'ERROR',
+           'propagate': False,
+       }
     },
 }
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
+sentry_sdk.init(
+    dsn="https://092b068e99e143cf9ccdb848d421930a@o803843.ingest.sentry.io/5803015",
+    integrations=[DjangoIntegration(), RedisIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=0.5,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
+
+

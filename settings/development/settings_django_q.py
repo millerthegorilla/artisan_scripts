@@ -111,7 +111,7 @@ Q_CLUSTER = {
 # dbbackup
 DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
 DBBACKUP_STORAGE_OPTIONS = {
-    'oauth2_access_token': 'my_token',
+    'oauth2_access_token': os.getenv("DROPBOX_OAUTH_TOKEN"),
 }
 
 # Database
@@ -347,9 +347,13 @@ class CATEGORY(models.TextChoices):
     FORSALE = 'FS', _('For Sale')
 
 #CATEGORY = Category
-
 def skip_mtime_seen(record):
     if 'mtime' in record.getMessage():  # filter whatever you want
+        return False
+    return True
+
+def skip_djangoq_schedule(record):
+    if 'schedule' in record.getMessage():
         return False
     return True
 
@@ -361,6 +365,21 @@ LOGGING = {
         'skip_mtime_seen': {
             '()': 'django.utils.log.CallbackFilter',
             'callback': skip_mtime_seen
+        },
+        'skip_djangoq_schedule': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_djangoq_schedule
+        }
+    },
+    'formatters': {
+        'django': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] - {pathname} - {message}',
+            'style': '{',
+        },
+        'verbose': {
+            'format': '{levelname} {asctime} {pathname} {module} {process:d} {thread:d} {message}',
+            'style': '{',
         }
     },
     'handlers': {
@@ -368,19 +387,39 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
-            'filters': ['skip_mtime_seen'],
+            'formatter': 'verbose',
+            'filters': ['skip_mtime_seen', 'skip_djangoq_schedule'],
         },
         'console': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.StreamHandler',
+            'formatter': 'django',
         },
     },
     'loggers': {
             'django': {
-                'handlers': ['file'],
+                'handlers': ['file', 'console'],
                 'level': 'DEBUG',
                 'propagate': True,
            },
         },
     }
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
+sentry_sdk.init(
+    dsn="https://0f35df857c1f4ea19b61fa76729dde9e@o803843.ingest.sentry.io/5802934",
+    integrations=[DjangoIntegration(), RedisIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
 
