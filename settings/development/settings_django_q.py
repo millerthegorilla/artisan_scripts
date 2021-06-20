@@ -14,11 +14,13 @@ DEBUG=True
 ## TODO: clearsessions cron job
 
 import sys, os
-import datetime
 from pathlib import Path
-from django.urls import reverse_lazy
 
 from dotenv import load_dotenv
+
+from django.urls import reverse_lazy
+from django.utils import timezone
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -57,14 +59,16 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_elasticsearch_dsl',
     'django_q',
-    'dbbackup'
+    'dbbackup',
+    'debug_toolbar',
+    'cookie_consent',
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.cache.FetchFromCacheMiddleware',
@@ -127,9 +131,6 @@ DATABASES = {
           'PORT': os.getenv("DB_PORT")
       }
 }
-
-## Soft deletion
-DELETION_TIMEOUT = datetime.timedelta(days=21)
 
 CACHES = {
      "default": {
@@ -269,6 +270,14 @@ ESSION_COOKIE_AGE = 129600 # 36 hours.  # defaults to two weeks
 SESSION_COOKIE_SECURE = True    # set this to true when using https
 # SESSION_SAVE_EVERY_REQUEST = True  #updates timestamp to increase session_cookie_age
 
+# the amount of time before a comment or post is hard deleted
+DELETION_TIMEOUT = timezone.timedelta(days=21)
+# the amount of time to wait before emails are sent to subscribed users
+COMMENT_WAIT = timezone.timedelta(seconds=600)
+# msg sent to subscribed users
+# the msg must include one pair of brackets, which will contain
+# the href of the post
+SUBSCRIBED_MSG = "<h3 style='color: blue;'>Ceramic Isles</h3><br>A new comment has been added to a post that you are subscribed to!<br>Follow this link to view the post and comments: {}"
 
 # settings for bleach
 
@@ -324,11 +333,13 @@ ABOUT_US_SPIEL = "<span class='spiel-headline'>Ceramic Isles</span> <span class=
 ### NAVBAR
 NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
                 local to the Channel Islands are able to meet, chat, and show off their work. \
-                 If you are a ceramic artist local to one of the Channel Islands, consider \
-                 registering as a user to be able to access the forum, \
-                 and to be able present images of your work here, on this page.<br> \
-                    Click the Ceramic Isles Logo to return to the landing page \
-                    which acts as a gallery for member's work.</p>"
+                If you are a ceramic artist local to one of the Channel Islands, consider \
+                registering as a user to be able to access the forum, \
+                and to be able present images of your work here, on this page.<br> \
+                Click the Ceramic Isles Logo to return to the landing page \
+                which acts as a gallery for member's work.<br> \
+                On a diet???  This site is cookie free!<br> \
+                Problems??? contact - ceramic_isles [at] gmail.com"
 
 ### The following are used by django_artisan and django_forum_app
 SITE_NAME = str(os.getenv("SITE_NAME"))
@@ -346,7 +357,13 @@ class CATEGORY(models.TextChoices):
     PICTURES = 'PS', _('Pictures')
     FORSALE = 'FS', _('For Sale')
 
-#CATEGORY = Category
+class LOCATION(models.TextChoices):
+    ANY_ISLE = 'AI', _('Any')
+    ALDERNEY = 'AY', _('Alderney')
+    GUERNSEY = 'GY', _('Guernsey')
+    JERSEY = 'JE', _('Jersey')
+    SARK = 'SK', _('Sark')
+
 def skip_mtime_seen(record):
     if 'mtime' in record.getMessage():  # filter whatever you want
         return False
@@ -405,21 +422,22 @@ LOGGING = {
         },
     }
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
+# I think sentry in dev mode is not secure...
+# import sentry_sdk
+# from sentry_sdk.integrations.django import DjangoIntegration
+# from sentry_sdk.integrations.redis import RedisIntegration
 
-sentry_sdk.init(
-    dsn="https://0f35df857c1f4ea19b61fa76729dde9e@o803843.ingest.sentry.io/5802934",
-    integrations=[DjangoIntegration(), RedisIntegration()],
+# sentry_sdk.init(
+#     dsn="https://0f35df857c1f4ea19b61fa76729dde9e@o803843.ingest.sentry.io/5802934",
+#     integrations=[DjangoIntegration(), RedisIntegration()],
 
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
+#     # Set traces_sample_rate to 1.0 to capture 100%
+#     # of transactions for performance monitoring.
+#     # We recommend adjusting this value in production.
+#     traces_sample_rate=1.0,
 
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
+#     # If you wish to associate users to errors (assuming you are using
+#     # django.contrib.auth) you may enable sending PII data.
+#     send_default_pii=True
+# )
 
