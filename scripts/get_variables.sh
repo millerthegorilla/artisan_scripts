@@ -153,8 +153,8 @@ fi
 
 make_secret MARIADB_ROOT_PASSWORD
 
-podman secret rm DB_PASSWORD &>/dev/null
-echo $db_password | podman secret create DB_PASSWORD -
+# podman secret rm DB_PASSWORD &>/dev/null
+# echo $db_password | podman secret create DB_PASSWORD -
 
 ### TEMPLATES
 
