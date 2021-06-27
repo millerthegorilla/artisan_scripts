@@ -9,15 +9,18 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+DEBUG=True
 
 ## TODO: clearsessions cron job
 
-from pathlib import Path
 import sys, os
-from django.urls import reverse_lazy
+from pathlib import Path
 
 from dotenv import load_dotenv
+
+from django.urls import reverse_lazy
+from django.utils import timezone
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -50,19 +53,21 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'crispy_forms',
+    'crispy_bootstrap5',
     'captcha', #django-recaptcha
     'tinymce',
     'sorl.thumbnail',
     'django_elasticsearch_dsl',
     'django_q',
     'dbbackup',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.cache.FetchFromCacheMiddleware',
@@ -74,11 +79,9 @@ MIDDLEWARE = [
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_BROWSER_XSS_FILTER = True
 
 ROOT_URLCONF = "{}.urls".format(os.getenv("DJANGO_PROJECT_NAME"))
+
 TEMPLATE_DIR = 'templates/'
 TEMPLATES = [
     {
@@ -98,6 +101,21 @@ TEMPLATES = [
         },
     },
 ]
+
+# django-q
+Q_CLUSTER = {
+    'name': 'DJRedis',
+    'workers': 4,
+    'timeout': 20,
+    'retry': 60,
+    'django_redis': 'default'
+}
+
+# dbbackup
+DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'oauth2_access_token': os.getenv("DROPBOX_OAUTH_TOKEN"),
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -127,59 +145,59 @@ CACHES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 12,
-         }
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-    {
-        'NAME': 'django_password_validators.password_history.password_validation.UniquePasswordsValidator',
-        'OPTIONS': {
-                 # How many recently entered passwords matter.
-                 # Passwords out of range are deleted.
-                 # Default: 0 - All passwords entered by the user. All password hashes are stored.
-            'last_passwords': 5 # Only the last 5 passwords entered by the user
-        }
-    },
-    {
-        'NAME': 'django_password_validators.password_character_requirements.password_validation.PasswordCharacterValidator',
-        'OPTIONS': {
-            'min_length_digit': 1,
-            'min_length_alpha': 1,
-            'min_length_special': 0,
-            'min_length_lower': 1,
-            'min_length_upper': 1,
-            'special_characters': ""
-        }
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    #     'OPTIONS': {
+    #         'min_length': 12,
+    #      }
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django_password_validators.password_history.password_validation.UniquePasswordsValidator',
+    #     'OPTIONS': {
+    #              # How many recently entered passwords matter.
+    #              # Passwords out of range are deleted.
+    #              # Default: 0 - All passwords entered by the user. All password hashes are stored.
+    #         'last_passwords': 5 # Only the last 5 passwords entered by the user
+    #     }
+    # },
+    # {
+    #     'NAME': 'django_password_validators.password_character_requirements.password_validation.PasswordCharacterValidator',
+    #     'OPTIONS': {
+    #         'min_length_digit': 1,
+    #         'min_length_alpha': 1,
+    #         'min_length_special': 0,
+    #         'min_length_lower': 1,
+    #         'min_length_upper': 1,
+    #         'special_characters': ""
+    #     }
+    # },
 ]
 
 ### TODO: consider using shadowd web app firewall, if there is enough power...
-
-# primary key
-DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-gb'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Jersey'
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
+
+# primary key
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -220,27 +238,30 @@ IMAGE_UPLOAD_PATH = '/uploads/users/'
 def verified_callback(user):
     user.is_active = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_VERIFIED_CALLBACK = verified_callback
 EMAIL_ACTIVE_FIELD = 'is_active'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv("EMAIL_APP_ADDRESS")
-EMAIL_FROM_ADDRESS = os.getenv("EMAIL_FROM_ADDRESS")
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+EMAIL_HOST_USER = "development@django_artisan.com"
+# os.getenv("EMAIL_APP_ADDRESS")
+EMAIL_FROM_ADDRESS = "noreply@django_artisan.com"
+# os.getenv("EMAIL_FROM_ADDRESS")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_APP_KEY")
 EMAIL_MAIL_SUBJECT = 'Confirm your email'
 EMAIL_MAIL_HTML = 'emails/mail_body.html'
 EMAIL_MAIL_PLAIN = 'emails/mail_body.txt'
 EMAIL_PAGE_TEMPLATE = 'registration/confirm.html'
-EMAIL_PAGE_DOMAIN = os.getenv("DUCKDNS_DOMAIN")
+EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000'
 EMAIL_TOKEN_LIFE = 60 * 60 * 24
-EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = True
 CUSTOM_SALT = os.getenv("CUSTOM_SALT")
 
 ## RECAPTCHA SETTINGS
-RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
-RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
+RECAPTCHA_PUBLIC_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+RECAPTCHA_PRIVATE_KEY = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
 
-# SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 ## SESSION SETTINGS
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -248,6 +269,14 @@ ESSION_COOKIE_AGE = 129600 # 36 hours.  # defaults to two weeks
 SESSION_COOKIE_SECURE = True    # set this to true when using https
 # SESSION_SAVE_EVERY_REQUEST = True  #updates timestamp to increase session_cookie_age
 
+# the amount of time before a comment or post is hard deleted
+DELETION_TIMEOUT = timezone.timedelta(days=21)
+# the amount of time to wait before emails are sent to subscribed users
+COMMENT_WAIT = timezone.timedelta(seconds=600)
+# msg sent to subscribed users
+# the msg must include one pair of brackets, which will contain
+# the href of the post
+SUBSCRIBED_MSG = "<h3 style='color: blue;'>Ceramic Isles</h3><br>A new comment has been added to a post that you are subscribed to!<br>Follow this link to view the post and comments: {}"
 
 # settings for bleach
 
@@ -280,7 +309,8 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # django crispy forms
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 CLAMAV_SOCKET = str(os.getenv("CLAMAV_ADDRESS"))
 
@@ -302,34 +332,111 @@ ABOUT_US_SPIEL = "<span class='spiel-headline'>Ceramic Isles</span> <span class=
 ### NAVBAR
 NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
                 local to the Channel Islands are able to meet, chat, and show off their work. \
-                 If you are a ceramic artist local to one of the Channel Islands, consider \
-                 registering as a user to be able to access the forum, \
-                 and to be able present images of your work here, on this page.<br> \
-                    Click the Ceramic Isles Logo to return to the landing page \
-                    which acts as a gallery for member's work.</p>"
+                If you are a ceramic artist local to one of the Channel Islands, consider \
+                registering as a user to be able to access the forum, \
+                and to be able present images of your work here, on this page.<br> \
+                Click the Ceramic Isles Logo to return to the landing page \
+                which acts as a gallery for member's work.<br> \
+                On a diet???  This site is cookie free!<br> \
+                Problems??? contact - ceramic_isles [at] gmail.com"
 
 ### The following are used by django_artisan and django_forum_app
 SITE_NAME = str(os.getenv("SITE_NAME"))
 SITE_LOGO = 'django_artisan/images/vase.svg'
-SITE_DOMAIN = str(os.getenv("DUCKDNS_DOMAIN"))
+SITE_DOMAIN = '127.0.0.1:8000'
 #for the sites framework so that sitemaps will work
 SITE_ID = 1
+
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+class CATEGORY(models.TextChoices):
+    EVENT = 'EV', _('Event')
+    QUESTION = 'QN', _('Question')
+    GENERAL = 'GL', _('General')
+    PICTURES = 'PS', _('Pictures')
+    FORSALE = 'FS', _('For Sale')
+
+class LOCATION(models.TextChoices):
+    ANY_ISLE = 'AI', _('Any')
+    ALDERNEY = 'AY', _('Alderney')
+    GUERNSEY = 'GY', _('Guernsey')
+    JERSEY = 'JE', _('Jersey')
+    SARK = 'SK', _('Sark')
+
+def skip_mtime_seen(record):
+    if 'mtime' in record.getMessage():  # filter whatever you want
+        return False
+    return True
+
+def skip_djangoq_schedule(record):
+    if 'schedule' in record.getMessage():
+        return False
+    return True
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        # use Django's built in CallbackFilter to point to your filter
+        'skip_mtime_seen': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_mtime_seen
+        },
+        'skip_djangoq_schedule': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_djangoq_schedule
+        }
+    },
+    'formatters': {
+        'django': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] - {pathname} - {message}',
+            'style': '{',
+        },
+        'verbose': {
+            'format': '{levelname} {asctime} {pathname} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        }
+    },
     'handlers': {
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
+            'formatter': 'verbose',
+            'filters': ['skip_mtime_seen', 'skip_djangoq_schedule'],
+        },
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django',
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
-       },
-    },
-}
+            'django': {
+                'handlers': ['file', 'console'],
+                'level': 'DEBUG',
+                'propagate': True,
+           },
+        },
+    }
+
+# I think sentry in dev mode is not secure...
+# import sentry_sdk
+# from sentry_sdk.integrations.django import DjangoIntegration
+# from sentry_sdk.integrations.redis import RedisIntegration
+
+# sentry_sdk.init(
+#     dsn="https://0f35df857c1f4ea19b61fa76729dde9e@o803843.ingest.sentry.io/5802934",
+#     integrations=[DjangoIntegration(), RedisIntegration()],
+
+#     # Set traces_sample_rate to 1.0 to capture 100%
+#     # of transactions for performance monitoring.
+#     # We recommend adjusting this value in production.
+#     traces_sample_rate=1.0,
+
+#     # If you wish to associate users to errors (assuming you are using
+#     # django.contrib.auth) you may enable sending PII data.
+#     send_default_pii=True
+# )
+

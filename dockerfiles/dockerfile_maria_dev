@@ -1,0 +1,8 @@
+# build command is: podman build --tag='python:django' -f='dockerfile_django'
+FROM docker.io/library/mariadb
+RUN apt-get update && apt-get upgrade -y
+RUN rm -rf /var/lib/apt/lists/*
+COPY ./maria /docker-entrypoint-initdb.d/maria.sh
+RUN chmod +x /docker-entrypoint-initdb.d/maria.sh
+# RUN chown mysql:mysql /docker-entrypoint-initdb.d/maria.sh
+# RUN chown root:root /var/lib/mysql

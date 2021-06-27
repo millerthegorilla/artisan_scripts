@@ -5,16 +5,12 @@ PARAMS=""
 set -a
 SCRIPTS_ROOT=$(pwd)
 source ${SCRIPTS_ROOT}/options
-if [[ -e .archive ]]
-then
-  source .archive
-fi
 set +a
 
 while (( "$#" )); do
   case "$1" in
     create)
-      ${SCRIPTS_ROOT}/scripts/initial_provision.sh  
+      ${SCRIPTS_ROOT}/scripts/get_variables.sh
       exit $? 
       ;;
     clean)

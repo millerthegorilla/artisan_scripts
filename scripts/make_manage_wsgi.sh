@@ -28,5 +28,5 @@ then
     DJANGO_PROJECT_NAME=${django_project_name:-${PN}}
 fi
 
-cat ${SCRIPTS_ROOT}/templates/manage.py | envsubst > ${CODE_PATH}/manage.py
-cat ${SCRIPTS_ROOT}/templates/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
+cat ${SCRIPTS_ROOT}/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.py
+cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py

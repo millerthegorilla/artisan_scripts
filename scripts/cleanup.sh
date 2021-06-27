@@ -100,7 +100,7 @@ select yn in "Yes" "No"; do
     esac
 done
 
-source ${SCRIPTS_ROOT}/scripts/utils.sh
+source ${SCRIPTS_ROOT}/scripts/super_access.sh
 
 if [[ save_sets -eq 1 ]]
 then
@@ -108,7 +108,9 @@ then
 fi
 
 rm .env
-rm swag/default
+rm .archive
+rm .proj
+rm dockerfiles/swag/default
 rm settings/gunicorn.conf.py
 rm settings/settings.py
 rm settings/settings_env
@@ -127,6 +129,27 @@ then
     PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
     read -p "enter the name of the django project folder (where wsgi.py resides) [${PN}] : " DJANGO_PROJECT_NAME
     DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME:-${PN}}
+fi
+
+echo -e "remove media files (choose a number)?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) mediafiles_remove=1; break;;
+        No ) mediafiles_remove=0; break;;
+    esac
+done
+
+if [[ ${mediafiles_remove} == 1 ]]
+then
+    if [[ -n ${DEBUG} && ${DEBUG} == "TRUE" ]]
+    then   
+        rm -rf ${CODE_PATH}/media/cache
+        rm -rf ${CODE_PATH}/media/uploads
+    elif [[ -n ${DEBUG} && ${DEBUG} == "FALSE" ]]
+    then
+        rm -rf $/etc/opt/${PROJECT_NAME}/static/media/cache
+        rm -rf $/etc/opt/${PROJECT_NAME}/static/media/uploads
+    fi
 fi
 
 rm ${CODE_PATH}/manage.py
@@ -205,25 +228,9 @@ done
 
 if [[ ${SYSD} == "TRUE" ]]
 then
-    
-    if [[ $(ls ${SCRIPTS_ROOT}/systemd/ | wc -l) != 0 ]]
-    then
-        systemctl --user disable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')
-    fi
-
     super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh"
     
     rm -rf ${SCRIPTS_ROOT}/systemd 
     mkdir ${SCRIPTS_ROOT}/systemd
-    cp ${SCRIPTS_ROOT}/templates/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore
-fi
-
-if [[ -f "${SCRIPTS_ROOT}/.archive" ]]
-then
-    rm ${SCRIPTS_ROOT}/.archive
-fi
-
-if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
-then
-    rm ${SCRIPTS_ROOT}/.proj
+    cp ${SCRIPTS_ROOT}/templates/systemd/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore
 fi

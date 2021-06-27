@@ -16,9 +16,10 @@ cd ${SCRIPTS_ROOT}/systemd
 FILES=*
 for f in ${FILES}
 do
-  if [[ -e /etc/systemd/user/${f} ]]
+  if [[ -e /etc/systemd/system/${f} ]]
   then
-      rm -rf /etc/systemd/user/${f}
+      systemctl disable ${f}
+      rm -rf /etc/systemd/system/${f}
   fi
 done
 

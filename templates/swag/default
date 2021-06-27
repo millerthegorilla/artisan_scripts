@@ -21,7 +21,7 @@ server {
         add_header X-Frame-Options SAMEORIGIN;
         add_header X-Content-Type-Options nosniff;
         add_header X-XSS-Protection "1; mode=block";
-        add_header Content-Security-Policy "default-src https://*.${EXTRA_DOMAINS} https://*.${DUCKDNS_SUBDOMAIN} https://*.gstatic.com https://www.google.com/recaptcha/ https://*.jsdelivr.net https://*.jquery.com 'self'; style-src https://*.${EXTRA_DOMAINS} https://*.${DUCKDNS_SUBDOMAIN} https://*.jsdelivr.net https://*.googleapis.com 'self'; script-src https://*.jquery.com https://*.jsdelivr.net https://*.google.com/recaptcha/ https://*.gstatic.com/recaptcha/ 'self'; img-src 'self' https://*.${EXTRA_DOMAINS} https://*.${DUCKDNS_SUBDOMAIN} data: https://*.${EXTRA_DOMAINS} https://*.${DUCKDNS_SUBDOMAIN} 'self'; object-src 'none'";
+        add_header Content-Security-Policy "default-src https://*.${tld_domain} https://*.${duckdns_domain} https://*.gstatic.com https://www.google.com/recaptcha/ https://*.jsdelivr.net https://*.jquery.com 'self'; style-src https://*.${tld_domain} https://*.${duckdns_domain} https://*.jsdelivr.net https://*.googleapis.com 'self'; script-src https://*.jquery.com https://*.jsdelivr.net https://*.google.com/recaptcha/ https://*.gstatic.com/recaptcha/ 'self'; img-src 'self' https://*.${tld_domain} https://*.${duckdns_domain} data: https://*.${tld_domain} https://*.${duckdns_domain} 'self'; object-src 'none'";
 
         server_name _;                                                                                                                                                  
 

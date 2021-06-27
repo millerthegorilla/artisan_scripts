@@ -1,16 +1,5 @@
 #!/bin/bash
 
-if [[ -z "${DEBUG}" ]]
-then
-    echo -e "\nIs this development ie debug? : "
-    select yn in "Yes" "No"; do
-        case $yn in
-            Yes ) DEBUG="TRUE"; break;;
-            No ) DEBUG="FALSE"; break;;
-        esac
-    done
-fi
-
 function settings_copy()
 {
     echo "Please select the settings file from the list"
@@ -37,9 +26,9 @@ else
     settings_copy "production"
 fi
 
-if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
+if [[ -f "${SCRIPTS_ROOT}/.archive" ]]
 then
-    source ${SCRIPTS_ROOT}/.proj
+    source ${SCRIPTS_ROOT}/.archive
 fi
 
 if [[ -n "${PROJECT_NAME}" ]]
@@ -49,35 +38,19 @@ else
     echo -e "\n*** PROJECT NAME IS NOT SET ***"
 fi
 
-if [[ -z "${PROJECT_NAME}" ]]
-then
-    read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements [${PROJECT_NAME}] : " pn
-
-    project_name=${pn:-${PROJECT_NAME}}
-else
-    project_name=$PROJECT_NAME
-fi
-
-if [[ -z "$CODE_PATH" ]]
-then
-    read -p 'Path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
-else
-    echo -e "\nCODE PATH is ${CODE_PATH}\n"
-fi
-
-set -a
-DEBUG=${DEBUG}
-CODE_PATH=${CODE_PATH}
-PROJECT_NAME=${project_name}
-set +a
-
-${SCRIPTS_ROOT}/scripts/get_variables.sh
-
 set -a
 source ${SCRIPTS_ROOT}/.env
 set +a
 
-echo -e "\n" >> ${SCRIPTS_ROOT}/.archive
+if [[ ! -f ${HOST_LOG_DIR} ]]
+then
+    mkdir -p ${HOST_LOG_DIR}
+    mkdir ${HOST_LOG_DIR}/django
+    mkdir ${HOST_LOG_DIR}/gunicorn
+fi
+
+# podman unshare chown 999:0 /etc/opt/${PROJECT_NAME}/database
+
 echo CURRENT_SETTINGS=${file[${input}]} >> .archive 
 echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
@@ -119,9 +92,19 @@ done
 
 if [[ ${SYSD} == "TRUE" ]]
 then
-    cd ${SCRIPTS_ROOT}/systemd/   ## DIRECTORY CHANGE HERE
 
-    podman generate systemd --files ${POD_NAME}
+    source ${SCRIPTS_ROOT}/scripts/super_access.sh
+
+    if [[ $(id ${SYSTEMD_USER_NAME} & >/dev/null; echo $?) == 0 ]]
+    then
+        "warning, system account with username ${SYSTEMD_USER_NAME} already exists!"
+    else
+        super_access "useradd -r ${SYSTEMD_USER_NAME}"
+    fi
+
+    cd ${SCRIPTS_ROOT}/systemd/ ## DIRECTORY CHANGE HERE
+
+    podman generate systemd --new --files ${POD_NAME}
     set -a
      django_service=$(cat .django_container_id)
      django_cont_name=${DJANGO_CONT_NAME}
@@ -132,16 +115,12 @@ then
     ## TEMPLATE
     if [[ ${DEBUG} == "TRUE" ]]
     then
-        cat ${SCRIPTS_ROOT}/templates/manage_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/manage_start.service 
+        cat ${SCRIPTS_ROOT}/templates/systemd/manage_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/manage_start.service 
     else
-        cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
+        cat ${SCRIPTS_ROOT}/templates/systemd/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
     fi
     
-    source ${SCRIPTS_ROOT}/scripts/utils.sh
-    
-    super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
-
-    systemctl --user enable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')
+    SUNAME=${SYSTEMD_USER_NAME} super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
 
     cd ${SCRIPTS_ROOT}   ## DIRECTORY CHANGE HERE
 fi

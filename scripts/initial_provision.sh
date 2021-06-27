@@ -1,15 +1,17 @@
 #!/bin/bash
 
-set -a
-SCRIPTS_ROOT=${SCRIPTS_ROOT}
-set +a
+echo PROJECT_NAME=${PROJECT_NAME} > .proj
+echo USER=${USER} >> .proj
+echo USER_DIR=${USER_DIR} >> .proj
+echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
+echo CODE_PATH=${CODE_PATH} >> .proj
 
 echo -e "\nI will first create the directories.\n"
 
 exists=$(type -t super_access)
 if [[ ${exists} != "function " ]]
 then
-    source ${SCRIPTS_ROOT}/scripts/utils.sh
+    source ${SCRIPTS_ROOT}/scripts/super_access.sh
 fi
 
 SUNAME=${SUNAME} super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/create_directories.sh" 
@@ -29,7 +31,7 @@ fi
 podman image exists mariadb:10.5.9
 if [[ ! $? -eq 0 ]]
 then
-        podman pull docker.io/library/mariadb:10.5.9 &
+        podman pull docker.io/library/mariadb:latest &
 fi
 podman image exists redis:6.2.2-buster
 if [[ ! $? -eq 0 ]]
@@ -54,26 +56,39 @@ fi
 
 wait
 
-echo -e "\nIs this development ie debug? : "
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) DEBUG="TRUE"; break;;
-        No ) DEBUG="FALSE"; break;;
-    esac
-done
-
-set -a
-DEBUG=${DEBUG}
-set +a
-
-podman image exists python:django
+podman image exists python:artisan
 if [[ ! $? -eq 0 ]]
 then
     if [[ ${DEBUG} == "TRUE" ]]
     then  
-        podman build --tag='python:django' -f='./dockerfiles/dockerfile_django_dev'
+        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag='python:artisan' -f='dockerfiles/dockerfile_django_dev'
     else
-        podman build --tag='python:django' -f='./dockerfiles/dockerfile_django_prod'
+        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag='python:artisan' -f='dockerfiles/dockerfile_django_prod'
+    fi
+fi
+
+# podman image exists maria:artisan
+# if [[ ! $? -eq 0 ]]
+# then
+#     if [[ ${DEBUG} == "TRUE" ]]
+#     then  
+#         podman build --tag='maria:artisan' -f='dockerfiles/dockerfile_maria_dev'
+#     else
+#         podman build --tag='maria:artisan' -f='dockerfiles/dockerfile_maria_prod'
+#     fi
+# fi
+
+if [[ ${DEBUG} == "FALSE" ]]
+then
+    podman image exists swag:artisan
+    if [[ ! $? -eq 0 ]]
+    then
+        if [[ ${DEBUG} == "TRUE" ]]
+        then  
+            podman build --tag='swag:artisan' -f='dockerfiles/dockerfile_swag_dev'
+        else
+            podman build --tag='swag:artisan' -f='dockerfiles/dockerfile_swag_prod'
+        fi
     fi
 fi
 
