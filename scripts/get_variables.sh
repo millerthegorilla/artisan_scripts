@@ -138,10 +138,10 @@ function make_secret()
         if [[ ${REUSE} == "FALSE" ]]
         then
             podman secret rm ${1}
-             $(read -p "Enter variable for ${1} : " token) && echo token | podman secret create "${1}" -
+             $(read -p "Enter variable for ${1} : " token) && printf token | podman secret create "${1}" -
         fi
     else
-        $(read -p "Enter variable for ${1} : " token) && echo token | podman secret create "${1}" -
+        $(read -p "Enter variable for ${1} : " token) && printf token | podman secret create "${1}" -
     fi
 
 }

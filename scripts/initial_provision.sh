@@ -28,10 +28,10 @@ if [[ ! $? -eq 0 ]]
 then
 	podman pull docker.io/library/elasticsearch:7.11.2 &
 fi
-podman image exists mariadb:10.5.9
+podman image exists mariadb:10.5
 if [[ ! $? -eq 0 ]]
 then
-        podman pull docker.io/library/mariadb:latest &
+        podman pull docker.io/library/mariadb:10.5 &
 fi
 podman image exists redis:6.2.2-buster
 if [[ ! $? -eq 0 ]]
