@@ -11,7 +11,7 @@ RUN mkdir -p /var/log/${PROJECT_NAME};
 RUN mkdir -p /etc/opt/${PROJECT_NAME}/settings; 
 RUN mkdir -p /etc/opt/${PROJECT_NAME}/static_files;
 RUN useradd -m artisan
-ENV VIRTUAL_ENV=/home/artisan/django_env
+ENV VIRTUAL_ENV=/home/artisan/django_venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY ./pip_requirements_dev /tmp/pip_requirements

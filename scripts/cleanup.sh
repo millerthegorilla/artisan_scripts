@@ -18,9 +18,6 @@ fi
 podman pod exists ${POD_NAME};
 retval=$?
 
-podman pod exists ${POD_NAME};
-retval=$?
-
 if [[ ! $retval -eq 0 ]]
 then
 	echo no such pod!
@@ -71,7 +68,19 @@ then
     fi
 fi
 
-echo -e "remove podman images (choose a number)?"
+
+## TODO check for image existence before deleting
+if [[ ${DEBUG} == "TRUE" ]]
+then
+    podman rmi python:artisan_debug
+else
+    podman rmi python:artisan_prod
+    podman rmi swag:artisan
+fi
+
+rm -rf ${SCRIPTS_ROOT}/dockerfiles/django/*
+
+echo -e "remove all podman images (choose a number)?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) imgs_remove=1; break;;
@@ -155,9 +164,10 @@ fi
 rm ${CODE_PATH}/manage.py
 rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
 
-echo -e "removing /etc/opt/${PROJECT_NAME}..."
-
-super_access "rm -rf /etc/opt/${PROJECT_NAME}"
+if [[ -n "${PROJECT_NAME}" ]]
+then
+    super_access "rm -rf /etc/opt/${PROJECT_NAME}"
+fi
 
 echo -e "remove logs or save logs and remove logs dir (choose a number)?"
 select yn in "Yes" "No" "Save"; do
@@ -218,7 +228,7 @@ then
     remove_logs_dir
 fi
 
-echo -e "Uninstall and remove systemd --user unit files? : "
+echo -e "Uninstall and remove systemd unit files? : "
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) SYSD="TRUE"; break;;
@@ -228,8 +238,22 @@ done
 
 if [[ ${SYSD} == "TRUE" ]]
 then
-    super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh"
-    
+    cd ${SCRIPTS_ROOT}/systemd
+    if [[ ${DEBUG} == "TRUE" ]]
+    then
+        FILES=*
+        for f in ${FILES}
+        do
+          if [[ -e /etc/systemd/user/${f} ]]
+          then
+            systemctl --user disable ${f}
+          fi
+        done
+        super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_cleanup.sh"
+    else
+        super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh"
+    fi
+    cd ${SCRIPTS_ROOT}   
     rm -rf ${SCRIPTS_ROOT}/systemd 
     mkdir ${SCRIPTS_ROOT}/systemd
     cp ${SCRIPTS_ROOT}/templates/systemd/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore

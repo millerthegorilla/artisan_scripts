@@ -20,7 +20,7 @@ PORT2_DESCRIPTION=0.0.0.0:80:80
 
 ## DJANGO
 DJANGO_CONT_NAME="django_cont"
-DJANGO_IMAGE="python:artisan"
+DJANGO_IMAGE=${django_image}
 DJANGO_CONT_LOG_DIR="/var/log/${PROJECT_NAME}/"
 DJANGO_HOST_STATIC_VOL="${host_static_dir}"
 DJANGO_CONT_STATIC_VOL="/etc/opt/${PROJECT_NAME}/static_files"

@@ -4,6 +4,8 @@ echo -e "\nThe following questions are to fill out the env files that are called
 
 echo -e "#******************************************************************"
 echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
+echo -e "#**** and have a password protected system user account       *****"
+echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
 
 set -a
@@ -121,6 +123,23 @@ recaptcha_private="${recaptcha_private}"
 ## system user account name
 read -p "System Account Name for systemd units ['artisan_sysd'] : " systemd_user
 systemd_user=${systemd_user:-"artisan_sysd"}
+if [[ $(id ${systemd_user} > /dev/null 2>&1; echo $?) -ne 0 ]]
+then
+    echo -e "Error, account with username ${systemd_user} does not exist!"
+    exit 1
+else
+    if [[ $(id -u ${systemd_user}) -ge 1000 ]]
+    then
+        echo -e "Error, ${systemd_user} account is not a system account"
+    fi
+fi
+
+if [[ ${DEBUG} == "TRUE" ]]
+then
+    django_image=python:artisan_debug
+else
+    django_image=python:artisan_prod
+fi
 set +a
 
 ## parameters : prompt (string), secret name
@@ -138,10 +157,10 @@ function make_secret()
         if [[ ${REUSE} == "FALSE" ]]
         then
             podman secret rm ${1}
-             $(read -p "Enter variable for ${1} : " token) && printf token | podman secret create "${1}" -
+            read -p "Enter variable for ${1} : " token && echo -n "$token" | podman secret create "${1}" - 
         fi
     else
-        $(read -p "Enter variable for ${1} : " token) && printf token | podman secret create "${1}" -
+        read -p "Enter variable for ${1} : " token && echo -n "$token" | podman secret create "${1}" -
     fi
 
 }
@@ -163,11 +182,11 @@ cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT
 cat ${SCRIPTS_ROOT}/templates/settings/archive | envsubst > ${SCRIPTS_ROOT}/.archive
 cat ${SCRIPTS_ROOT}/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.py
 cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
-if [[ ${DEBUG} == "TRUE" ]]
+if [[ ${DEBUG} == "FALSE" ]]
 then
     cat ${SCRIPTS_ROOT}/templates/gunicorn/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
     cat ${SCRIPTS_ROOT}/templates/gunicorn/supervisor_gunicorn | envsubst > ${SCRIPTS_ROOT}/settings/supervisor_gunicorn
-    cat ${SCRIPTS_ROOT}/templates/swag/default | envsubst > ${SCRIPTS_ROOT}/dockerfiles/swag/default
+    cat ${SCRIPTS_ROOT}/templates/swag/default | envsubst -v '$tld_domain:$duckdns_domain' > ${SCRIPTS_ROOT}/dockerfiles/swag/default
 fi
 ### Systemd system account creation
 

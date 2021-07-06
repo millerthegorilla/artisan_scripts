@@ -7,6 +7,7 @@ echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
 echo CODE_PATH=${CODE_PATH} >> .proj
 
 echo -e "\nI will first create the directories.\n"
+echo debug is ${DEBUG}
 
 exists=$(type -t super_access)
 if [[ ${exists} != "function " ]]
@@ -56,14 +57,20 @@ fi
 
 wait
 
-podman image exists python:artisan
-if [[ ! $? -eq 0 ]]
+if [[ ${DEBUG} == "TRUE" ]]
 then
-    if [[ ${DEBUG} == "TRUE" ]]
-    then  
-        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag='python:artisan' -f='dockerfiles/dockerfile_django_dev'
-    else
-        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag='python:artisan' -f='dockerfiles/dockerfile_django_prod'
+    podman image exists python:artisan_debug
+    if [[ ! $? -eq 0 ]]
+    then
+        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag='python:artisan_debug' -f='dockerfiles/dockerfile_django_dev'
+    fi
+else
+    podman image exists python:artisan_prod
+    if [[ ! $? -eq 0 ]]
+    then
+        cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django
+        cp ${SCRIPTS_ROOT}/settings/supervisor_gunicorn ${SCRIPTS_ROOT}/dockerfiles/django/supervisor_gunicorn
+        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --build-arg=SCRIPTS_ROOT=${SCRIPTS_ROOT} --build-arg=CODE_PATH=${CODE_PATH} --tag='python:artisan_prod' -f='dockerfiles/dockerfile_django_prod'
     fi
 fi
 
@@ -83,12 +90,7 @@ then
     podman image exists swag:artisan
     if [[ ! $? -eq 0 ]]
     then
-        if [[ ${DEBUG} == "TRUE" ]]
-        then  
-            podman build --tag='swag:artisan' -f='dockerfiles/dockerfile_swag_dev'
-        else
-            podman build --tag='swag:artisan' -f='dockerfiles/dockerfile_swag_prod'
-        fi
+        podman build --build-arg=SCRIPTS_ROOT=${SCRIPTS_ROOT} --tag='swag:artisan' -f='dockerfiles/dockerfile_swag_prod'
     fi
 fi
 

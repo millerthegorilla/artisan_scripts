@@ -12,16 +12,14 @@ then
 fi
 
 cd ${SCRIPTS_ROOT}/systemd
-cp -a * /etc/systemd/system/
 
 FILES=*
 for f in ${FILES}
 do
-  echo -e "\n[Service]\nUser=${SYSTEMD_USER}" >> /etc/systemd/system/${f}
-  if [[ -e /etc/systemd/system/${f} ]]
+  if [[ -e /etc/systemd/user/${f} ]]
   then
-      chcon -u system_u -t systemd_unit_file_t /etc/systemd/system/${f}
-      systemctl enable ${f}
+      rm -rf /etc/systemd/user/${f}
   fi
 done
+
 cd ${SCRIPTS_ROOT}

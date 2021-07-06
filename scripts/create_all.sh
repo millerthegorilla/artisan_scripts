@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo beginning of create_all debug is ${DEBUG}
+
 function settings_copy()
 {
     echo "Please select the settings file from the list"
@@ -19,7 +21,7 @@ function settings_copy()
     cp ${SCRIPTS_ROOT}/settings/${1}/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
 }
 
-if [[ ${DEBUG} == "TRUE" ]]   ## TODO function 
+if [[ "${DEBUG}" == "TRUE" ]]   ## TODO function 
 then
     settings_copy "development"
 else
@@ -56,14 +58,14 @@ echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 echo CODE_PATH=${CODE_PATH} >> ${SCRIPTS_ROOT}/.archive
 
-if [[ ${DEBUG} == "TRUE" ]]
+if [[ "${DEBUG}" == "TRUE" ]]
 then
    podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000
 else
    podman pod create --name ${POD_NAME} -p ${PORT1_DESCRIPTION} -p ${PORT2_DESCRIPTION} # --dns-search=${POD_NAME} --dns-opt=timeout:30 --dns-opt=attempts:5
 fi
 
-if [[ ${DEBUG} == "FALSE" ]]
+if [[ "${DEBUG}" == "FALSE" ]]
 then
    ${SCRIPTS_ROOT}/container_scripts/run_duckdns_cont.sh
 fi
@@ -73,7 +75,7 @@ ${SCRIPTS_ROOT}/container_scripts/run_redis_cont.sh
 ${SCRIPTS_ROOT}/container_scripts/run_elastic_search_cont.sh
 ${SCRIPTS_ROOT}/container_scripts/run_maria_cont.sh
 
-if [[ ${DEBUG} == "FALSE" ]]
+if [[ "${DEBUG}" == "FALSE" ]]
 then
    ${SCRIPTS_ROOT}/container_scripts/run_swag_cont.sh
 fi
@@ -95,11 +97,10 @@ then
 
     source ${SCRIPTS_ROOT}/scripts/super_access.sh
 
-    if [[ $(id ${SYSTEMD_USER_NAME} & >/dev/null; echo $?) == 0 ]]
+    if [[ $(id ${SYSTEMD_USER_NAME} > /dev/null 2>&1; echo $?) -ne 0 ]]
     then
-        "warning, system account with username ${SYSTEMD_USER_NAME} already exists!"
-    else
-        super_access "useradd -r ${SYSTEMD_USER_NAME}"
+        echo -e "Error, system account with username ${SYSTEMD_USER_NAME} does not exist!"
+        exit 1
     fi
 
     cd ${SCRIPTS_ROOT}/systemd/ ## DIRECTORY CHANGE HERE
@@ -116,11 +117,26 @@ then
     if [[ ${DEBUG} == "TRUE" ]]
     then
         cat ${SCRIPTS_ROOT}/templates/systemd/manage_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/manage_start.service 
+        cat ${SCRIPTS_ROOT}/templates/systemd/qcluster_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
+        super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh"
+
+        cd ${SCRIPTS_ROOT}/systemd/
+        FILES=*
+        for f in ${FILES}
+        do
+          if [[ -e /etc/systemd/user/${f} ]]
+          then
+              systemctl --user enable ${f}
+          fi
+        done
+
+        cd ${SCRIPTS_ROOT}
     else
         cat ${SCRIPTS_ROOT}/templates/systemd/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
+        cat ${SCRIPTS_ROOT}/templates/systemd/qcluster_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
+        super_access "SYSTEMD_USER=${SYSTEMD_USER_NAME} SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
     fi
     
-    SUNAME=${SYSTEMD_USER_NAME} super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
 
     cd ${SCRIPTS_ROOT}   ## DIRECTORY CHANGE HERE
 fi

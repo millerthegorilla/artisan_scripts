@@ -99,6 +99,21 @@ TEMPLATES = [
     },
 ]
 
+# django-q
+Q_CLUSTER = {
+    'name': 'DJRedis',
+    'workers': 4,
+    'timeout': 20,
+    'retry': 60,
+    'django_redis': 'default'
+}
+
+# dbbackup
+DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'oauth2_access_token': os.getenv("DROPBOX_OAUTH_TOKEN"),
+}
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -237,8 +252,10 @@ EMAIL_USE_TLS = True
 CUSTOM_SALT = os.getenv("CUSTOM_SALT")
 
 ## RECAPTCHA SETTINGS
-RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
-RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
+rpubkey = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
+rprivkey = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
+RECAPTCHA_PUBLIC_KEY = rpubkey if rpubkey != "" else "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+RECAPTCHA_PRIVATE_KEY = rprivkey if rprivkey != "" else "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
 
 # SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
@@ -315,21 +332,96 @@ SITE_DOMAIN = str(os.getenv("DUCKDNS_DOMAIN"))
 #for the sites framework so that sitemaps will work
 SITE_ID = 1
 
+
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+class CATEGORY(models.TextChoices):
+    EVENT = 'EV', _('Event')
+    QUESTION = 'QN', _('Question')
+    GENERAL = 'GL', _('General')
+    PICTURES = 'PS', _('Pictures')
+    FORSALE = 'FS', _('For Sale')
+
+class LOCATION(models.TextChoices):
+    ANY_ISLE = 'AI', _('Any')
+    ALDERNEY = 'AY', _('Alderney')
+    GUERNSEY = 'GY', _('Guernsey')
+    JERSEY = 'JE', _('Jersey')
+    SARK = 'SK', _('Sark')
+
+def skip_mtime_seen(record):
+    if 'mtime' in record.getMessage():  # filter whatever you want
+        return False
+    return True
+
+def skip_djangoq_schedule(record):
+    if 'schedule' in record.getMessage():
+        return False
+    return True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        # use Django's built in CallbackFilter to point to your filter
+        'skip_mtime_seen': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_mtime_seen
+        },
+        'skip_djangoq_schedule': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_djangoq_schedule
+        }
+    },
+    'formatters': {
+        'django': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] - {pathname} - {message}',
+            'style': '{',
+        },
+        'verbose': {
+            'format': '{levelname} {asctime} {pathname} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        }
+    },
     'handlers': {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
+            'formatter': 'verbose',
+            'filters': ['skip_mtime_seen', 'skip_djangoq_schedule'],
+        },
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django',
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
-       },
-    },
-}
+            'django': {
+                'handlers': ['file', 'console'],
+                'level': 'ERROR',
+                'propagate': True,
+           },
+        },
+    }
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#        },
+#     },
+# }
