@@ -1,7 +1,7 @@
 #!/bin/bash
 
 read -p "Enter your MYSQL_ROOT_PASSWORD : " mysql_root_password
-podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --name "${MARIA_CONT_NAME}" -v /etc/opt/${PROJECT_NAME}/database:/var/lib/mysql:Z --pod "${POD_NAME}" ${MARIA_IMAGE}
+podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --name "${MARIA_CONT_NAME}" -v dbvol:/var/lib/mysql:Z --pod "${POD_NAME}" ${MARIA_IMAGE}
 echo "Waiting for Database container to be ready"
 until podman exec -e ROOT_PASSWORD="$mysql_root_password" -it "${MARIA_CONT_NAME}" bash -c "mysql -uroot  -p\"\${ROOT_PASSWORD}\" -h'localhost' --protocol=tcp -e \"delete from mysql.global_priv where user='root' and host='%'; flush privileges;\""  > /dev/null 2>&1
 do

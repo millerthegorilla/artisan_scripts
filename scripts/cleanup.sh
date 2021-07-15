@@ -6,6 +6,8 @@ if [[ -f ".archive" ]]; then
    set -a
 fi
 
+source ${SCRIPTS_ROOT}/scripts/super_access.sh
+
 if [[ -z ${POD_NAME} ]]
 then
     read -p "Enter pod name: " POD_NAME
@@ -68,14 +70,10 @@ then
     fi
 fi
 
-
-## TODO check for image existence before deleting
-if [[ ${DEBUG} == "TRUE" ]]
+if [[ ${DEBUG} == "FALSE" ]]
 then
-    podman rmi python:artisan_debug
-else
-    podman rmi python:artisan_prod
-    podman rmi swag:artisan
+    super_access "chown ${USER}:${USER} -R ${CODE_PATH}"
+    super_access "chown ${USER}:${USER} -R /etc/opt/${PROJECT_NAME}"
 fi
 
 rm -rf ${SCRIPTS_ROOT}/dockerfiles/django/*
@@ -90,11 +88,10 @@ done
 
 if [[ imgs_remove -eq 1 ]]
 then
-    podman rmi python:django
 	podman rmi python:latest
-	podman rmi swag:latest
+	podman rmi swag:1.14.0
     podman rmi duckdns:latest
-	podman rmi memcached:latest
+	podman rmi redis:6.2.2-buster
 	podman rmi elasticsearch:7.11.2
 	podman rmi docker-clamav:latest
 	podman rmi mariadb:latest
@@ -105,15 +102,27 @@ echo -e "save settings/.env to ./settings_env_old (choose a number)?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) save_sets=1; break;;
-        No )  save_sets=0; break;;
+        No ) save_sets=0; break;;
     esac
 done
 
-source ${SCRIPTS_ROOT}/scripts/super_access.sh
-
 if [[ save_sets -eq 1 ]]
 then
-        super_access "cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old"
+    super_access "cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old"
+fi
+
+echo -e "remove database podman volume (choose a number)?"
+
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) del_db_vol=1; break;;
+        No ) del_db_vol=0; break;;
+    esac
+done
+
+if [[ del_db_vol -eq 1 ]]
+then
+    podman volume rm dbvol
 fi
 
 rm .env
@@ -122,11 +131,16 @@ rm .proj
 rm dockerfiles/swag/default
 rm settings/gunicorn.conf.py
 rm settings/settings.py
-rm settings/settings_env
 rm settings/supervisor_gunicorn
-rm -rf /etc/opt/${PROJECT_NAME}/settings/*
-rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
-rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
+
+if [[ ${DEBUG} == "TRUE" ]]
+then
+    rm -rf /etc/opt/${PROJECT_NAME}/settings/*
+    rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
+    rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
+else
+    super_access "rm -rf /etc/opt/${PROJECT_NAME}/settings/* /etc/opt/${PROJECT_NAME}/settings/.env /etc/opt/${PROJECT_NAME}/static_files/*"
+fi
 
 if [[ ! -n "$CODE_PATH" ]]
 then
@@ -161,8 +175,13 @@ then
     fi
 fi
 
-rm ${CODE_PATH}/manage.py
-rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+if [[ ${DEBUG} == "TRUE" ]]
+then
+    rm ${CODE_PATH}/manage.py
+    rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+else
+    super_access "rm -rf ${CODE_PATH}/manage.py ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py" 
+fi
 
 if [[ -n "${PROJECT_NAME}" ]]
 then

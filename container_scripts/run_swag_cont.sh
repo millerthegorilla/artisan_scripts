@@ -14,4 +14,9 @@ select yn in "Yes" "No"; do
     esac
 done
 
-podman run -dit --pod=${POD_NAME}  --secret=DUCKDNS_TOKEN,type=env --name=${SWAG_CONT_NAME} --cap-add=NET_ADMIN -e PUID=1000 -e PGID=1000 -e TZ=Europe/London -e URL=${DUCKDNS_SUBDOMAIN}  -e VALIDATION=duckdns -e EXTRA_DOMAINS=${EXTRA_DOMAINS} -e STAGING=$staging -v ${SWAG_HOST_VOL_STATIC}:${SWAG_CONT_VOL_STATIC}:Z -v ${SWAG_HOST_LOG_DIR}:${SWAG_CONT_LOG_DIR}:Z --restart unless-stopped ${SWAG_IMAGE}
+if [[ ${TLDOMAIN} == "TRUE" ]]
+then
+	podman run -dit --pod=${POD_NAME}  --secret=DUCKDNS_TOKEN,type=env --name=${SWAG_CONT_NAME} --cap-add=NET_ADMIN -e PUID=1000 -e PGID=1000 -e TZ=Europe/London -e URL=${DUCKDNS_SUBDOMAIN}  -e VALIDATION=duckdns -e EXTRA_DOMAINS=${EXTRA_DOMAINS} -e STAGING=$staging -v ${SWAG_HOST_VOL_STATIC}:${SWAG_CONT_VOL_STATIC}:Z -v ${SWAG_HOST_LOG_DIR}:${SWAG_CONT_LOG_DIR}:Z --restart unless-stopped ${SWAG_IMAGE}
+else
+	podman run -dit --pod=${POD_NAME}  --secret=DUCKDNS_TOKEN,type=env --name=${SWAG_CONT_NAME} --cap-add=NET_ADMIN -e PUID=1000 -e PGID=1000 -e TZ=Europe/London -e URL=${DUCKDNS_SUBDOMAIN}  -e VALIDATION=duckdns -e STAGING=$staging -v ${SWAG_HOST_VOL_STATIC}:${SWAG_CONT_VOL_STATIC}:Z -v ${SWAG_HOST_LOG_DIR}:${SWAG_CONT_LOG_DIR}:Z --restart unless-stopped ${SWAG_IMAGE}
+fi

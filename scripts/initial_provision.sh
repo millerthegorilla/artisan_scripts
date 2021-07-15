@@ -49,48 +49,55 @@ if [[ ! $? -eq 0 ]]
 then
         podman pull docker.io/linuxserver/duckdns:latest &
 fi
-podman image exists swag:1.13.0-ls46
+podman image exists swag:1.14.0
 if [[ ! $? -eq 0 ]]
 then
-        podman pull docker.io/linuxserver/swag:version-1.14.0 &
+    podman pull docker.io/linuxserver/swag:version-1.14.0 &
 fi
 
 wait
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-    podman image exists python:artisan_debug
+    podman image exists "python:${PROJECT_NAME}_debug"
     if [[ ! $? -eq 0 ]]
     then
-        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag='python:artisan_debug' -f='dockerfiles/dockerfile_django_dev'
+        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag="python:${PROJECT_NAME}_debug" -f='dockerfiles/dockerfile_django_dev'
     fi
 else
-    podman image exists python:artisan_prod
+    podman image exists "python:${PROJECT_NAME}_prod"
     if [[ ! $? -eq 0 ]]
     then
         cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django
         cp ${SCRIPTS_ROOT}/settings/supervisor_gunicorn ${SCRIPTS_ROOT}/dockerfiles/django/supervisor_gunicorn
-        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --build-arg=SCRIPTS_ROOT=${SCRIPTS_ROOT} --build-arg=CODE_PATH=${CODE_PATH} --tag='python:artisan_prod' -f='dockerfiles/dockerfile_django_prod'
+        podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag="python:${PROJECT_NAME}_prod" -f='dockerfiles/dockerfile_django_prod'
     fi
 fi
 
-# podman image exists maria:artisan
-# if [[ ! $? -eq 0 ]]
-# then
-#     if [[ ${DEBUG} == "TRUE" ]]
-#     then  
-#         podman build --tag='maria:artisan' -f='dockerfiles/dockerfile_maria_dev'
-#     else
-#         podman build --tag='maria:artisan' -f='dockerfiles/dockerfile_maria_prod'
-#     fi
-# fi
+function build_swag()
+{
+   rm ${SCRIPTS_ROOT}/.images
+   podman build --tag='swag:artisan' -f='dockerfiles/dockerfile_swag_prod'
+   echo -e "[swag]" > ${SCRIPTS_ROOT}/.images
+   echo -e "TL_DOMAIN=${EXTRA_DOMAINS}" >> ${SCRIPTS_ROOT}/.images
+   echo -e "DUCK_DOMAIN=${DUCKDNS_SUBDOMAIN}" >> ${SCRIPTS_ROOT}/.images 
+}
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
     podman image exists swag:artisan
     if [[ ! $? -eq 0 ]]
     then
-        podman build --build-arg=SCRIPTS_ROOT=${SCRIPTS_ROOT} --tag='swag:artisan' -f='dockerfiles/dockerfile_swag_prod'
+        if [[ -e ${SCRIPTS_ROOT}/.images ]]
+        then
+            source ${SCRIPTS_ROOT}/.images
+            if [[ ${TL_DOMAIN} != ${EXTRA_DOMAINS} || ${DUCK_DOMAIN} != ${DUCKDNS_SUBDOMAIN} ]]
+            then
+                build_swag
+            fi
+        else
+            build_swag
+        fi
     fi
 fi
 

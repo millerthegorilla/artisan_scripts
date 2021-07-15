@@ -5,6 +5,10 @@ PARAMS=""
 set -a
 SCRIPTS_ROOT=$(pwd)
 source ${SCRIPTS_ROOT}/options
+if [[ -e ${SCRIPTS_ROOT}/.archive ]]
+then
+    source ${SCRIPTS_ROOT}/.archive
+fi
 set +a
 
 while (( "$#" )); do
@@ -24,6 +28,16 @@ while (( "$#" )); do
     reload) # preserve positional arguments
       ${SCRIPTS_ROOT}/scripts/reload.sh
       exit $?
+      ;;
+    status)
+      if [[ -n ${POD_NAME} ]]
+      then          
+          echo pod ${POD_NAME} exists!  State is "$(podman pod inspect ${POD_NAME} | grep -m1 State)"
+          exit 0
+      else
+        echo -e "No project running currently"
+      fi
+      exit 1
       ;;
     manage) # preserve positional arguments
       if [[ -z "${DJANGO_CONT_NAME}" ]]

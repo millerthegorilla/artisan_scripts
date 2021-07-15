@@ -22,6 +22,7 @@ PROJECT_NAME=${project_name}
 PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
 read -p "Enter the name of the django project ie the folder in which wsgi.py resides [${PN}] : " django_project_name
 django_project_name=${django_project_name:-${PN}}
+DJANGO_PROJECT_NAME=$django_project_name
 
 if [[ -z "${DEBUG}" ]]
 then
@@ -91,8 +92,18 @@ db_host=${dbh:-${db_host}}
 
 ## DUCKDNS
 read -p "Duckdns domain : " duckdns_domain
-read -p "Your top level domain that points at your duckdns domain : " tld_domain
-EXTRA_DOMAINS="${tld_domain}"
+echo -e "\nDo you have a top level domain pointing at your duckdns domain ? : "
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) tldomain="TRUE"; break;;
+        No ) tldomain="FALSE"; break;;
+    esac
+done
+if [[ ${tldomain} == "TRUE" ]]
+then
+    read -p "Your top level domain that points at your duckdns domain : " tl_domain
+    EXTRA_DOMAINS="${tl_domain}"
+fi
 DUCKDNS_SUBDOMAIN="${duckdns_domain}"
 
 ## DJANGO_EMAIL_VERIFICATION AND EMAIL MODERATORS ETC
@@ -101,9 +112,9 @@ echo -e "# https://support.google.com/accounts/answer/185833?hl=en"
 echo -e "#********************************************"
 read -p "Your app email server address : " email_app_address
 read -p "Your app email server address secret password : " email_app_key
-if [[ ! -z "$tld_domain" ]]
+if [[ ! -z "$tl_domain" ]]
 then
-    return_mail=noreply@${tld_domain}
+    return_mail=noreply@${tl_domain}
 else
     return_mail=noreply@${duckdns_domain}
 fi
@@ -136,9 +147,9 @@ fi
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-    django_image=python:artisan_debug
+    django_image="python:${PROJECT_NAME}_debug"
 else
-    django_image=python:artisan_prod
+    django_image="python:${PROJECT_NAME}_prod"
 fi
 set +a
 
@@ -186,7 +197,12 @@ if [[ ${DEBUG} == "FALSE" ]]
 then
     cat ${SCRIPTS_ROOT}/templates/gunicorn/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
     cat ${SCRIPTS_ROOT}/templates/gunicorn/supervisor_gunicorn | envsubst > ${SCRIPTS_ROOT}/settings/supervisor_gunicorn
-    cat ${SCRIPTS_ROOT}/templates/swag/default | envsubst -v '$tld_domain:$duckdns_domain' > ${SCRIPTS_ROOT}/dockerfiles/swag/default
+    if [[ ${tldomain} == "TRUE" ]]
+    then
+        cat ${SCRIPTS_ROOT}/templates/swag/default_tld | envsubst '$tl_domain:$duckdns_domain' > ${SCRIPTS_ROOT}/dockerfiles/swag/default
+    else
+        cat ${SCRIPTS_ROOT}/templates/swag/default | envsubst '$duckdns_domain' > ${SCRIPTS_ROOT}/dockerfiles/swag/default
+    fi
 fi
 ### Systemd system account creation
 
@@ -198,9 +214,9 @@ unset static_base_root
 unset host_log_dir
 unset swag_host_static_dir
 unset secret_key
-unset duckdns_token
+unset tl_domain
 unset duckdns_domain
-unset tld_domain
+unset duckdns_token
 unset db_name
 unset db_user
 unset db_password

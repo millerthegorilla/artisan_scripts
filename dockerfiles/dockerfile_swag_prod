@@ -1,4 +1,3 @@
-# build command is: podman build --tag='python:django' -f='dockerfile_django'
 FROM docker.io/linuxserver/swag
 RUN rm -rf /var/run/s6/etc/services.d/php-fpm
 COPY ./swag/default /config/nginx/site-confs/default

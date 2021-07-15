@@ -1,7 +1,9 @@
 #!/bin/bash
 
-if [[ -n ${DUCKDNS_TOKEN} && -n ${DUCKDNS_SUBDOMAIN} ]]
+if [[ -n ${DUCKDNS_SUBDOMAIN} ]]
 then
-    podman run -d --pod=${POD_NAME} --name=${DUCKDNS_CONT_NAME} -e SUBDOMAINS=${DUCKDNS_SUBDOMAIN} -e TZ=Europe/London -e TOKEN=${DUCKDNS_TOKEN} --restart unless-stopped ${DUCKDNS_IMAGE}
+    podman run -d --pod=${POD_NAME} --name=${DUCKDNS_CONT_NAME} -e SUBDOMAINS=${DUCKDNS_SUBDOMAIN} -e TZ="Europe/London" --secret=DUCKDNS_TOKEN,type=env --restart unless-stopped ${DUCKDNS_IMAGE}
+else
+	echo -e "DUCKDNS VARIABLES ARE NOT SET"
 fi
 

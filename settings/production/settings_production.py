@@ -257,7 +257,7 @@ rprivkey = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
 RECAPTCHA_PUBLIC_KEY = rpubkey if rpubkey != "" else "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
 RECAPTCHA_PRIVATE_KEY = rprivkey if rprivkey != "" else "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
 
-# SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 ## SESSION SETTINGS
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

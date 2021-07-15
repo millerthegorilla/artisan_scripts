@@ -70,6 +70,10 @@ then
    ${SCRIPTS_ROOT}/container_scripts/run_duckdns_cont.sh
 fi
 
+## TODO change dbvol to env var set in get_variables.sh
+## -o uid etc creates euid inside container ie 166355 when viewed on host.
+podman volume create dbvol
+
 ${SCRIPTS_ROOT}/container_scripts/run_clamd_cont.sh
 ${SCRIPTS_ROOT}/container_scripts/run_redis_cont.sh
 ${SCRIPTS_ROOT}/container_scripts/run_elastic_search_cont.sh
@@ -132,7 +136,6 @@ then
 
         cd ${SCRIPTS_ROOT}
     else
-        cat ${SCRIPTS_ROOT}/templates/systemd/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
         cat ${SCRIPTS_ROOT}/templates/systemd/qcluster_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
         super_access "SYSTEMD_USER=${SYSTEMD_USER_NAME} SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
     fi
