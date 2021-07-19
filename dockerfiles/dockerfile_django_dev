@@ -4,7 +4,7 @@ ARG PROJECT_NAME=${PROJECT_NAME}
 ENV DJANGO_SETTINGS_MODULE=settings
 ENV PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/"
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y supervisor libmagic1 libmagickwand-dev libjpeg62-turbo-dev zlib1g-dev python3-pil python3-pil.imagetk graphviz graphviz-dev python-wheel
+RUN apt-get install -y libmagic1 libmagickwand-dev libjpeg62-turbo-dev zlib1g-dev python3-pil python3-pil.imagetk graphviz graphviz-dev python-wheel
 RUN rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /opt/${PROJECT_NAME}; 
 RUN mkdir -p /var/log/${PROJECT_NAME}; 

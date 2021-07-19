@@ -19,14 +19,13 @@ then
 	echo -e "creating manage and qcluster"
 	${TERMINAL_CMD} podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "cd /home/artisan/django_venv; source bin/activate; python /opt/\${PROJECT_NAME}/manage.py runserver 0.0.0.0:8000"
 	${TERMINAL_CMD} podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "cd /home/artisan/django_venv; source bin/activate; python /opt/\${PROJECT_NAME}/manage.py qcluster"
-
 else
 	## change everything to artisan:artisan
-    podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c "chown artisan:artisan -R /opt/${PROJECT_NAME} && chmod 0440 -R /opt/${PROJECT_NAME}"
-    podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c "chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && chmod 0440 -R /etc/opt/${PROJECT_NAME}"
+    podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c "chown artisan:artisan -R /opt/${PROJECT_NAME}&& find /opt/${PROJECT_NAME} -type d -exec chmod 0550 {} + && find /opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + "
+    podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c "chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + && find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0550 {} +"
     podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c "touch /var/log/${PROJECT_NAME}/django/debug.log && chown artisan:artisan /var/log/${PROJECT_NAME}/django/debug.log"
     # copy media files to media_root
-    echo -e "starting gunicorn"
-    podman exec -d ${DJANGO_CONT_NAME} bash -c "supervisorctl start gunicorn"
+  #  echo -e "starting gunicorn"
+   # podman exec -d ${DJANGO_CONT_NAME} bash -c "supervisorctl start gunicorn"
     #podman exec -e PROJECT_NAME=${PROJECT_NAME} -d  ${DJANGO_CONT_NAME} bash -c "gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py ${DJANGO_PROJECT_NAME}.wsgi:application &"
 fi

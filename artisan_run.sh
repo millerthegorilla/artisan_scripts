@@ -21,11 +21,11 @@ while (( "$#" )); do
       ${SCRIPTS_ROOT}/scripts/cleanup.sh
       exit $?
       ;;
-    replace) # preserve positional arguments
+    replace)
       ${SCRIPTS_ROOT}/scripts/make_manage_wsgi.sh
       exit $?
       ;;    
-    reload) # preserve positional arguments
+    reload) 
       ${SCRIPTS_ROOT}/scripts/reload.sh
       exit $?
       ;;

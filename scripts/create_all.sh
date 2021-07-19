@@ -101,15 +101,15 @@ then
 
     source ${SCRIPTS_ROOT}/scripts/super_access.sh
 
-    if [[ $(id ${SYSTEMD_USER_NAME} > /dev/null 2>&1; echo $?) -ne 0 ]]
-    then
-        echo -e "Error, system account with username ${SYSTEMD_USER_NAME} does not exist!"
-        exit 1
-    fi
+    # if [[ $(id ${SYSTEMD_USER_NAME} > /dev/null 2>&1; echo $?) -ne 0 ]]
+    # then
+    #     echo -e "Error, system account with username ${SYSTEMD_USER_NAME} does not exist!"
+    #     exit 1
+    # fi
 
     cd ${SCRIPTS_ROOT}/systemd/ ## DIRECTORY CHANGE HERE
 
-    podman generate systemd --new --files ${POD_NAME}
+    podman generate systemd --new --name --files ${POD_NAME}
     set -a
      django_service=$(cat .django_container_id)
      django_cont_name=${DJANGO_CONT_NAME}
@@ -121,27 +121,28 @@ then
     if [[ ${DEBUG} == "TRUE" ]]
     then
         cat ${SCRIPTS_ROOT}/templates/systemd/manage_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/manage_start.service 
-        cat ${SCRIPTS_ROOT}/templates/systemd/qcluster_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
-        super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh"
-
-        cd ${SCRIPTS_ROOT}/systemd/
-        FILES=*
-        for f in ${FILES}
-        do
-          if [[ -e /etc/systemd/user/${f} ]]
-          then
-              systemctl --user enable ${f}
-          fi
-        done
-
-        cd ${SCRIPTS_ROOT}
+        cat ${SCRIPTS_ROOT}/templates/systemd/qcluster_start.service.dev | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
     else
-        cat ${SCRIPTS_ROOT}/templates/systemd/qcluster_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
-        super_access "SYSTEMD_USER=${SYSTEMD_USER_NAME} SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
+        cat ${SCRIPTS_ROOT}/templates/systemd/qcluster_start.service.prod | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
     fi
-    
+    super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh"
+
+    cd ${SCRIPTS_ROOT}/systemd/
+    FILES=*
+    for f in ${FILES}
+    do
+      if [[ -e /etc/systemd/user/${f} ]]
+      then
+          systemctl --user enable ${f}
+      fi
+    done
 
     cd ${SCRIPTS_ROOT}   ## DIRECTORY CHANGE HERE
+
+    # if [[ ${DEBUG} == "FALSE" ]]
+    # then
+    #     super_access usermod -s /bin/nologin ${USER}
+    # fi
 fi
 
 rm .env

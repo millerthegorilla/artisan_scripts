@@ -6,8 +6,6 @@ if [[ -f ".archive" ]]; then
    set -a
 fi
 
-source ${SCRIPTS_ROOT}/scripts/super_access.sh
-
 if [[ -z ${POD_NAME} ]]
 then
     read -p "Enter pod name: " POD_NAME
@@ -17,7 +15,7 @@ then
     read -p "Enter project name " PROJECT_NAME
 fi
 
-podman pod exists ${POD_NAME};
+su ${USER} -c "podman pod exists ${POD_NAME}"
 retval=$?
 
 if [[ ! $retval -eq 0 ]]
@@ -31,15 +29,15 @@ else
         else
             SN=${SWAG_CONT_NAME}
         fi
-        podman container exists ${SN}
+        su ${USER} -c "podman container exists ${SN}"
         retval=$?
         if  [[ retval -eq 0 ]]
         then
-            podman exec -it ${SN} bash -c "chown -R root:root /config/log"
+            su ${USER} -c "podman exec -it ${SN} bash -c \"chown -R root:root /config/log\""
         fi
         echo -e "\nshutting down and removing the pod..."
-	podman pod stop ${POD_NAME}
-	podman pod rm ${POD_NAME}
+	su ${USER} -c "podman pod stop ${POD_NAME}"
+	su ${USER} -c "podman pod rm ${POD_NAME}"
 fi
 
 echo -e "remove code (choose a number)?"
@@ -70,12 +68,6 @@ then
     fi
 fi
 
-if [[ ${DEBUG} == "FALSE" ]]
-then
-    super_access "chown ${USER}:${USER} -R ${CODE_PATH}"
-    super_access "chown ${USER}:${USER} -R /etc/opt/${PROJECT_NAME}"
-fi
-
 rm -rf ${SCRIPTS_ROOT}/dockerfiles/django/*
 
 echo -e "remove all podman images (choose a number)?"
@@ -88,13 +80,7 @@ done
 
 if [[ imgs_remove -eq 1 ]]
 then
-	podman rmi python:latest
-	podman rmi swag:1.14.0
-    podman rmi duckdns:latest
-	podman rmi redis:6.2.2-buster
-	podman rmi elasticsearch:7.11.2
-	podman rmi docker-clamav:latest
-	podman rmi mariadb:latest
+	su ${USER} -c "podman rmi python:latest swag:1.14.0 duckdns:latest redis:6.2.2-buster elasticsearch:7.11.2 docker-clamav:latest mariadb:latest"
 fi
 
 echo -e "save settings/.env to ./settings_env_old (choose a number)?"
@@ -108,22 +94,10 @@ done
 
 if [[ save_sets -eq 1 ]]
 then
-    super_access "cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old"
+    cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
 fi
 
-echo -e "remove database podman volume (choose a number)?"
-
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) del_db_vol=1; break;;
-        No ) del_db_vol=0; break;;
-    esac
-done
-
-if [[ del_db_vol -eq 1 ]]
-then
-    podman volume rm dbvol
-fi
+su ${USER} -c "podman volume rm dbvol"
 
 rm .env
 rm .archive
@@ -139,12 +113,22 @@ then
     rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
     rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
 else
-    super_access "rm -rf /etc/opt/${PROJECT_NAME}/settings/* /etc/opt/${PROJECT_NAME}/settings/.env /etc/opt/${PROJECT_NAME}/static_files/*"
+    rm -rf /etc/opt/${PROJECT_NAME}/settings/* /etc/opt/${PROJECT_NAME}/settings/.env /etc/opt/${PROJECT_NAME}/static_files/*
 fi
 
 if [[ ! -n "$CODE_PATH" ]]
 then
     read -p "enter path to code (where manage.py resides) : " CODE_PATH
+fi
+
+if [[ ${DEBUG} == "FALSE" ]]
+then
+    chown ${USER}:${USER} -R ${CODE_PATH}
+    chown ${USER}:${USER} -R /etc/opt/${PROJECT_NAME}
+    find ${CODE_PATH} -type f -exec chmod 0644 {} +
+    find ${CODE_PATH} -type d -exec chmod 0755 {} +
+    find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0644 {} +
+    find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0755 {} +
 fi
 
 if [[ ! -n "$DJANGO_PROJECT_NAME" ]]
@@ -180,12 +164,12 @@ then
     rm ${CODE_PATH}/manage.py
     rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
 else
-    super_access "rm -rf ${CODE_PATH}/manage.py ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py" 
+    rm -rf ${CODE_PATH}/manage.py ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
 fi
 
 if [[ -n "${PROJECT_NAME}" ]]
 then
-    super_access "rm -rf /etc/opt/${PROJECT_NAME}"
+    rm -rf /etc/opt/${PROJECT_NAME}
 fi
 
 echo -e "remove logs or save logs and remove logs dir (choose a number)?"
@@ -201,18 +185,17 @@ remove_logs_dir()
 {
     if [[ -n ${DEBUG} && ${DEBUG} == "FALSE" ]]
     then
-        if [[ -e ${HOME}/${PROJECT_NAME} ]]
+        if [[ -e /home/${USER}/${PROJECT_NAME} ]]
         then
-            echo -e "removing swag logs - enter your sudo user password..."
-            super_access "rm -rf ${HOME}/${PROJECT_NAME}/logs"
+            rm -rf /home/${USER}/${PROJECT_NAME}/logs
         fi
     else
-        rm -rf ${HOME}/${PROJECT_NAME}/logs
+        rm -rf /home/${USER}/${PROJECT_NAME}/logs
     fi
         
     if [[ -n "${PROJECT_NAME}" ]]
     then
-        echo -e "remove ${HOME}/${PROJECT_NAME} (choose a number)?"
+        echo -e "remove /home/${USER}/${PROJECT_NAME} (choose a number)?"
         select yn in "Yes" "No"; do
             case $yn in
                 Yes ) remove_home=1; break;;
@@ -223,13 +206,13 @@ remove_logs_dir()
         then
             if [[ -n ${DEBUG} && ${DEBUG} == "FAlSE" ]]
             then
-                if [[ -e ${HOME}/${PROJECT_NAME} ]]
+                if [[ -e /home/${USER}/${PROJECT_NAME} ]]
                 then
                     echo -e "removing swag logs"
-                    super_access "rm -rf ${HOME}/${PROJECT_NAME}"
+                    rm -rf /home/${USER}/${PROJECT_NAME}
                 fi
             else
-                rm -rf ${HOME}/${PROJECT_NAME}
+                rm -rf /home/${USER}/${PROJECT_NAME}
             fi
         fi
     fi
@@ -238,7 +221,7 @@ remove_logs_dir()
 if [[ logs_remove -eq 2 ]]
 then
     mkdir ${SCRIPTS_ROOT}/old_logs
-    mv ${HOME}/${PROJECT_NAME}/logs/* ${SCRIPTS_ROOT}/old_logs/
+    mv /home/${USER}/${PROJECT_NAME}/logs/* ${SCRIPTS_ROOT}/old_logs/
     remove_logs_dir
 fi
 
@@ -258,20 +241,15 @@ done
 if [[ ${SYSD} == "TRUE" ]]
 then
     cd ${SCRIPTS_ROOT}/systemd
-    if [[ ${DEBUG} == "TRUE" ]]
-    then
-        FILES=*
-        for f in ${FILES}
-        do
-          if [[ -e /etc/systemd/user/${f} ]]
-          then
-            systemctl --user disable ${f}
-          fi
-        done
-        super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_cleanup.sh"
-    else
-        super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_cleanup.sh"
-    fi
+    FILES=*
+    for f in ${FILES}
+    do
+      if [[ -e /etc/systemd/user/${f} ]]
+      then
+        su ${USER} -c "systemctl --user disable ${f}"
+      fi
+    done
+    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_cleanup.sh
     cd ${SCRIPTS_ROOT}   
     rm -rf ${SCRIPTS_ROOT}/systemd 
     mkdir ${SCRIPTS_ROOT}/systemd

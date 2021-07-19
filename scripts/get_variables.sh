@@ -103,6 +103,8 @@ if [[ ${tldomain} == "TRUE" ]]
 then
     read -p "Your top level domain that points at your duckdns domain : " tl_domain
     EXTRA_DOMAINS="${tl_domain}"
+else
+    EXTRA_DOMAINS="NONE"
 fi
 DUCKDNS_SUBDOMAIN="${duckdns_domain}"
 

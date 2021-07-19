@@ -4,9 +4,6 @@ ARG PROJECT_NAME=${PROJECT_NAME}
 ENV PROJECT_NAME=${PROJECT_NAME}
 ENV DJANGO_SETTINGS_MODULE=settings
 ENV PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/"
-RUN pip3 install supervisor==4.2.2
-RUN mkdir -p /etc/supervisor/conf.d
-RUN echo_supervisord_conf > /etc/supervisor/supervisord.conf
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y libmagic1 libmagickwand-dev libjpeg62-turbo-dev zlib1g-dev python3-pil python3-pil.imagetk python-wheel
 RUN rm -rf /var/lib/apt/lists/*
@@ -15,12 +12,13 @@ RUN mkdir -p /var/log/${PROJECT_NAME};
 RUN mkdir -p /etc/opt/${PROJECT_NAME}/settings; 
 RUN mkdir -p /etc/opt/${PROJECT_NAME}/static_files;
 RUN useradd -m artisan
+RUN mkdir /home/artisan/django_venv
+RUN chown artisan:artisan /home/artisan/django_venv
 ENV VIRTUAL_ENV=/home/artisan/django_venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY ./pip_requirements_prod /tmp/pip_requirements
-RUN python -m pip install --upgrade pip && pip install --no-cache-dir -r /tmp/pip_requirements
+RUN su artisan -c python -m pip install --upgrade pip && su artisan -c pip install --no-cache-dir -r /tmp/pip_requirements
 RUN rm -r /tmp/pip_requirements
 COPY ./django/media /etc/opt/${PROJECT_NAME}/static_files/media
-COPY ./django/supervisor_gunicorn /etc/supervisor/conf.d/gunicorn_supervisord.conf
 CMD gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py
