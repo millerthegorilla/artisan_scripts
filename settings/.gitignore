@@ -2,3 +2,4 @@
 settings.py
 gunicorn.conf.py
 supervisor_gunicorn
+settings_env
