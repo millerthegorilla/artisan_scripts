@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo -e "$(basename \"$0\")"
+
+source ${SCRIPTS_ROOT}/.env
+
 if [[ -n "${SWAG_HOST_LOG_DIR}" && ! -f ${SWAG_HOST_LOG_DIR} ]]
 then
     mkdir -p ${SWAG_HOST_LOG_DIR}

@@ -1,11 +1,14 @@
 #!/bin/bash
+echo -e "run_django_cont.sh"
 
+source ${SCRIPTS_ROOT}/.env
+source ${SCRIPTS_ROOT}/.archive
 
 cp ${SCRIPTS_ROOT}/settings/settings_env /etc/opt/${PROJECT_NAME}/settings/.env
 
-rm ${SCRIPTS_ROOT}/settings/settings_env
-
 chmod 0400 /etc/opt/${PROJECT_NAME}/settings/.env
+
+rm ${SCRIPTS_ROOT}/settings/settings_env
 
 cp ${SCRIPTS_ROOT}/settings/gunicorn.conf.py /etc/opt/${PROJECT_NAME}/settings/
 cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/

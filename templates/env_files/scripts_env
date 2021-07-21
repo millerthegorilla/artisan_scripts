@@ -32,6 +32,7 @@ CLAM_IMAGE="docker.io/mkodockx/docker-clamav:latest"
 ## DUCKDNS/SWAG
 DUCKDNS_CONT_NAME="duckdns_cont"
 DUCKDNS_IMAGE="docker.io/linuxserver/duckdns:latest"
+DUCKDNS_SUBDOMAIN=${duckdns_domain}
 
 ## REDIS CACHE
 REDIS_CONT_NAME="redis_cont"

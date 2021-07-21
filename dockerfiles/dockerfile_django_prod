@@ -15,10 +15,10 @@ RUN useradd -m artisan
 RUN mkdir /home/artisan/django_venv
 RUN chown artisan:artisan /home/artisan/django_venv
 ENV VIRTUAL_ENV=/home/artisan/django_venv
-RUN python3 -m venv $VIRTUAL_ENV
+RUN su artisan -c "python3 -m venv $VIRTUAL_ENV"
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY ./pip_requirements_prod /tmp/pip_requirements
-RUN su artisan -c python -m pip install --upgrade pip && su artisan -c pip install --no-cache-dir -r /tmp/pip_requirements
+RUN su artisan -c "python -m pip install --upgrade pip" && su artisan -c "pip install --no-cache-dir -r /tmp/pip_requirements"
 RUN rm -r /tmp/pip_requirements
 COPY ./django/media /etc/opt/${PROJECT_NAME}/static_files/media
 CMD gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py

@@ -1,4 +1,7 @@
 #!/bin/bash
+echo -e "run_duckdns_cont.sh"
+
+source ${SCRIPTS_ROOT}/.env
 
 if [[ -n ${DUCKDNS_SUBDOMAIN} ]]
 then

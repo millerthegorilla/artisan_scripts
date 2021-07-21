@@ -14,8 +14,8 @@ read -p 'Artisan scripts project name - this is used as a directory name, so mus
 read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
 read -p "Absolute path to User home dir [$(echo ${CODE_PATH} | cut -d/ -f 1-4)] : " USER_DIR
 USER_DIR=${USER_DIR:-$(echo ${CODE_PATH} | cut -d/ -f 1-4)}
-read -p 'User account name ['$(echo ${CODE_PATH} | cut -d/ -f 4)'] : ' USER
-USER=${USER:-$(echo ${CODE_PATH} | cut -d/ -f 4)}
+read -p 'User account name ['$(echo ${CODE_PATH} | cut -d/ -f 4)'] : ' USER_NAME
+USER_NAME=${USER_NAME:-$(echo ${CODE_PATH} | cut -d/ -f 4)}
 
 PROJECT_NAME=${project_name}
 
@@ -185,9 +185,12 @@ fi
 
 make_secret MARIADB_ROOT_PASSWORD
 
-# podman secret rm DB_PASSWORD &>/dev/null
-# echo $db_password | podman secret create DB_PASSWORD -
-
+# variables for create_directories.sh
+echo PROJECT_NAME=${PROJECT_NAME} > .proj
+echo USER_NAME=${USER_NAME} >> .proj
+echo USER_DIR=${USER_DIR} >> .proj
+echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
+echo CODE_PATH=${CODE_PATH} >> .proj
 ### TEMPLATES
 
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
@@ -198,7 +201,6 @@ cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_
 if [[ ${DEBUG} == "FALSE" ]]
 then
     cat ${SCRIPTS_ROOT}/templates/gunicorn/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
-    cat ${SCRIPTS_ROOT}/templates/gunicorn/supervisor_gunicorn | envsubst > ${SCRIPTS_ROOT}/settings/supervisor_gunicorn
     if [[ ${tldomain} == "TRUE" ]]
     then
         cat ${SCRIPTS_ROOT}/templates/swag/default_tld | envsubst '$tl_domain:$duckdns_domain' > ${SCRIPTS_ROOT}/dockerfiles/swag/default
@@ -228,5 +230,3 @@ unset email_from_address
 unset custom_salt
 unset recaptcha_public
 unset recaptcha_private
-
-${SCRIPTS_ROOT}/scripts/initial_provision.sh

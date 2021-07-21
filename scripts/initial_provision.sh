@@ -1,23 +1,6 @@
 #!/bin/bash
 
-echo PROJECT_NAME=${PROJECT_NAME} > .proj
-echo USER=${USER} >> .proj
-echo USER_DIR=${USER_DIR} >> .proj
-echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
-echo CODE_PATH=${CODE_PATH} >> .proj
-
-echo -e "\nI will first create the directories.\n"
-echo debug is ${DEBUG}
-
-exists=$(type -t super_access)
-if [[ ${exists} != "function " ]]
-then
-    source ${SCRIPTS_ROOT}/scripts/super_access.sh
-fi
-
-SUNAME=${SUNAME} super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/create_directories.sh" 
-
-echo -e "\nI will now download and provision container images, if they are not already present.\n"
+source ${SCRIPTS_ROOT}/.proj
 
 podman image exists python:latest
 if [[ ! $? -eq 0 ]]
@@ -68,8 +51,8 @@ else
     podman image exists "python:${PROJECT_NAME}_prod"
     if [[ ! $? -eq 0 ]]
     then
-        cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django
-        cp ${SCRIPTS_ROOT}/settings/supervisor_gunicorn ${SCRIPTS_ROOT}/dockerfiles/django/supervisor_gunicorn
+        echo $(whoami)
+        cp -ar ${CODE_PATH}/media/ ${SCRIPTS_ROOT}/dockerfiles/django/
         podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag="python:${PROJECT_NAME}_prod" -f='dockerfiles/dockerfile_django_prod'
     fi
 fi
@@ -100,7 +83,3 @@ then
         fi
     fi
 fi
-
-echo -e "\nI will now create and provision the containers."
-
-${SCRIPTS_ROOT}/scripts/create_all.sh
