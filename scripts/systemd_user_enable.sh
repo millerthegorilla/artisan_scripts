@@ -6,7 +6,7 @@ for f in ${FILES}
 do
   if [[ -e /etc/systemd/user/${f} ]]
   then
-      systemctl --user enable ${f}
+      XDG_RUNTIME_DIR="/run/user/$(id -u)" DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus" systemctl --user enable ${f}
   fi
 done
 

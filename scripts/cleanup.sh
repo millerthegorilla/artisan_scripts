@@ -69,6 +69,9 @@ else
 	su ${USER_NAME} -c "podman pod rm ${POD_NAME}"
 fi
 
+# prune any miscellaneous images that may have been left over during builds.
+su ${USER_NAME} -c "podman image prune -f"
+
 echo -e "remove code (choose a number)?"
 
 select yn in "Yes" "No"; do
@@ -131,9 +134,12 @@ su ${USER_NAME} -c "podman volume rm dbvol"
 rm .env
 rm .archive
 rm .proj
-rm dockerfiles/swag/default
-rm settings/gunicorn.conf.py
 rm settings/settings.py
+if [[ ${DEBUG} == "FALSE" ]]
+then
+    rm dockerfiles/swag/default
+    rm settings/gunicorn.conf.py
+fi
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
@@ -263,16 +269,7 @@ done
 
 if [[ ${SYSD} == "TRUE" ]]
 then
-    cd ${SCRIPTS_ROOT}/systemd
-    FILES=*
-    for f in ${FILES}
-    do
-      if [[ -e /etc/systemd/user/${f} ]]
-      then
-        su ${USER_NAME} -c "systemctl --user disable ${f}"
-      fi
-    done
-    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_cleanup.sh
+    USER_NAME=${USER_NAME} SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_cleanup.sh
     cd ${SCRIPTS_ROOT}   
     rm -rf ${SCRIPTS_ROOT}/systemd 
     su ${USER_NAME} -c "mkdir ${SCRIPTS_ROOT}/systemd"

@@ -29,7 +29,7 @@ while (( "$#" )); do
       echo -e "\nSo, first I will create the directtories, and I will open ports below 1024 on this machine.\n"
       ${SCRIPTS_ROOT}/scripts/create_directories.sh
       echo -e "\nI will now download and provision container images, if they are not already present.\n"
-      su ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/initial_provision.sh"
+      su ${USER_NAME} -c "${SCRIPTS_ROOT}/scripts/initial_provision.sh"
       echo -e "\n and now I will create the containers...\n"
       su ${USER_NAME} -c "${SCRIPTS_ROOT}/scripts/create_all.sh"
       echo -e "\n fancy some systemd?...\n"
@@ -72,7 +72,7 @@ while (( "$#" )); do
     status)
       if [[ -n ${POD_NAME} ]]
       then
-          if [[ $(podman pod exists ${POD_NAME}) == 0 ]]
+          if [[ $(podman pod exists ${POD_NAME}) -eq 0 ]]
           then         
               echo -e "pod ${POD_NAME} exists!  State is $(podman pod inspect ${POD_NAME} | grep -m1 State)"
               exit 0

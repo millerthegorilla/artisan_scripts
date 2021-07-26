@@ -6,4 +6,4 @@ capture_output=True
 sendfile=True
 user='artisan'
 group='artisan'
-workers=10
+workers=${NUM_OF_WORKERS}

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ${SCRIPTS_ROOT}/.options
+source ${SCRIPTS_ROOT}/options
 source ${SCRIPTS_ROOT}/.archive
 source ${SCRIPTS_ROOT}/.env
 
@@ -10,7 +10,7 @@ podman generate systemd --new --name --files ${POD_NAME}
 
 ## TEMPLATES
 set -a
- django_service=$(cat .django_container_id)
+ django_service=${DJANGO_CONT_NAME}
  django_cont_name=${DJANGO_CONT_NAME}
  project_name=${PROJECT_NAME}
  terminal_cmd=${TERMINAL_CMD}

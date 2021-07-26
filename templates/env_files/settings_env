@@ -15,7 +15,7 @@ ALLOWED_HOSTS1=127.0.0.1
 # localhost 
 ALLOWED_HOSTS2=${duckdns_domain}
 # yoursubdomain.duckdns.org
-ALLOWED_HOSTS3=${tld_domain}
+ALLOWED_HOSTS3=${tl_domain}
 # your top level domain, if you have one
 DB_ENGINE=django.db.backends.mysql
 DB_NAME=${db_name}

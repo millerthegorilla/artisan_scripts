@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'crispy_forms',
+    'crispy_bootstrap5',
     'captcha', #django-recaptcha
     'tinymce',
     'sorl.thumbnail',
@@ -253,9 +254,13 @@ CUSTOM_SALT = os.getenv("CUSTOM_SALT")
 
 ## RECAPTCHA SETTINGS
 rpubkey = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
+rpubkey = rpubkey if rpubkey != "" else "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+
 rprivkey = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
-RECAPTCHA_PUBLIC_KEY = rpubkey if rpubkey != "" else "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-RECAPTCHA_PRIVATE_KEY = rprivkey if rprivkey != "" else "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+rprivkey = rprivkey if rprivkey != "" else "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+
+RECAPTCHA_PUBLIC_KEY = rpubkey
+RECAPTCHA_PRIVATE_KEY = rprivkey
 
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 

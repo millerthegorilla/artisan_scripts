@@ -179,7 +179,7 @@ function make_secret()
 }
 
 if [[ ${DEBUG} == "FALSE" ]]
-then
+then 
     make_secret DUCKDNS_TOKEN
 fi
 
@@ -191,6 +191,9 @@ echo USER_NAME=${USER_NAME} >> .proj
 echo USER_DIR=${USER_DIR} >> .proj
 echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
 echo CODE_PATH=${CODE_PATH} >> .proj
+echo EXTRA_DOMAINS=${EXTRA_DOMAINS} >> .proj
+echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj
+echo DEBUG=${DEBUG} >> .proj
 ### TEMPLATES
 
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
@@ -198,8 +201,13 @@ cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT
 cat ${SCRIPTS_ROOT}/templates/settings/archive | envsubst > ${SCRIPTS_ROOT}/.archive
 cat ${SCRIPTS_ROOT}/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.py
 cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
+cat ${SCRIPTS_ROOT}/templates/gunicorn/start |  envsubst > ${SCRIPTS_ROOT}/dockerfiles/django/start.sh
+
 if [[ ${DEBUG} == "FALSE" ]]
 then
+    set -a
+        NUM_OF_WORKERS=$(($(nproc --all) * 2 + 1))
+    set +a
     cat ${SCRIPTS_ROOT}/templates/gunicorn/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
     if [[ ${tldomain} == "TRUE" ]]
     then

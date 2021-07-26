@@ -5,6 +5,11 @@ then
     source ${SCRIPTS_ROOT}/.archive
 fi
 
+if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
+then
+    source ${SCRIPTS_ROOT}/.proj
+fi
+
 function settings_copy()
 {
     echo "Please select the settings file from the list"
@@ -48,6 +53,8 @@ then
     mkdir ${HOST_LOG_DIR}/django
     mkdir ${HOST_LOG_DIR}/gunicorn
 fi
+
+cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django/media
 
 echo CURRENT_SETTINGS=${file[${input}]} >> .archive 
 echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
