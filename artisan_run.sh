@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 PARAMS=""
 
 set -a
@@ -17,11 +23,6 @@ set +a
 while (( "$#" )); do
   case "$1" in
     create)
-      if [[ $EUID -ne 0 ]]
-      then
-         echo "This script must be run as root" 
-         exit 1
-      fi
       read -p 'Standard/service user account name : ' USER_NAME
       echo -e "\nOkay, lets find out more about you...\n"
       su ${USER_NAME} -c "${SCRIPTS_ROOT}/scripts/get_variables.sh"
@@ -53,11 +54,6 @@ while (( "$#" )); do
       exit $? 
       ;;
     clean)
-      if [[ $EUID -ne 0 ]]
-      then
-         echo "This script must be run as root" 
-         exit 1
-      fi
       ${SCRIPTS_ROOT}/scripts/cleanup.sh
       exit $?
       ;;
@@ -66,13 +62,13 @@ while (( "$#" )); do
       exit $?
       ;;    
     reload) 
-      ${SCRIPTS_ROOT}/scripts/reload.sh
+      su ${USER_NAME} -c "${SCRIPTS_ROOT}/scripts/reload.sh"
       exit $?
       ;;
     status)
       if [[ -n ${POD_NAME} ]]
       then
-          if [[ $(podman pod exists ${POD_NAME}) -eq 0 ]]
+          if [[ $(XDG_RUNTIME_DIR="/run/user/$(id -u ${USER_NAME})" DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus" su ${USER_NAME} -c "podman pod exists ${POD_NAME}") -eq 0 ]]
           then         
               echo -e "pod ${POD_NAME} exists!  State is $(podman pod inspect ${POD_NAME} | grep -m1 State)"
               exit 0
@@ -85,7 +81,7 @@ while (( "$#" )); do
       fi
       exit 1
       ;;
-    manage) # preserve positional arguments
+    manage) ## TODO - if the below variables don't exist then save them.
       if [[ -z "${DJANGO_CONT_NAME}" ]]
       then
         read -p "Enter the name of the container running python/django : " DJANGO_CONT_NAME
@@ -96,7 +92,7 @@ while (( "$#" )); do
       fi
       shift;
       COMMANDS="$*"
-      podman exec -e COMMANDS="$*" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}"
+      su ${USER_NAME} -c "podman exec -e COMMANDS=\"$*\" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}\""
       exit $?
       ;;
     settings)
@@ -147,7 +143,6 @@ while (( "$#" )); do
           file[i]=$j
           i=$(( i + 1 ))
           done
-
           echo "Enter number"
           read input
           cp ${SCRIPTS_ROOT}/settings/production/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
@@ -155,6 +150,7 @@ while (( "$#" )); do
       sed -i '/CURRENT_SETTINGS/d' ${SCRIPTS_ROOT}/.archive
       echo "CURRENT_SETTINGS="${file[${input}]} >> ${SCRIPTS_ROOT}/.archive
       cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings
+      su ${USERNAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan /etc/opt/${PROJECT_NAME}/settings/settings.py\""
       exit $?
       ;;
     help|-h|-?|--help)

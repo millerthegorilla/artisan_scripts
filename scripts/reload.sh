@@ -21,11 +21,17 @@ then
 	read -p "enter the name of the django container : " DJANGO_CONT_NAME
 fi
 
+if [[ -z "${PROJECT_NAME}" ]]
+then
+	read -p "Enter artisan scripts project name, as in /etc/opt/*PROJECT_NAME*/settings etc [${PROJECT_NAME}] : " project_name
+    PROJECT_NAME=${project_name:-${PROJECT_NAME}}
+fi
+
 if [[ ${DEBUG} == "TRUE" ]]
 then
 	echo "this is a development setup - manage.py should reload automatically on file changes."
 else
-	podman exec -it $DJANGO_CONT_NAME bash -c "supervisorctl reload gunicorn"
+	XDG_RUNTIME_DIR="/run/user/$(id -u ${USER_NAME})" DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus" podman exec -e PROJECT_NAME=${PROJECT_NAME} -it $DJANGO_CONT_NAME bash -c "su artisan -c \"killall5 gunicorn && gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py"
 fi
 
 ####   need to reload nginx - try svscanctl inside swag container.

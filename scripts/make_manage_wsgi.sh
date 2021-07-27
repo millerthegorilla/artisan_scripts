@@ -30,3 +30,4 @@ fi
 
 cat ${SCRIPTS_ROOT}/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.py
 cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
+su ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -e DJANGO_PROJECT_NAME=${django_project_name} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan /opt/${PROJECT_NAME}/manage.py /opt/${PROJECT_NAME}/${DJANGO_PROJECT_NAME}/wsgi.py\"" 
