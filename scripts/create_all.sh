@@ -54,8 +54,6 @@ then
     mkdir ${HOST_LOG_DIR}/gunicorn
 fi
 
-cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django/media
-
 echo CURRENT_SETTINGS=${file[${input}]} >> .archive 
 echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive

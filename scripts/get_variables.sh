@@ -162,6 +162,8 @@ else
 fi
 set +a
 
+cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django/media
+
 ## parameters : prompt (string), secret name
 function make_secret()
 {  
