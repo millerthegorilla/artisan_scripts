@@ -24,6 +24,13 @@ read -p "Enter the name of the django project ie the folder in which wsgi.py res
 django_project_name=${django_project_name:-${PN}}
 DJANGO_PROJECT_NAME=$django_project_name
 
+if [[ $(type Xorg | echo $?) -eq 0 ]]
+then
+    XDESK="XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\""
+else
+    XDESK=""
+fi
+
 if [[ -z "${DEBUG}" ]]
 then
     echo -e "\nIs this development ie debug? : "
@@ -194,6 +201,7 @@ echo CODE_PATH=${CODE_PATH} >> .proj
 echo EXTRA_DOMAINS=${EXTRA_DOMAINS} >> .proj
 echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj
 echo DEBUG=${DEBUG} >> .proj
+echo XDESK=${XDESK} >> .proj
 ### TEMPLATES
 
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env

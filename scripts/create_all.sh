@@ -62,9 +62,9 @@ echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 
 if [[ "${DEBUG}" == "TRUE" ]]
 then
-   podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000
+   su "${USER_NAME}" -c "${XDESK} podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000"
 else
-   podman pod create --name ${POD_NAME} -p ${PORT1_DESCRIPTION} -p ${PORT2_DESCRIPTION} # --dns-search=${POD_NAME} --dns-opt=timeout:30 --dns-opt=attempts:5
+   su "${USER_NAME}" -c "${XDESK} podman pod create --name ${POD_NAME} -p ${PORT1_DESCRIPTION} -p ${PORT2_DESCRIPTION}" # --dns-search=${POD_NAME} --dns-opt=timeout:30 --dns-opt=attempts:5
 fi
 
 if [[ "${DEBUG}" == "FALSE" ]]

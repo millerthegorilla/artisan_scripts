@@ -22,11 +22,19 @@ set +a
 
 while (( "$#" )); do
   case "$1" in
+    install)
+      ## added this option to archive it.
+      read -p 'Standard/service user account name : ' USER_NAME
+      cd ${SCRIPTS_ROOT}/scripts
+      chown ${USER_NAME}:${USER_NAME} reload.sh create_all.sh get_variables.sh initial_provision.sh make_manage_wsgi.sh make_user.sh super_access.sh systemd_generate.sh systemd_user_enable.sh
+      cd ${SCRIPTS_ROOT}
+      exit $?
+      ;;
     create)
       read -p 'Standard/service user account name : ' USER_NAME
       echo -e "\nOkay, lets find out more about you...\n"
       su ${USER_NAME} -c "${SCRIPTS_ROOT}/scripts/get_variables.sh"
-      source ${SCRIPTS_ROOT}/.archive
+      source ${SCRIPTS_ROOT}/.archive ## todo do I need to source this here...?
       echo -e "\nSo, first I will create the directtories, and I will open ports below 1024 on this machine.\n"
       ${SCRIPTS_ROOT}/scripts/create_directories.sh
       echo -e "\nI will now download and provision container images, if they are not already present.\n"
