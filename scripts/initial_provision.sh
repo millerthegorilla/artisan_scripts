@@ -1,10 +1,6 @@
 #!/bin/bash
 
 source ${SCRIPTS_ROOT}/.proj
-echo -e "username is "${USER_NAME}
-echo -e "xdesk is "${XDESK}
-echo "su \"${USER_NAME}\" -c \"${XDESK} podman image exists python:latest\""
-exit 0
 
 su "${USER_NAME}" -c "${XDESK} podman image exists python:latest"
 if [[ ! $? -eq 0 ]]
