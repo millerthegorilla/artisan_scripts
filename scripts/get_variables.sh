@@ -195,6 +195,7 @@ fi
 make_secret MARIADB_ROOT_PASSWORD
 
 # variables for create_directories.sh
+su ${USER_NAME} -c "(
 echo PROJECT_NAME=${PROJECT_NAME} > .proj
 echo USER_NAME=${USER_NAME} >> .proj
 echo USER_DIR=${USER_DIR} >> .proj
@@ -205,7 +206,6 @@ echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj
 echo DEBUG=${DEBUG} >> .proj
 echo XDESK=${XDESK} >> .proj
 ### TEMPLATES
-
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
 cat ${SCRIPTS_ROOT}/templates/settings/archive | envsubst > ${SCRIPTS_ROOT}/.archive
@@ -226,6 +226,7 @@ then
         cat ${SCRIPTS_ROOT}/templates/swag/default | envsubst '$duckdns_domain' > ${SCRIPTS_ROOT}/dockerfiles/swag/default
     fi
 fi
+)"
 ### Systemd system account creation
 
 
