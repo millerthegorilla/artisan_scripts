@@ -3,10 +3,11 @@
 source ${SCRIPTS_ROOT}/options
 source ${SCRIPTS_ROOT}/.archive
 source ${SCRIPTS_ROOT}/.env
+source ${SCRIPTS_ROOT}/.proj
 
 cd ${SCRIPTS_ROOT}/systemd/ ## DIRECTORY CHANGE HERE
 
-podman generate systemd --new --name --files ${POD_NAME}
+su "${USER_NAME}" -c "${XDESK} podman generate systemd --new --name --files ${POD_NAME}"
 
 ## TEMPLATES
 set -a
