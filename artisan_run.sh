@@ -51,7 +51,7 @@ while (( "$#" )); do
       done
       if [[ ${SYSD} == "TRUE" ]]
       then
-          su ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh"
+          SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh
           SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh
           su ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh"
       fi

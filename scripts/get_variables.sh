@@ -167,7 +167,7 @@ cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django/media
 ## parameters : prompt (string), secret name
 function make_secret()
 {  
-    if [[ $(su "${USER_NAME}" -c "${XDESK} podman secret inspect ${1} &>/dev/null"; echo $?) == 0 ]]
+    if [[ $(runuser --login -u ${USER_NAME} -- ${XDESK} podman secret inspect ${1} &>/dev/null; echo $?) == 0 ]]
     then
         echo -e "podman secret ${1} already exists - reuse ?"
         select yn in "Yes" "No"; do
@@ -178,11 +178,11 @@ function make_secret()
         done
         if [[ ${REUSE} == "FALSE" ]]
         then
-            su "${USER_NAME}" -c "${XDESK} podman secret rm ${1}"
-            read -p "Enter variable for ${1} : " token && echo -n "$token" | su "${USER_NAME}" -c "${XDESK} podman secret create \"${1}\" -" 
+            runuser --login -u ${USER_NAME} -- ${XDESK} podman secret rm ${1}
+            read -p "Enter variable for ${1} : " token && echo -n "$token" | su "${USER_NAME}" --login -c "${XDESK} podman secret create \"${1}\" -" 
         fi
     else
-        read -p "Enter variable for ${1} : " token && echo -n "$token" | su "${USER_NAME}" -c "${XDESK} podman secret create \"${1}\" -"
+        read -p "Enter variable for ${1} : " token && echo -n "$token" | su "${USER_NAME}" --login -c "${XDESK} podman secret create \"${1}\" -"
     fi
 
 }
@@ -195,7 +195,7 @@ fi
 make_secret MARIADB_ROOT_PASSWORD
 
 # variables for create_directories.sh
-su ${USER_NAME} -c "(
+runuser --login -u ${USER_NAME} "(
 echo PROJECT_NAME=${PROJECT_NAME} > .proj
 echo USER_NAME=${USER_NAME} >> .proj
 echo USER_DIR=${USER_DIR} >> .proj
