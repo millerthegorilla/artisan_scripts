@@ -278,7 +278,7 @@ then
     USER_NAME=${USER_NAME} SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_cleanup.sh
     cd ${SCRIPTS_ROOT}   
     rm -rf ${SCRIPTS_ROOT}/systemd 
-    su ${USER_NAME} -c "mkdir ${SCRIPTS_ROOT}/systemd"
+    mkdir ${SCRIPTS_ROOT}/systemd
     cp ${SCRIPTS_ROOT}/templates/systemd/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore
     chown ${USER_NAME}:${USER_NAME} ${SCRIPTS_ROOT}/systemd/.gitignore
 fi
