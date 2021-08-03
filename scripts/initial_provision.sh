@@ -44,7 +44,7 @@ then
     runuser --login ${USER_NAME} -c "podman pull docker.io/linuxserver/swag:version-1.14.0 &"
 fi
 
-wait
+runuser --login ${USER_NAME} -c "wait"
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
@@ -57,7 +57,7 @@ then
         cp ${SCRIPTS_ROOT}/dockerfiles/pip_requirements_dev /var/home/${USER_NAME}/pip_requirements_dev
         runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_debug\" -f='dockerfiles/dockerfile_django_dev'"
         rm /var/home/${USER_NAME}/dockerfile_django_dev /var/home/${USER_NAME}/pip_requirements_dev
-        rm -r /var/home/${USER_NAME}/django/media
+        rm -r /var/home/${USER_NAME}/django
     fi
 else
     runuser --login ${USER_NAME} -c "podman image exists \"python:${PROJECT_NAME}_prod\""
@@ -69,7 +69,7 @@ else
         cp dockerfiles/dockerfile_django_prod /var/home/${USER_NAME}/dockerfile_django_prod
         runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_prod\" -f='dockerfile_django_prod' ."
         rm /var/home/${USER_NAME}/dockerfile_django_prod /var/home/${USER_NAME}/pip_requirements_prod
-        rm -r /var/home/${USER_NAME}/django/media
+        rm -r /var/home/${USER_NAME}/django
     fi
 fi
 
