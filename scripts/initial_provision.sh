@@ -51,7 +51,7 @@ then
     runuser --login ${USER_NAME} -c "podman image exists \"python:${PROJECT_NAME}_debug\""
     if [[ ! $? -eq 0 ]]
     then
-        mkdir -p /var/home/${USER_NAME}/django/media && cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/media/* /var/home/${USER_NAME}/django/media
+        mkdir -p /var/home/${USER_NAME}/django && cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/* /var/home/${USER_NAME}/django/
         chown -R ${USER_NAME}:${USER_NAME} /var/home/${USER_NAME}/django
         cp ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev /var/home/${USER_NAME}/dockerfile_django_dev
         cp ${SCRIPTS_ROOT}/dockerfiles/pip_requirements_dev /var/home/${USER_NAME}/pip_requirements_dev
@@ -63,7 +63,7 @@ else
     runuser --login ${USER_NAME} -c "podman image exists \"python:${PROJECT_NAME}_prod\""
     if [[ ! $? -eq 0 ]]
     then
-        mkdir -p /var/home/${USER_NAME}/django/media && cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/media/* /var/home/${USER_NAME}/django/media
+        mkdir -p /var/home/${USER_NAME}/django && cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/* /var/home/${USER_NAME}/django/
         chown -R ${USER_NAME}:${USER_NAME} /var/home/${USER_NAME}/django
         cp dockerfiles/pip_requirements_prod /var/home/${USER_NAME}/pip_requirements_prod
         cp dockerfiles/dockerfile_django_prod /var/home/${USER_NAME}/dockerfile_django_prod
