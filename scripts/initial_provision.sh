@@ -51,19 +51,25 @@ then
     runuser --login ${USER_NAME} -c "podman image exists \"python:${PROJECT_NAME}_debug\""
     if [[ ! $? -eq 0 ]]
     then
-        cp dockerfiles/dockerfile_django_dev /var/home/${USER_NAME}/dockerfile_django_dev
-        cp dockerfiles/pip_requirements_dev /var/home/${USER_NAME}/pip_requirements_dev
+        mkdir -p /var/home/${USER_NAME}/django/media && cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/media/* /var/home/${USER_NAME}/django/media
+        chown -R ${USER_NAME}:${USER_NAME} /var/home/${USER_NAME}/django
+        cp ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev /var/home/${USER_NAME}/dockerfile_django_dev
+        cp ${SCRIPTS_ROOT}/dockerfiles/pip_requirements_dev /var/home/${USER_NAME}/pip_requirements_dev
         runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_debug\" -f='dockerfiles/dockerfile_django_dev'"
         rm /var/home/${USER_NAME}/dockerfile_django_dev /var/home/${USER_NAME}/pip_requirements_dev
+        rm -r /var/home/${USER_NAME}/django/media
     fi
 else
     runuser --login ${USER_NAME} -c "podman image exists \"python:${PROJECT_NAME}_prod\""
     if [[ ! $? -eq 0 ]]
     then
+        mkdir -p /var/home/${USER_NAME}/django/media && cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/media/* /var/home/${USER_NAME}/django/media
+        chown -R ${USER_NAME}:${USER_NAME} /var/home/${USER_NAME}/django
         cp dockerfiles/pip_requirements_prod /var/home/${USER_NAME}/pip_requirements_prod
         cp dockerfiles/dockerfile_django_prod /var/home/${USER_NAME}/dockerfile_django_prod
         runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_prod\" -f='dockerfile_django_prod' ."
         rm /var/home/${USER_NAME}/dockerfile_django_prod /var/home/${USER_NAME}/pip_requirements_prod
+        rm -r /var/home/${USER_NAME}/django/media
     fi
 fi
 
