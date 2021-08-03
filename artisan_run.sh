@@ -76,9 +76,9 @@ while (( "$#" )); do
     status)
       if [[ -n ${POD_NAME} ]]
       then
-          if [[ $(XDG_RUNTIME_DIR="/run/user/$(id -u ${USER_NAME})" DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus" su ${USER_NAME} -c "podman pod exists ${POD_NAME}") -eq 0 ]]
+          if [[ runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}") -eq 0 ]]
           then         
-              echo -e "pod ${POD_NAME} exists!  State is $(podman pod inspect ${POD_NAME} | grep -m1 State)"
+              echo -e "pod ${POD_NAME} exists!  State is $(runuser --login ${USER_NAME} -c "podman pod inspect ${POD_NAME}" | grep -m1 State)"
               exit 0
           else
               echo -e "pod ${POD_NAME} doesn't exist - you might want to clean up dot settings files manually, or run artisan_run clean"
@@ -100,7 +100,7 @@ while (( "$#" )); do
       fi
       shift;
       COMMANDS="$*"
-      su ${USER_NAME} -c "podman exec -e COMMANDS=\"$*\" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}\""
+      runuser --login ${USER_NAME} -c "podman exec -e COMMANDS=\"$*\" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}\""
       exit $?
       ;;
     settings)
