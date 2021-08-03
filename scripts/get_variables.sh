@@ -167,7 +167,7 @@ cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django/media
 ## parameters : prompt (string), secret name
 function make_secret()
 {  
-    if [[ $(runuser --login -u ${USER_NAME} -- ${XDESK} podman secret inspect ${1} &>/dev/null; echo $?) == 0 ]]
+    if [[ $(runuser --login ${USER_NAME} -c "podman secret inspect ${1} &>/dev/null"; echo $?) == 0 ]]
     then
         echo -e "podman secret ${1} already exists - reuse ?"
         select yn in "Yes" "No"; do
@@ -178,13 +178,12 @@ function make_secret()
         done
         if [[ ${REUSE} == "FALSE" ]]
         then
-            runuser --login -u ${USER_NAME} -- ${XDESK} podman secret rm ${1}
-            read -p "Enter variable for ${1} : " token && echo -n "$token" | su "${USER_NAME}" --login -c "${XDESK} podman secret create \"${1}\" -" 
+            runuser --login ${USER_NAME} -c "${XDESK} podman secret rm ${1}"
+            read -p "Enter variable for ${1} : " token && echo -n "$token" | runuser --login "${USER_NAME}" -c "podman secret create \"${1}\" -" 
         fi
     else
-        read -p "Enter variable for ${1} : " token && echo -n "$token" | su "${USER_NAME}" --login -c "${XDESK} podman secret create \"${1}\" -"
+        read -p "Enter variable for ${1} : " token && echo -n "$token" | runuser --login "${USER_NAME}" -c "podman secret create \"${1}\" -"
     fi
-
 }
 
 if [[ ${DEBUG} == "FALSE" ]]

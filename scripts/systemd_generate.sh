@@ -7,7 +7,7 @@ source ${SCRIPTS_ROOT}/.proj
 
 cd ${SCRIPTS_ROOT}/systemd/ ## DIRECTORY CHANGE HERE
 
-su "${USER_NAME}" -c "${XDESK} podman generate systemd --new --name --files ${POD_NAME}"
+runuser --login "${USER_NAME}" -c "mkdir systemd && cd systemd; podman generate systemd --new --name --files ${POD_NAME} && cp * ${SCRIPTS_ROOT}/systemd/"
 
 ## TEMPLATES
 set -a

@@ -2,69 +2,74 @@
 
 source ${SCRIPTS_ROOT}/.proj
 
-su "${USER_NAME}" -c "${XDESK} podman image exists python:latest"
+runuser --login ${USER_NAME} -c "podman image exists python:latest"
 if [[ ! $? -eq 0 ]]
 then
-	su "${USER_NAME}" -c "${XDESK} podman pull docker.io/library/python:latest &"
+	runuser --login ${USER_NAME} -c "podman pull docker.io/library/python:latest &"
 fi
 
-su "${USER_NAME}" -c "${XDESK} podman image exists elasticsearch:7.11.2"
+runuser --login ${USER_NAME} -c "podman image exists elasticsearch:7.11.2"
 if [[ ! $? -eq 0 ]]
 then
-	su "${USER_NAME}" -c "${XDESK} podman pull docker.io/library/elasticsearch:7.11.2 &"
+	runuser --login ${USER_NAME} -c "podman pull docker.io/library/elasticsearch:7.11.2 &"
 fi
 
-su "${USER_NAME}" -c "${XDESK} podman image exists mariadb:10.5"
+runuser --login ${USER_NAME} -c "podman image exists mariadb:10.5"
 if [[ ! $? -eq 0 ]]
 then
-    su "${USER_NAME}" -c "${XDESK} podman pull docker.io/library/mariadb:10.5 &"
+    runuser --login ${USER_NAME} -c "podman pull docker.io/library/mariadb:10.5 &"
 fi
 
-su "${USER_NAME}" -c "${XDESK} podman image exists redis:6.2.2-buster"
+runuser --login ${USER_NAME} -c "podman image exists redis:6.2.2-buster"
 if [[ ! $? -eq 0 ]]
 then
-    su "${USER_NAME}" -c "${XDESK} podman pull docker.io/library/redis:6.2.2-buster &"
+    runuser --login ${USER_NAME} -c "podman pull docker.io/library/redis:6.2.2-buster &"
 fi
 
-su "${USER_NAME}" -c "${XDESK} podman image exists docker-clamav:latest"
+runuser --login ${USER_NAME} -c "podman image exists docker-clamav:latest"
 if [[ ! $? -eq 0 ]]
 then
-    su "${USER_NAME}" -c "${XDESK} podman pull docker.io/mkodockx/docker-clamav:latest &"
+    runuser --login ${USER_NAME} -c "podman pull docker.io/mkodockx/docker-clamav:latest &"
 fi
 
-su "${USER_NAME}" -c "${XDESK} podman image exists duckdns:latest"
+runuser --login ${USER_NAME} -c "podman image exists duckdns:latest"
 if [[ ! $? -eq 0 ]]
 then
-    su "${USER_NAME}" -c "${XDESK} podman pull docker.io/linuxserver/duckdns:latest &"
+    runuser --login ${USER_NAME} -c "podman pull docker.io/linuxserver/duckdns:latest &"
 fi
 
-su "${USER_NAME}" -c "${XDESK} podman image exists swag:1.14.0"
+runuser --login ${USER_NAME} -c "podman image exists swag:1.14.0"
 if [[ ! $? -eq 0 ]]
 then
-    su "${USER_NAME}" -c "${XDESK} podman pull docker.io/linuxserver/swag:version-1.14.0 &"
+    runuser --login ${USER_NAME} -c "podman pull docker.io/linuxserver/swag:version-1.14.0 &"
 fi
 
 wait
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-    su "${USER_NAME}" -c "${XDESK} podman image exists \"python:${PROJECT_NAME}_debug\""
+    runuser --login ${USER_NAME} -c "podman image exists \"python:${PROJECT_NAME}_debug\""
     if [[ ! $? -eq 0 ]]
     then
-        su "${USER_NAME}" -c "${XDESK} podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_debug\" -f='dockerfiles/dockerfile_django_dev'"
+        cp dockerfiles/dockerfile_django_dev /var/home/${USER_NAME}/dockerfile_django_dev
+        runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_debug\" -f='dockerfiles/dockerfile_django_dev'"
+        rm /var/home/${USER_NAME}/dockerfile_django_dev
     fi
 else
-    su "${USER_NAME}" -c "${XDESK} podman image exists \"python:${PROJECT_NAME}_prod\""
+    runuser --login ${USER_NAME} -c "podman image exists \"python:${PROJECT_NAME}_prod\""
     if [[ ! $? -eq 0 ]]
     then
-        su "${USER_NAME}" -c "${XDESK} podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_prod\" -f='dockerfiles/dockerfile_django_prod'"
+        cp dockerfiles/dockerfile_django_prod /var/home/${USER_NAME}/dockerfile_django_prod
+        runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_prod\" -f='dockerfile_django_prod' ."
+        rm /var/home/${USER_NAME}/dockerfile_django_prod
     fi
 fi
 
 function build_swag()
 {
    rm ${SCRIPTS_ROOT}/.images
-   su "${USER_NAME}" -c "${XDESK} podman build --tag='swag:artisan' -f='dockerfiles/dockerfile_swag_prod'"
+   cp dockerfiles/dockerfile_swag_prod /var/home/${USER_NAME}/dockerfile_swag_prod
+   runuser --login ${USER_NAME} -c "podman build --tag='swag:artisan' -f='dockerfile_swag_prod' ."
    echo -e "[swag]" > ${SCRIPTS_ROOT}/.images
    echo -e "TL_DOMAIN=${EXTRA_DOMAINS}" >> ${SCRIPTS_ROOT}/.images
    echo -e "DUCK_DOMAIN=${DUCKDNS_SUBDOMAIN}" >> ${SCRIPTS_ROOT}/.images 
@@ -72,7 +77,7 @@ function build_swag()
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
-    su "${USER_NAME}" -c "${XDESK} podman image exists swag:artisan"
+    runuser --login ${USER_NAME} -c "podman image exists swag:artisan"
     if [[ ! $? -eq 0 ]]
     then
         if [[ -e ${SCRIPTS_ROOT}/.images ]]

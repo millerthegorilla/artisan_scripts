@@ -43,14 +43,14 @@ fi
 
 if [[ -z ${POD_NAME} ]]
 then
-    su ${USER_NAME} -c "read -p \"Enter pod name: \" POD_NAME"
+    read -p "Enter pod name: " POD_NAME
 fi
 if [[ -z ${PROJECT_NAME} ]]
 then
-    su ${USER_NAME} -c "read -p \"Enter project name \" PROJECT_NAME"
+    read -p "Enter project name: " PROJECT_NAME
 fi
 
-su ${USER_NAME} -c "${XDESK} podman pod exists ${POD_NAME}"
+runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"
 retval=$?
 
 if [[ ! $retval -eq 0 ]]
@@ -64,19 +64,19 @@ else
         else
             SN=${SWAG_CONT_NAME}
         fi
-        su ${USER_NAME} -c "${XDESK} podman container exists ${SN}"
+        runuser --login ${USER_NAME} -c "podman container exists ${SN}"
         retval=$?
         if  [[ retval -eq 0 ]]
         then
-            su ${USER_NAME} -c "${XDESK} podman exec -it ${SN} bash -c \"chown -R root:root /config/log\""
+            runuser --login ${USER_NAME} -c "podman exec -it ${SN} bash -c \"chown -R root:root /config/log\""
         fi
         echo -e "\nshutting down and removing the pod..."
-	su ${USER_NAME} -c "${XDESK} podman pod stop ${POD_NAME}"
-	su ${USER_NAME} -c "${XDESK} podman pod rm ${POD_NAME}"
+	runuser --login ${USER_NAME} -c "podman pod stop ${POD_NAME}"
+	runuser --login ${USER_NAME} -c "podman pod rm ${POD_NAME}"
 fi
 
 # prune any miscellaneous images that may have been left over during builds.
-su ${USER_NAME} -c "podman image prune -f"
+runuser --login ${USER_NAME} -c "podman image prune -f"
 
 echo -e "remove code (choose a number)?"
 
@@ -118,7 +118,7 @@ done
 
 if [[ imgs_remove -eq 1 ]]
 then
-	su ${USER_NAME} -c "${XDESK} podman rmi python:latest swag:1.14.0 duckdns:latest redis:6.2.2-buster elasticsearch:7.11.2 docker-clamav:latest mariadb:latest"
+	runuser --login ${USER_NAME} -c "podman rmi python:latest swag:1.14.0 duckdns:latest redis:6.2.2-buster elasticsearch:7.11.2 docker-clamav:latest mariadb:latest"
 fi
 
 echo -e "save settings/.env to ./settings_env_old (choose a number)?"
@@ -135,7 +135,7 @@ then
     cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
 fi
 
-su ${USER_NAME} -c "podman volume rm dbvol"
+runuser --login ${USER_NAME} -c "podman volume rm dbvol"
 
 rm .env
 rm .archive

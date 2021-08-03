@@ -6,7 +6,7 @@ for f in ${FILES}
 do
   if [[ -e /etc/systemd/user/${f} ]]
   then
-      su "${USER_NAME}" -c "${XDESK} systemctl --user enable ${f}"
+      runuser --login ${USER_NAME} -c "systemctl --user enable ${f}"
   fi
 done
 
