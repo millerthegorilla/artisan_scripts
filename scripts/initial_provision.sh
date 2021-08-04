@@ -2,7 +2,9 @@
 
 source ${SCRIPTS_ROOT}/.proj
 
+chown ${USER_NAME}:${USER_NAME} ${SCRIPTS_ROOT}/scripts/image_ack.sh
 runuser --login ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/image_ack.sh"
+chown root:root ${SCRIPTS_ROOT}/scripts/image_ack.sh
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
