@@ -2,7 +2,7 @@
 
 source ${SCRIPTS_ROOT}/.proj
 
-SCRIPTS_ROOT=${SCRIPTS_ROOT} ./image_ack.sh
+SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/image_ack.sh
 
 wait
 
