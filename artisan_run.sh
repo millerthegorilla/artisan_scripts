@@ -76,7 +76,7 @@ while (( "$#" )); do
     status)
       if [[ -n ${POD_NAME} ]]
       then
-          if [[ $(runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}") -eq 0 ]]
+          if [[ $(runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"; echo $?) -eq 0 ]]
           then         
               echo -e "pod ${POD_NAME} exists!  State is $(runuser --login ${USER_NAME} -c "podman pod inspect ${POD_NAME}" | grep -m1 State)"
               exit 0
