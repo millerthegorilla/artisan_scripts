@@ -12,7 +12,7 @@ set -a
 
 read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' project_name
 read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
-read -p "Absolute path to User home dir [$(echo ${CODE_PATH} | cut -d/ -f 1-4)] : " USER_DIR
+read -p "Absolute path to User home dir [$(echo ${CODE_PATH} | cut -d/ -f 1-3)] : " USER_DIR
 USER_DIR=${USER_DIR:-$(echo ${CODE_PATH} | cut -d/ -f 1-4)}
 read -p 'User account name ['$(echo ${CODE_PATH} | cut -d/ -f 4)'] : ' USER_NAME
 USER_NAME=${USER_NAME:-$(echo ${CODE_PATH} | cut -d/ -f 4)}
@@ -226,7 +226,6 @@ then
 fi
 
 ### Systemd system account creation
-
 
 unset site_name
 unset pod_name

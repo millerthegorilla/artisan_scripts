@@ -60,9 +60,9 @@ echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 
 if [[ "${DEBUG}" == "TRUE" ]]
 then
-   su "${USER_NAME}" -c "${XDESK} podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000"
+   runuser --login ${USER_NAME} -c "podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000"
 else
-   su "${USER_NAME}" -c "${XDESK} podman pod create --name ${POD_NAME} -p ${PORT1_DESCRIPTION} -p ${PORT2_DESCRIPTION}" # --dns-search=${POD_NAME} --dns-opt=timeout:30 --dns-opt=attempts:5
+   runuser --login ${USER_NAME} -c "podman pod create --name ${POD_NAME} -p ${PORT1_DESCRIPTION} -p ${PORT2_DESCRIPTION}" # --dns-search=${POD_NAME} --dns-opt=timeout:30 --dns-opt=attempts:5
 fi
 
 if [[ "${DEBUG}" == "FALSE" ]]
@@ -72,7 +72,7 @@ fi
 
 ## TODO change dbvol to env var set in get_variables.sh
 ## -o uid etc creates euid inside container ie 166355 when viewed on host.
-podman volume create dbvol
+runuser --login ${USER_NAME} -c "podman volume create dbvol"
 
 SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_clamd_cont.sh
 SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_redis_cont.sh

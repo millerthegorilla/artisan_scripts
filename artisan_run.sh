@@ -81,7 +81,7 @@ while (( "$#" )); do
               echo -e "pod ${POD_NAME} exists!  State is $(runuser --login ${USER_NAME} -c "podman pod inspect ${POD_NAME}" | grep -m1 State)"
               exit 0
           else
-              echo -e "pod ${POD_NAME} doesn't exist - you might want to clean up dot settings files manually, or run artisan_run clean"
+              echo -e "pod ${POD_NAME} doesn't exist - but there are settings files - you might want to clean up dot settings files manually, or run artisan_run clean"
               exit 1
           fi
       else
