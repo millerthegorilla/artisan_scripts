@@ -2,9 +2,7 @@
 
 source ${SCRIPTS_ROOT}/.proj
 
-SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/image_ack.sh
-
-wait $!
+runuser --login ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/image_ack.sh"
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
