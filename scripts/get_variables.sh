@@ -1,4 +1,7 @@
 #!/bin/bash
+set -a
+
+read -p 'Standard/service user account name : ' USER_NAME
 
 echo -e "\nThe following questions are to fill out the env files that are called upon by the scripts when executing, and by the settings file during production.  The settings .env file is called from the settings file using os.getenv, after the env file is loaded into the environment by the python program dotenv.  This .env file is located in the settings folder, along with settings.py.  You can edit either of those files to edit your site.   Press enter to accept default value[] where listed...\n\n"
 
@@ -7,8 +10,6 @@ echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
 echo -e "#**** and have a password protected system user account       *****"
 echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
-
-set -a
 
 read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' project_name
 read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH

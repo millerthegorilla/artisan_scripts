@@ -31,7 +31,6 @@ while (( "$#" )); do
       exit $?
       ;;
     create)
-      read -p 'Standard/service user account name : ' USER_NAME
       echo -e "\nOkay, lets find out more about you...\n"
       ${SCRIPTS_ROOT}/scripts/get_variables.sh
       source ${SCRIPTS_ROOT}/.archive ## todo do I need to source this here...?
