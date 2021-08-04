@@ -1,7 +1,8 @@
 #!/bin/bash
 
 source ${SCRIPTS_ROOT}/.proj
-runuser --login ${USER_NAME} -c "(
+
+runuser --login ${USER_NAME} -c "
 podman image exists python:latest
 if [[ ! $? -eq 0 ]]
 then
@@ -45,7 +46,7 @@ then
 fi
 
 wait
-)"
+"
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
