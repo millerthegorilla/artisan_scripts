@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ${SCRIPTS_ROOT}/.proj
+source .proj
 
 podman image exists python:latest
 if [[ ! $? -eq 0 ]]
@@ -43,5 +43,3 @@ if [[ ! $? -eq 0 ]]
 then
     podman pull docker.io/linuxserver/swag:version-1.14.0 &
 fi
-
-wait
