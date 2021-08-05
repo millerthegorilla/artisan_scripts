@@ -3,7 +3,8 @@
 source ${SCRIPTS_ROOT}/.proj
 
 cp ${SCRIPTS_ROOT}/scripts/image_ack.sh /home/${USER_NAME}/image_ack.sh
-chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/image_ack.sh
+cp ${SCRIPTS_ROOT}/.proj /home/${USER_NAME}/.proj
+chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/image_ack.sh  /home/${USER_NAME}/.proj
 chmod +x /home/${USER_NAME}/image_ack.sh
 runuser --login ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/image_ack.sh"
 wait $!
