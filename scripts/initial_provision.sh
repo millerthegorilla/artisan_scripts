@@ -8,7 +8,7 @@ chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/image_ack.sh  /home/${USER_NA
 chmod +x /home/${USER_NAME}/image_ack.sh
 runuser --login ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} /home/${USER_NAME}/image_ack.sh"
 wait $!
-#rm /home/${USER_NAME}/image_ack.sh /home/${USER_NAME}/.proj
+rm /home/${USER_NAME}/image_ack.sh /home/${USER_NAME}/.proj
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
