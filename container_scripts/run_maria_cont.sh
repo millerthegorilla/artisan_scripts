@@ -9,7 +9,7 @@ runuser --login ${USER_NAME} -P -c "podman run -dit --secret=MARIADB_ROOT_PASSWO
 
 echo "Waiting for Database container to be ready"
 read -p "Enter your MYSQL_ROOT_PASSWORD : " mysql_root_password
-until runuser --login ${USER_NAME} -P -c "podman exec -e ROOT_PASSWORD=\"${mysql_root_password}\" -it \"${MARIA_CONT_NAME}\" bash -c \"mysql -uroot  -p\"\${ROOT_PASSWORD}\" -h'localhost' --protocol=tcp -e \"delete from mysql.global_priv where user='root' and host='%'; flush privileges;\" > /dev/null 2>\&"
+until runuser --login ${USER_NAME} -P -c "podman exec -e ROOT_PASSWORD=\"${mysql_root_password}\" -it \"${MARIA_CONT_NAME}\" bash -c \"mysql\" -uroot  -p\"\${ROOT_PASSWORD}\" -h'localhost' --protocol=tcp -e \"delete from mysql.global_priv where user='root' and host='%'; flush privileges;\" > /dev/null 2>\&"
 do
 	echo -n "."
 done
