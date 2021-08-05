@@ -220,17 +220,17 @@ remove_logs_dir()
 {
     if [[ -n ${DEBUG} && ${DEBUG} == "FALSE" ]]
     then
-        if [[ -e /home/${USER_NAME}/${PROJECT_NAME} ]]
+        if [[ -e ${USER_DIR}/${PROJECT_NAME} ]]
         then
-            rm -rf /home/${USER_NAME}/${PROJECT_NAME}/logs
+            rm -rf ${USER_DIR}/${PROJECT_NAME}/logs
         fi
     else
-        rm -rf /home/${USER_NAME}/${PROJECT_NAME}/logs
+        rm -rf ${USER_DIR}/${PROJECT_NAME}/logs
     fi
         
     if [[ -n "${PROJECT_NAME}" ]]
     then
-        echo -e "remove /home/${USER_NAME}/${PROJECT_NAME} (choose a number)?"
+        echo -e "remove ${USER_DIR}/${PROJECT_NAME} (choose a number)?"
         select yn in "Yes" "No"; do
             case $yn in
                 Yes ) remove_home=1; break;;
@@ -241,13 +241,13 @@ remove_logs_dir()
         then
             if [[ -n ${DEBUG} && ${DEBUG} == "FAlSE" ]]
             then
-                if [[ -e /home/${USER_NAME}/${PROJECT_NAME} ]]
+                if [[ -e ${USER_DIR}/${PROJECT_NAME} ]]
                 then
                     echo -e "removing swag logs"
-                    rm -rf /home/${USER_NAME}/${PROJECT_NAME}
+                    rm -rf ${USER_DIR}/${PROJECT_NAME}
                 fi
             else
-                rm -rf /home/${USER_NAME}/${PROJECT_NAME}
+                rm -rf ${USER_DIR}/${PROJECT_NAME}
             fi
         fi
     fi
@@ -256,7 +256,7 @@ remove_logs_dir()
 if [[ logs_remove -eq 2 ]]
 then
     mkdir ${SCRIPTS_ROOT}/old_logs
-    mv /home/${USER_NAME}/${PROJECT_NAME}/logs/* ${SCRIPTS_ROOT}/old_logs/
+    mv ${USER_DIR}/${PROJECT_NAME}/logs/* ${SCRIPTS_ROOT}/old_logs/
     remove_logs_dir
 fi
 

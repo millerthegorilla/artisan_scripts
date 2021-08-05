@@ -72,10 +72,10 @@ read -p "Static base root [${SBR}] : " sbr
 static_base_root=${sbr:-${SBR}}
 
 ## LOGS
-read -p "Host log dir [${HOME}/${project_name}/logs/] : " hld
-host_log_dir=${hld:-${HOME}/${project_name}/logs/}
-read -p "Swag Host log dir (must be different to Host Log Dir) [${HOME}/${project_name}/swag_logs] : " shld
-swag_host_log_dir=${shld:-${HOME}/${project_name}/swag_logs}
+read -p "Host log dir [${USER_DIR}/${project_name}/logs] : " hld
+host_log_dir=${hld:-${USER_DIR}/${project_name}/logs}
+read -p "Swag Host log dir (must be different to Host Log Dir) [${USER_DIR}/${project_name}/swag_logs] : " shld
+swag_host_log_dir=${shld:-${USER_DIR}/${project_name}/swag_logs}
 # host static dir mounts on to static base root from django and swag conts.
 
 ## HOST STATIC
