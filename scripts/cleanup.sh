@@ -106,7 +106,8 @@ then
     fi
 fi
 
-rm -rf ${SCRIPTS_ROOT}/dockerfiles/django/*
+rm -r ${SCRIPTS_ROOT}/dockerfiles/django/*
+rm ${SCRIPTS_ROOT}/dockerfiles/maria.sh
 
 echo -e "remove all podman images (choose a number)?"
 select yn in "Yes" "No"; do
