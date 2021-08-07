@@ -70,13 +70,14 @@ function build_maria()
 {
    rm ${SCRIPTS_ROOT}/.images
    cp dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
+   cp dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
    runuser --login ${USER_NAME} -c "podman build --tag='maria:artisan' -f='dockerfile_maria' ."
    echo -e "# [maria]" > ${SCRIPTS_ROOT}/.images
    echo -e "DBNAME=${DB_NAME}" >> ${SCRIPTS_ROOT}/.images
    echo -e "DBUSER=${DB_USER}" >> ${SCRIPTS_ROOT}/.images 
    echo -e "DBHOST=${DB_HOST}" >> ${SCRIPTS_ROOT}/.images 
    echo -e "DBPASSWORD=${DB_PASSWORD}" >> ${SCRIPTS_ROOT}/.images
-   rm /home/${USER_NAME}/dockerfile_maria 
+   rm /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
 }
 
 runuser --login ${USER_NAME} -c "podman image exists maria:artisan"
