@@ -3,6 +3,7 @@
 echo -e "$(basename \"$0\")"
 
 source ${SCRIPTS_ROOT}/.env
+source ${SCRIPTS_ROOT}/.proj
 
 if [[ -n "${SWAG_HOST_LOG_DIR}" && ! -f ${SWAG_HOST_LOG_DIR} ]]
 then
