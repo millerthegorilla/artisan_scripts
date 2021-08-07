@@ -1,2 +1,0 @@
-CREATE DATABASE ${DB_NAME} CHARSET utf8; 
-GRANT all privileges on ${DB_NAME}.* TO ${DB_USER}@${DB_HOST} identified by '${DB_PASSWORD}';

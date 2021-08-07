@@ -42,9 +42,10 @@ function build_swag()
    rm ${SCRIPTS_ROOT}/.images
    cp dockerfiles/dockerfile_swag_prod /home/${USER_NAME}/dockerfile_swag_prod
    runuser --login ${USER_NAME} -c "podman build --tag='swag:artisan' -f='dockerfile_swag_prod' ."
-   echo -e "[swag]" > ${SCRIPTS_ROOT}/.images
+   echo -e "# [swag]" > ${SCRIPTS_ROOT}/.images
    echo -e "TL_DOMAIN=${EXTRA_DOMAINS}" >> ${SCRIPTS_ROOT}/.images
-   echo -e "DUCK_DOMAIN=${DUCKDNS_SUBDOMAIN}" >> ${SCRIPTS_ROOT}/.images 
+   echo -e "DUCK_DOMAIN=${DUCKDNS_SUBDOMAIN}" >> ${SCRIPTS_ROOT}/.images
+   rm /home/${USER_NAME}/dockerfile_swag_prod 
 }
 
 if [[ ${DEBUG} == "FALSE" ]]
@@ -62,5 +63,33 @@ then
         else
             build_swag
         fi
+    fi
+fi
+
+function build_maria()
+{
+   rm ${SCRIPTS_ROOT}/.images
+   cp dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
+   runuser --login ${USER_NAME} -c "podman build --tag='maria:artisan' -f='dockerfile_maria' ."
+   echo -e "# [maria]" > ${SCRIPTS_ROOT}/.images
+   echo -e "DBNAME=${DB_NAME}" >> ${SCRIPTS_ROOT}/.images
+   echo -e "DBUSER=${DB_USER}" >> ${SCRIPTS_ROOT}/.images 
+   echo -e "DBHOST=${DB_HOST}" >> ${SCRIPTS_ROOT}/.images 
+   echo -e "DBPASSWORD=${DB_PASSWORD}" >> ${SCRIPTS_ROOT}/.images
+   rm /home/${USER_NAME}/dockerfile_maria 
+}
+
+runuser --login ${USER_NAME} -c "podman image exists maria:artisan"
+if [[ ! $? -eq 0 ]]
+then
+    if [[ -e ${SCRIPTS_ROOT}/.images ]]
+    then
+        source ${SCRIPTS_ROOT}/.images
+        if [[ ${DBPASSWORD} != ${DB_PASSWORD} || ${DBNAME} != ${DB_NAME} || ${DBUSER} != ${DB_USER} || ${DBHOST} != ${DB_HOST} ]]
+        then
+            build_maria
+        fi
+    else
+        build_maria
     fi
 fi

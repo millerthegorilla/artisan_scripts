@@ -200,8 +200,13 @@ echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
 echo CODE_PATH=${CODE_PATH} >> .proj
 echo EXTRA_DOMAINS=${EXTRA_DOMAINS} >> .proj
 echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj
+echo DB_NAME=${db_name} >> .proj
+echo DB_USER=${db_user} >> .proj
+echo DB_HOST=${db_host} >> .proj
+echo DB_PASSWORD=${db_password} >> .proj
 echo DEBUG=${DEBUG} >> .proj
 echo XDESK=${XDESK} >> .proj
+
 ### TEMPLATES
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
