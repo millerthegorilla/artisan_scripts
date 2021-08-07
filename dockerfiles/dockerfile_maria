@@ -1,4 +1,4 @@
-FROM docker.io/library/mariadb
+FROM docker.io/library/mariadb:10.5
 RUN apt-get update && apt-get upgrade -y
 RUN rm -rf /var/lib/apt/lists/*
 COPY ./maria /docker-entrypoint-initdb.d/maria.sh

@@ -44,7 +44,7 @@ ELASTIC_IMAGE="docker.io/library/elasticsearch:7.11.2"
 
 ## MARIADB
 MARIA_CONT_NAME="mariadb_cont"
-MARIA_IMAGE="mariadb:10.5"
+MARIA_IMAGE="maria:artisan"
 DB_NAME="${db_name}"
 DB_USER="${db_user}"
 DB_PASSWORD="${db_password}"
