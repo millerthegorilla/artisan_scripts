@@ -1,4 +1,5 @@
-.images
+.images/*
+!.images/.gitignore
 .proj
 .archive
 .env
