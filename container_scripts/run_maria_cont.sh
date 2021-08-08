@@ -8,13 +8,13 @@ source ${SCRIPTS_ROOT}/.proj
 runuser --login ${USER_NAME} -P -c "podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --name \"${MARIA_CONT_NAME}\" -v dbvol:/var/lib/mysql:Z --pod \"${POD_NAME}\" --restart unless-stopped ${MARIA_IMAGE}"
 
 echo -n "Waiting for mariadb restart..."
-until podman stop ${MARIA_CONT_NAME} > /dev/null 2>&1
+until runuser --login ${USER_NAME} -c "podman stop ${MARIA_CONT_NAME} > /dev/null 2>&1"
 do
 	echo -n "."
 done
-podman start ${MARIA_CONT_NAME}
+runuser --login ${USER_NAME} -c "podman start ${MARIA_CONT_NAME}"
 
-podman exec -it ${MARIA_CONT_NAME} bash -c "rm /docker-entrypoint-initdb.d/maria.sh"
+runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'rm /docker-entrypoint-initdb.d/maria.sh'"
 
 # echo "Waiting for Database container to be ready"
 # read -p "Enter your MYSQL_ROOT_PASSWORD : " mysql_root_password
