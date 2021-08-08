@@ -5,7 +5,7 @@ echo -e "run_maria_cont.sh"
 source ${SCRIPTS_ROOT}/.env
 source ${SCRIPTS_ROOT}/.proj
 
-runuser --login ${USER_NAME} -P -c "podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --name \"${MARIA_CONT_NAME}\" -v dbvol:/var/lib/mysql:Z --pod \"${POD_NAME}\" ${MARIA_IMAGE} &"
+runuser --login ${USER_NAME} -P -c "podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --name \"${MARIA_CONT_NAME}\" -v dbvol:/var/lib/mysql:Z --pod \"${POD_NAME}\" --restart unless-stopped ${MARIA_IMAGE}"
 
 # echo "Waiting for Database container to be ready"
 # read -p "Enter your MYSQL_ROOT_PASSWORD : " mysql_root_password
