@@ -40,12 +40,14 @@ fi
 function build_swag()
 {
    rm ${SCRIPTS_ROOT}/.images
-   cp dockerfiles/dockerfile_swag_prod /home/${USER_NAME}/dockerfile_swag_prod
+   cp dockerfiles/dockerfile_swag /home/${USER_NAME}/dockerfile_swag
+   cp dockerfiles/swag/default /home/${USER_NAME}/default
+   cp dockerfiles/swag/nginx /home/${USER_NAME}/nginx
    runuser --login ${USER_NAME} -c "podman build --tag='swag:artisan' -f='dockerfile_swag_prod' ."
    echo -e "# [swag]" > ${SCRIPTS_ROOT}/.images
    echo -e "TL_DOMAIN=${EXTRA_DOMAINS}" >> ${SCRIPTS_ROOT}/.images
    echo -e "DUCK_DOMAIN=${DUCKDNS_SUBDOMAIN}" >> ${SCRIPTS_ROOT}/.images
-   rm /home/${USER_NAME}/dockerfile_swag_prod 
+   rm /home/${USER_NAME}/dockerfile_swag /home/${USER_NAME}/default /home/${USER_NAME}/nginx
 }
 
 if [[ ${DEBUG} == "FALSE" ]]

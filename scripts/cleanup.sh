@@ -70,7 +70,7 @@ else
         # then
         #     runuser --login ${USER_NAME} -c "podman exec -it ${SN} bash -c 'chown -R root:root /config/log'"
         # fi
-        # echo -e "\nshutting down and removing the pod..."
+    echo -e "\nshutting down and removing the pod..."
 	runuser --login ${USER_NAME} -c "podman pod stop ${POD_NAME}"
 	runuser --login ${USER_NAME} -c "podman pod rm ${POD_NAME}"
 fi
