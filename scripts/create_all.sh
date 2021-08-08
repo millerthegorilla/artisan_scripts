@@ -52,6 +52,7 @@ then
     mkdir -p ${HOST_LOG_DIR}
     mkdir ${HOST_LOG_DIR}/django
     mkdir ${HOST_LOG_DIR}/gunicorn
+    chown ${USER_NAME}:${USER_NAME} ${HOST_LOG_DIR}/django ${HOST_LOG_DIR}/gunicorn
 fi
 
 echo CURRENT_SETTINGS=${file[${input}]} >> .archive 
