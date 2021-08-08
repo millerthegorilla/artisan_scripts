@@ -43,7 +43,7 @@ function build_swag()
    cp dockerfiles/dockerfile_swag /home/${USER_NAME}/dockerfile_swag
    cp dockerfiles/swag/default /home/${USER_NAME}/default
    cp dockerfiles/swag/nginx /home/${USER_NAME}/nginx
-   runuser --login ${USER_NAME} -c "podman build --tag='swag:artisan' -f='dockerfile_swag_prod' ."
+   runuser --login ${USER_NAME} -c "podman build --tag='swag:artisan' -f='dockerfile_swag' ."
    echo -e "# [swag]" > ${SCRIPTS_ROOT}/.images
    echo -e "TL_DOMAIN=${EXTRA_DOMAINS}" >> ${SCRIPTS_ROOT}/.images
    echo -e "DUCK_DOMAIN=${DUCKDNS_SUBDOMAIN}" >> ${SCRIPTS_ROOT}/.images
