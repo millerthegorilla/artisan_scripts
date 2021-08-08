@@ -58,19 +58,19 @@ then
 	echo no such pod!
 else
         #chown swag_logs to be able to delete them
-        if [[ -z "${SWAG_CONT_NAME}" ]]
-        then
-	        SN=swag_cont
-        else
-            SN=${SWAG_CONT_NAME}
-        fi
-        runuser --login ${USER_NAME} -c "podman container exists ${SN}"
-        retval=$?
-        if  [[ retval -eq 0 ]]
-        then
-            runuser --login ${USER_NAME} -c "podman exec -it ${SN} bash -c 'chown -R root:root /config/log'"
-        fi
-        echo -e "\nshutting down and removing the pod..."
+        # if [[ -z "${SWAG_CONT_NAME}" ]]
+        # then
+	       #  SN=swag_cont
+        # else
+        #     SN=${SWAG_CONT_NAME}
+        # fi
+        # runuser --login ${USER_NAME} -c "podman container exists ${SN}"
+        # retval=$?
+        # if  [[ retval -eq 0 ]]
+        # then
+        #     runuser --login ${USER_NAME} -c "podman exec -it ${SN} bash -c 'chown -R root:root /config/log'"
+        # fi
+        # echo -e "\nshutting down and removing the pod..."
 	runuser --login ${USER_NAME} -c "podman pod stop ${POD_NAME}"
 	runuser --login ${USER_NAME} -c "podman pod rm ${POD_NAME}"
 fi
