@@ -1,6 +1,12 @@
 #!/bin/bash
 
-source ${SCRIPTS_ROOT}/.proj
+if [[ -e ${SCRIPTS_ROOT}/.proj ]]
+then
+    source ${SCRIPTS_ROOT}/.proj
+else
+    read -p "Enter username : " USER_NAME
+    XDESK="XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\""
+fi
 
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 
