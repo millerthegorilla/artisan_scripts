@@ -82,7 +82,6 @@ function build_maria()
    echo -e "DBNAME=${DB_NAME}" >> ${SCRIPTS_ROOT}/.images/maria
    echo -e "DBUSER=${DB_USER}" >> ${SCRIPTS_ROOT}/.images/maria 
    echo -e "DBHOST=${DB_HOST}" >> ${SCRIPTS_ROOT}/.images/maria 
-   echo -e "DBPASSWORD=${DB_PASSWORD}" >> ${SCRIPTS_ROOT}/.images/maria
    rm /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
 }
 
@@ -92,7 +91,7 @@ then
     if [[ -e ${SCRIPTS_ROOT}/.images/maria ]]
     then
         source ${SCRIPTS_ROOT}/.images/maria
-        if [[ ${DBPASSWORD} != ${DB_PASSWORD} || ${DBNAME} != ${DB_NAME} || ${DBUSER} != ${DB_USER} || ${DBHOST} != ${DB_HOST} ]]
+        if [[ ${DBNAME} != ${DB_NAME} || ${DBUSER} != ${DB_USER} || ${DBHOST} != ${DB_HOST} ]]
         then
             build_maria
         fi
