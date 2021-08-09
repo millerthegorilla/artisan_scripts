@@ -1,7 +1,7 @@
 #!/bin/bash
 
 chown -R artisan:artisan /opt/${PROJECT_NAME} /var/log/${PROJECT_NAME} /etc/opt/${PROJECT_NAME}/settings /etc/opt/${PROJECT_NAME}/static_files
-chmod 0440 /etc/opt/${PROJECT_NAME}/settings/settings.py /etc/opt/${PROJECT_NAME}/gunicorn.conf.py
+chmod 0440 /etc/opt/${PROJECT_NAME}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py
 chmod 0400 /etc/opt/${PROJECT_NAME}/settings/.env
 su artisan -c "gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py"
 chown 0000 /etc/opt/${PROJECT_NAME}/settings/.env
