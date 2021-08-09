@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ${SCRIPTS_ROOT}/.proj
+
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 
    exit 1
@@ -18,7 +20,7 @@ for f in ${FILES}
 do
   if [[ -e /etc/systemd/user/${f} ]]
   then
-  	  runuser --login ${USER_NAME} -c "systemctl --user disable ${f}"
+  	  runuser --login ${USER_NAME} -c "${XDESK} systemctl --user disable ${f}"
   	  if [[ ! $? -eq 0 ]]
   	  then
   	  	  echo -e "\nFailed whilst disabling systemd units."

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ${SCRIPTS_ROOT}/.proj
+
 cd ${SCRIPTS_ROOT}/systemd/
 FILES=*
 for f in ${FILES}
