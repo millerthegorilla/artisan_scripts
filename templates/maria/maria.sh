@@ -6,7 +6,7 @@ then
 
     mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "CREATE DATABASE ${db_name} CHARSET utf8;"
     
-    mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "grant all privileges on ${db_name}.* TO ${db_user}@${db_host} identified by '${db_password}'; flush privileges;"
+    mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "grant all privileges on ${db_name}.* TO ${db_user}@${db_host} identified by '${DB_PASSWORD}'; flush privileges;"
 fi
 
 rm -- "$0"
