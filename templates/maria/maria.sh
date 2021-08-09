@@ -9,5 +9,4 @@ then
     mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "grant all privileges on ${db_name}.* TO ${db_user}@${db_host} identified by '${db_password}'; flush privileges;"
 fi
 
-touch ./done
 rm -- "$0"

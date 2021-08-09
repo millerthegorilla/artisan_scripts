@@ -8,7 +8,7 @@ source ${SCRIPTS_ROOT}/.proj
 runuser --login ${USER_NAME} -P -c "podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --name \"${MARIA_CONT_NAME}\" -v dbvol:/var/lib/mysql:Z --pod \"${POD_NAME}\" --restart unless-stopped ${MARIA_IMAGE}"
 
 echo -n "Waiting for mariadb restart..."
-until runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'ls /docker-entrypoint-initdb.d/done'" > /dev/null 2>&1
+until ! runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'ls /docker-entrypoint-initdb.d/maria.sh'" > /dev/null 2>&1
 do
 	echo -n "."
 done

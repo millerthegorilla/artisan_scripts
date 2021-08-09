@@ -39,7 +39,10 @@ fi
 
 function build_swag()
 {
-   rm ${SCRIPTS_ROOT}/.images/swag
+   if [[ -e ${SCRIPTS_ROOT}/.images/swag ]]
+   then
+      rm ${SCRIPTS_ROOT}/.images/swag
+   fi
    cp dockerfiles/dockerfile_swag /home/${USER_NAME}/dockerfile_swag
    cp dockerfiles/swag/default /home/${USER_NAME}/default
    cp dockerfiles/swag/nginx /home/${USER_NAME}/nginx
@@ -69,7 +72,10 @@ fi
 
 function build_maria()
 {
-   rm ${SCRIPTS_ROOT}/.images/maria
+   if [[ -e ${SCRIPTS_ROOT}/.images/maria ]]
+   then
+      rm ${SCRIPTS_ROOT}/.images/maria
+   fi
    cp dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
    cp dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
    runuser --login ${USER_NAME} -c "podman build --tag='maria:artisan' -f='dockerfile_maria' ."
