@@ -91,7 +91,7 @@ db_name=${dbn:-${db_name}}
 db_user=${db_name}_user
 read -p "Your django database username [${db_user}]: " dbu
 db_user=${dbu:-${db_user}}
-db_password=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
+# db_password=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
 db_host=127.0.0.1
 read -p "Your django database host address [${db_host}] : " dbh
 db_host=${dbh:-${db_host}}
@@ -177,7 +177,7 @@ function make_secret()
         done
         if [[ ${REUSE} == "FALSE" ]]
         then
-            runuser --login ${USER_NAME} -c "${XDESK} podman secret rm ${1}"
+            runuser --login ${USER_NAME} -c "podman secret rm ${1}"
             read -p "Enter variable for ${1} : " token && echo -n "$token" | runuser --login "${USER_NAME}" -c "podman secret create \"${1}\" -" 
         fi
     else
@@ -191,6 +191,9 @@ then
 fi
 
 make_secret MARIADB_ROOT_PASSWORD
+
+runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
+echo -n "< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32}" | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
 
 # variables for create_directories.sh
 echo PROJECT_NAME=${PROJECT_NAME} > .proj
