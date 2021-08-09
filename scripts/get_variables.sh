@@ -219,7 +219,7 @@ chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/manage.py
 cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
 chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/${django_project_name}/wsgi.py
 cat ${SCRIPTS_ROOT}/templates/gunicorn/start | envsubst > ${SCRIPTS_ROOT}/dockerfiles/django/start.sh
-cat ${SCRIPTS_ROOT}/templates/maria/maria.sh | envsubst '$db_user:$db_host:$db_name:$db_password' > ${SCRIPTS_ROOT}/dockerfiles/maria.sh
+cat ${SCRIPTS_ROOT}/templates/maria/maria.sh | envsubst '$db_user:$db_host:$db_name' > ${SCRIPTS_ROOT}/dockerfiles/maria.sh
 if [[ ${DEBUG} == "FALSE" ]]
 then
     set -a
