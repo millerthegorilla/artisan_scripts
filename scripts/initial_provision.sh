@@ -68,6 +68,8 @@ then
             build_swag
         fi
     fi
+else
+    build_swag
 fi
 
 function build_maria()
@@ -98,4 +100,6 @@ then
     else
         build_maria
     fi
+else
+    build_maria
 fi
