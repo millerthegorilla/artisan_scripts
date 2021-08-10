@@ -47,7 +47,7 @@ function build_swag()
    cp dockerfiles/swag/default /home/${USER_NAME}/default
    cp dockerfiles/swag/nginx /home/${USER_NAME}/nginx
    runuser --login ${USER_NAME} -c "podman build --tag='swag:artisan' -f='dockerfile_swag' ."
-   echo -e "TL_DOMAIN=${EXTRA_DOMAINS}" >> ${SCRIPTS_ROOT}/.images/swag
+   echo -e "TL_DOMAIN=${EXTRA_DOMAINS}" > ${SCRIPTS_ROOT}/.images/swag
    echo -e "DUCK_DOMAIN=${DUCKDNS_SUBDOMAIN}" >> ${SCRIPTS_ROOT}/.images/swag
    rm /home/${USER_NAME}/dockerfile_swag /home/${USER_NAME}/default /home/${USER_NAME}/nginx
 }
@@ -68,8 +68,6 @@ then
             build_swag
         fi
     fi
-else
-    build_swag
 fi
 
 function build_maria()
@@ -81,7 +79,7 @@ function build_maria()
    cp dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
    cp dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
    runuser --login ${USER_NAME} -c "podman build --tag='maria:artisan' -f='dockerfile_maria' ."
-   echo -e "DBNAME=${DB_NAME}" >> ${SCRIPTS_ROOT}/.images/maria
+   echo -e "DBNAME=${DB_NAME}" > ${SCRIPTS_ROOT}/.images/maria
    echo -e "DBUSER=${DB_USER}" >> ${SCRIPTS_ROOT}/.images/maria 
    echo -e "DBHOST=${DB_HOST}" >> ${SCRIPTS_ROOT}/.images/maria 
    rm /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
@@ -100,6 +98,4 @@ then
     else
         build_maria
     fi
-else
-    build_maria
 fi
