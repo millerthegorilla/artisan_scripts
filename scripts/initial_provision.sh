@@ -55,7 +55,7 @@ function build_swag()
 if [[ ${DEBUG} == "FALSE" ]]
 then
     runuser --login ${USER_NAME} -c "podman image exists swag:artisan"
-    if [[ ! $? -eq 0 ]]
+    if [[ $? -eq 0 ]]
     then
         if [[ -e ${SCRIPTS_ROOT}/.images/swag ]]
         then
@@ -64,9 +64,9 @@ then
             then
                 build_swag
             fi
-        else
-            build_swag
         fi
+    else
+        build_swag
     fi
 fi
 
@@ -86,7 +86,7 @@ function build_maria()
 }
 
 runuser --login ${USER_NAME} -c "podman image exists maria:artisan"
-if [[ ! $? -eq 0 ]]
+if [[ $? -eq 0 ]]
 then
     if [[ -e ${SCRIPTS_ROOT}/.images/maria ]]
     then
@@ -95,7 +95,7 @@ then
         then
             build_maria
         fi
-    else
-        build_maria
-    fi
+     fi
+else
+    build_maria
 fi
