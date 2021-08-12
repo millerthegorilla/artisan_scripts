@@ -293,5 +293,5 @@ then
     rm -rf ${SCRIPTS_ROOT}/systemd 
     mkdir ${SCRIPTS_ROOT}/systemd
     cp ${SCRIPTS_ROOT}/templates/systemd/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore
-    chown ${USER_NAME}:${USER_NAME} ${SCRIPTS_ROOT}/systemd/.gitignore
+    #chown ${USER_NAME}:${USER_NAME} ${SCRIPTS_ROOT}/systemd/.gitignore
 fi

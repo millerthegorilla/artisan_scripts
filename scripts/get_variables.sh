@@ -187,7 +187,7 @@ function make_secret()
 
 if [[ ${DEBUG} == "FALSE" ]]
 then 
-    make_secret DUCKDNS_TOKEN
+    make_secret DUCKDNSTOKEN
 fi
 
 make_secret MARIADB_ROOT_PASSWORD
