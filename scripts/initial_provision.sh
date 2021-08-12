@@ -2,13 +2,13 @@
 
 source ${SCRIPTS_ROOT}/.proj
 
-cp ${SCRIPTS_ROOT}/scripts/image_ack.sh /home/${USER_NAME}/image_ack.sh
+cp ${SCRIPTS_ROOT}/scripts/image_acq.sh /home/${USER_NAME}/image_acq.sh
 cp ${SCRIPTS_ROOT}/.proj /home/${USER_NAME}/.proj
-chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/image_ack.sh  /home/${USER_NAME}/.proj
-chmod +x /home/${USER_NAME}/image_ack.sh
-runuser --login ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} /home/${USER_NAME}/image_ack.sh"
+chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/image_acq.sh  /home/${USER_NAME}/.proj
+chmod +x /home/${USER_NAME}/image_acq.sh
+runuser --login ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} /home/${USER_NAME}/image_acq.sh"
 wait $!
-rm /home/${USER_NAME}/image_ack.sh /home/${USER_NAME}/.proj
+rm /home/${USER_NAME}/image_acq.sh /home/${USER_NAME}/.proj
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
@@ -76,8 +76,8 @@ function build_maria()
    then
       rm ${SCRIPTS_ROOT}/.images/maria
    fi
-   cp dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
-   cp dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
+   cp ${SCRIPTS_ROOT}/dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
+   cp ${SCRIPTS_ROOT}/dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
    runuser --login ${USER_NAME} -c "podman build --tag='maria:artisan' -f='dockerfile_maria' ."
    echo -e "DBNAME=${DB_NAME}" > ${SCRIPTS_ROOT}/.images/maria
    echo -e "DBUSER=${DB_USER}" >> ${SCRIPTS_ROOT}/.images/maria 

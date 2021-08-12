@@ -1,5 +1,6 @@
 FROM docker.io/linuxserver/swag
 RUN rm -rf /var/run/s6/etc/services.d/php-fpm
+RUN rm -rf /etc/services.d/php-fpm
 COPY ./default /config/nginx/site-confs/default
 COPY ./nginx /config/nginx/nginx.conf
 RUN chown abc:users /config/nginx/nginx.conf
