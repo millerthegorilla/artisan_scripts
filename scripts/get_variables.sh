@@ -1,7 +1,18 @@
 #!/bin/bash
 set -a
 
-read -p 'Standard/service user account name : ' USER_NAME
+read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
+systemd_user=${USER_NAME:-"artisan_sysd"}
+if [[ $(id ${USER_NAME} > /dev/null 2>&1; echo $?) -ne 0 ]]
+then
+    echo -e "Error, account with username ${USER_NAME} does not exist!"
+    exit 1
+# else
+#     if [[ $(id -u ${USER_NAME}) -ge 1000 ]]
+#     then
+#         echo -e "Error, ${USER_NAME} account is not a system account"
+#     fi
+fi
 
 echo -e "\nThe following questions are to fill out the env files that are called upon by the scripts when executing, and by the settings file during production.  The settings .env file is called from the settings file using os.getenv, after the env file is loaded into the environment by the python program dotenv.  This .env file is located in the settings folder, along with settings.py.  You can edit either of those files to edit your site.   Press enter to accept default value[] where listed...\n\n"
 
@@ -138,20 +149,6 @@ read -p "Google Recaptcha public key : " recaptcha_public
 read -p "Google Recaptcha private key : " recaptcha_private
 recaptcha_public="${recaptcha_public}"
 recaptcha_private="${recaptcha_private}"
-
-## system user account name
-read -p "System Account Name for systemd units ['artisan_sysd'] : " systemd_user
-systemd_user=${systemd_user:-"artisan_sysd"}
-if [[ $(id ${systemd_user} > /dev/null 2>&1; echo $?) -ne 0 ]]
-then
-    echo -e "Error, account with username ${systemd_user} does not exist!"
-    exit 1
-else
-    if [[ $(id -u ${systemd_user}) -ge 1000 ]]
-    then
-        echo -e "Error, ${systemd_user} account is not a system account"
-    fi
-fi
 
 if [[ ${DEBUG} == "TRUE" ]]
 then

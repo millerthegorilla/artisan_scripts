@@ -6,9 +6,6 @@
 ## purposes only.
 ###
 
-## systemd user
-SYSTEMD_USER_NAME=${systemd_user}
-
 ## SHARED
 PROJECT_NAME=${project_name}
 HOST_LOG_DIR=${host_log_dir}
