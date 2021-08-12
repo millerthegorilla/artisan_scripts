@@ -8,7 +8,7 @@ source ${SCRIPTS_ROOT}/.proj
 runuser --login ${USER_NAME} -P -c "podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --secret=DB_PASSWORD,type=env --name \"${MARIA_CONT_NAME}\" -v dbvol:/var/lib/mysql:Z --pod \"${POD_NAME}\" --restart unless-stopped ${MARIA_IMAGE}"
 
 echo -n "Waiting for mariadb restart..."
-until ! runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'ls /var/run/.finished'" > /dev/null 2>&1
+until ! runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'ls /tmp/.finished'" > /dev/null 2>&1
 do
 	echo -n "."
 done
