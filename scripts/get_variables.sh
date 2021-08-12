@@ -2,7 +2,7 @@
 set -a
 
 read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
-systemd_user=${USER_NAME:-"artisan_sysd"}
+USER_NAME=${USER_NAME:-"artisan_sysd"}
 if [[ $(id ${USER_NAME} > /dev/null 2>&1; echo $?) -ne 0 ]]
 then
     echo -e "Error, account with username ${USER_NAME} does not exist!"
