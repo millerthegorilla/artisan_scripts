@@ -152,7 +152,6 @@ runuser --login ${USER_NAME} -c "podman volume rm dbvol"
 
 rm .env
 rm .archive
-rm .proj
 rm settings/settings.py
 if [[ ${DEBUG} == "FALSE" ]]
 then
@@ -295,3 +294,5 @@ then
     cp ${SCRIPTS_ROOT}/templates/systemd/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore
     #chown ${USER_NAME}:${USER_NAME} ${SCRIPTS_ROOT}/systemd/.gitignore
 fi
+
+rm ${SCRIPTS_ROOT}/.proj
