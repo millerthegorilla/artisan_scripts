@@ -17,6 +17,18 @@ if [[ -f ".proj" ]]; then
    set -a
 fi
 
+if [[ ! -n "DEBUG" ]]
+then
+    echo -e "Is the project debug (choose a number) : "
+
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) DEBUG="TRUE";;
+            No ) DEBUG="FALSE";;
+        esac
+    done
+fi
+
 if [[ ! -n "$CODE_PATH" ]]
 then
     until [[ -n "${CODE_PATH}" ]]
