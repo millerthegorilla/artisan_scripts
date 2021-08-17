@@ -13,4 +13,4 @@ TimeoutStopSec=70
 ExecStart=${terminal_cmd} /usr/bin/podman exec -e PROJECT_NAME=${project_name} -e PYTHONPATH="/etc/opt/${project_name}/settings/:/opt/${project_name}/" -it ${django_cont_name} bash -c "source /home/artisan/django_venv/bin/activate; python /opt/${project_name}/manage.py runserver 0.0.0.0:8000"
 
 [Install]
-WantedBy=multi-user.target default.target
+WantedBy=graphical.target
