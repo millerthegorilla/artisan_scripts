@@ -160,6 +160,14 @@ while (( "$#" )); do
       su ${USERNAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan /etc/opt/${PROJECT_NAME}/settings/settings.py\""
       exit $?
       ;;
+    interact)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      runuser --login artisan_sysd -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" ${1}"
+      exit $?
+      ;;
     help|-h|-?|--help)
       echo "$ artisan_run command   - where command is one of create, clean, replace, manage or settings."
       exit 0
