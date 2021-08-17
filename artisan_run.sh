@@ -165,7 +165,7 @@ while (( "$#" )); do
       then
           read -p "Enter username : " USER_NAME
       fi
-      runuser --login artisan_sysd -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" ${1}"
+      runuser --login artisan_sysd -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" ${2}"
       exit $?
       ;;
     help|-h|-?|--help)
