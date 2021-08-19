@@ -30,11 +30,11 @@ then
 	echo -e "creating manage and qcluster"
 	if [[ ! $(runuser --login ${USER_NAME} -P -c "${XDESK} ${TERMINAL_CMD} podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd /home/artisan/django_venv; source bin/activate; python /opt/${PROJECT_NAME}/manage.py runserver 0.0.0.0:8000\"" > /dev/null 2>&1; echo $?) -eq 0 ]]
   then
-     openvt -- runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd /home/artisan/django_venv; source bin/activate; python /opt/${PROJECT_NAME}/manage.py runserver 0.0.0.0:8000 &>/tmp/manage_rs_output\" &"
+     openvt -- runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd /home/artisan/django_venv; source bin/activate; python /opt/${PROJECT_NAME}/manage.py runserver 0.0.0.0:8000 &>/tmp/manage_output\" &"
   fi
 	if [[ ! $(runuser --login ${USER_NAME} -P -c "${XDESK} ${TERMINAL_CMD} podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd /home/artisan/django_venv; source bin/activate; python /opt/${PROJECT_NAME}/manage.py qcluster\""> /dev/null 2>&1; echo $?) -eq 0 ]]
   then
-      openvt -- runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd /home/artisan/django_venv; source bin/activate; python /opt/${PROJECT_NAME}/manage.py qcluster &>/tmp/manage_qc_output\" &"
+      openvt -- runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd /home/artisan/django_venv; source bin/activate; python /opt/${PROJECT_NAME}/manage.py qcluster &>/tmp/manage_output\" &"
   fi
   wait
 else
