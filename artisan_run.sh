@@ -168,6 +168,18 @@ while (( "$#" )); do
       runuser --login artisan_sysd -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" ${2}"
       exit $?
       ;;
+    output)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      if [[ -z ${DJANGO_CONT_NAME} ]]
+      then
+          read -p "Enter the name of the django container : " DJANGO_CONT_NAME
+      fi
+      su ${USER_NAME} -c "cd; podman exec -it ${DJANGO_CONT_NAME} tail -f /tmp/manage_output"
+      exit $?
+      ;;
     help|-h|-?|--help)
       echo "$ artisan_run command   - where command is one of create, clean, replace, manage or settings."
       exit 0
