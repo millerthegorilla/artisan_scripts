@@ -52,7 +52,10 @@ then
     done
 fi
 
-echo -e "\n"
+if [[ ${DEBUG} == "TRUE" && $(id -u ${USER_NAME}) -lt 1000 ]]
+then
+    echo -e "** warning **, it is not reccommended to use a service account when using debug mode.\n  If you wish to continue, use ./artisan_run.sh output to display the output from the runserver command.\nAlternatively, and better still (more secure), use a standard user account.\n"
+fi
 
 echo -e "Enter your....\n"
 read -p "Site name as used in the website header/logo : " site_name
