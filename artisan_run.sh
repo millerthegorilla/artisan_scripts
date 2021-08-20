@@ -181,8 +181,25 @@ while (( "$#" )); do
       exit $?
       ;;
     update)
-      su ${USER_NAME} -c "cd; podman ps --format=json | jq '.[].\"Names\"[]' | grep -oP '^((?!infra).)*$' | while read cont; do echo $cont | tr -d '\"' | { read test; podman exec -it ${test} bash -c \"apt-get update && apt-get upgrade -y\"; } done"
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      su ${USER_NAME} -c "cd; podman ps --format=\"{{.Names}}\" | grep -oP '^((?!infra).)*$' | while read name; do podman exec -u root ${name} bash -c \"apt-get update; apt-get upgrade -y\"; done"
       exit $?
+      ;;
+    refresh)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      if [[ -z ${POD_NAME} ]]
+      then
+          read -p "Enter username : " POD_NAME
+      fi
+      su {USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman prune --all -f"
+      ${SCRIPTS_ROOT}/scripts/initial_provision.sh
+      systemctl reboot
       ;;
     help|-h|-?|--help)
       echo "$ artisan_run command   - where command is one of create, clean, replace, manage or settings."
