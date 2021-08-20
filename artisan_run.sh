@@ -180,6 +180,10 @@ while (( "$#" )); do
       su ${USER_NAME} -c "cd; podman exec -it ${DJANGO_CONT_NAME} tail -f /tmp/manage_output"
       exit $?
       ;;
+    update)
+      su ${USER_NAME} -c "cd; podman ps --format=json | jq '.[].\"Names\"[]' | grep -oP '^((?!infra).)*$' | while read cont; do echo $cont | tr -d '\"' | { read test; podman exec -it ${test} bash -c \"apt-get update && apt-get upgrade -y\"; } done"
+      exit $?
+      ;;
     help|-h|-?|--help)
       echo "$ artisan_run command   - where command is one of create, clean, replace, manage or settings."
       exit 0
