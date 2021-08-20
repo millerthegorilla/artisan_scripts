@@ -197,7 +197,7 @@ while (( "$#" )); do
       then
           read -p "Enter username : " POD_NAME
       fi
-      su {USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman prune --all -f"
+      su ${USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman prune --all -f"
       ${SCRIPTS_ROOT}/scripts/initial_provision.sh
       systemctl reboot
       ;;
