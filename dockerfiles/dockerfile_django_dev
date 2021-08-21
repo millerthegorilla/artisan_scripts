@@ -18,5 +18,5 @@ ENV VIRTUAL_ENV=/home/artisan/django_venv
 RUN su artisan -c "python3 -m venv $VIRTUAL_ENV"
 ENV PATH=$VIRTUAL_ENV/bin:$PATH
 COPY ./pip_requirements_dev /tmp/pip_requirements
-RUN su artisan -c "python -m pip install --upgrade pip" && su artisan -c "pip install --no-cache-dir -r /tmp/pip_requirements"
+RUN su artisan -c "python -m pip install --upgrade pip wheel" && su artisan -c "pip install --no-cache-dir -r /tmp/pip_requirements"
 RUN rm -r /tmp/pip_requirements
