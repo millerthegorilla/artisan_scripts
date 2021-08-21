@@ -165,7 +165,7 @@ while (( "$#" )); do
       then
           read -p "Enter username : " USER_NAME
       fi
-      runuser --login artisan_sysd -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" ${2}"
+      runuser --login ${USER_NAME} -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" ${2}"
       exit $?
       ;;
     output)
@@ -197,7 +197,7 @@ while (( "$#" )); do
       then
           read -p "Enter username : " POD_NAME
       fi
-      su ${USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman prune --all -f"
+      su ${USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman image prune --all -f"
       ${SCRIPTS_ROOT}/scripts/initial_provision.sh
       systemctl reboot
       ;;
