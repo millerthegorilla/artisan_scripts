@@ -2,7 +2,11 @@
 
 ###  This script will rebuild manage.py and wsgi.py in case a git pull of the main django_artisan code base
 ###  removes them.
-
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
 
 if [[ -e .archive ]]
 then

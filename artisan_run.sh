@@ -28,6 +28,9 @@ while (( "$#" )); do
       find . -type d -exec chmod 0550 {} +
       find . -type f -exec chmod 0440 {} +
       chmod 0550 -R *.sh
+      find .git -type d | xargs chmod 755
+      find .git/objects -type f | xargs chmod 444
+      find .git -type f | grep -v /objects/ | xargs chmod 644
       exit $?
       ;;
     create)
@@ -52,7 +55,7 @@ while (( "$#" )); do
       then
           SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh
           SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh
-          runuser --login ${USER_NAME} -c "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh"
+          SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh
       fi
       # if [[ ${DEBUG} == "FALSE" ]]
       # then

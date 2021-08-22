@@ -1,6 +1,12 @@
 #!/bin/bash
 set -a
 
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
 USER_NAME=${USER_NAME:-"artisan_sysd"}
 if [[ $(id ${USER_NAME} > /dev/null 2>&1; echo $?) -ne 0 ]]

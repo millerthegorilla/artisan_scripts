@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 if [[ -f "${SCRIPTS_ROOT}/.archive" ]]
 then
     source ${SCRIPTS_ROOT}/.archive
