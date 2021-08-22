@@ -24,10 +24,10 @@ while (( "$#" )); do
   case "$1" in
     install)
       ## added this option to archive it.
-      read -p 'Standard/service user account name : ' USER_NAME
-      cd ${SCRIPTS_ROOT}/scripts
-      chown ${USER_NAME}:${USER_NAME} reload.sh create_all.sh get_variables.sh initial_provision.sh make_manage_wsgi.sh make_user.sh super_access.sh systemd_generate.sh systemd_user_enable.sh
-      cd ${SCRIPTS_ROOT}
+      chown root:root -R * *.
+      find . -type d -exec chmod 0550 {} +
+      find . -type f -exec chmod 0440 {} +
+      chmod 0550 -R *.sh
       exit $?
       ;;
     create)
