@@ -73,7 +73,7 @@ while (( "$#" )); do
       fi
       echo -e "${labels[@]}"
 
-      for i in "${labels[@]}"
+      for i in "( ${labels[@]} )"
       do
           case "${i^^}" in
             'VARIABLES')
