@@ -109,8 +109,7 @@ while (( "$#" )); do
                 fi
             ;;
             *)
-                echo -e "${i^^}"
-                echo -e "Error: unknown option passed to create"
+                echo -e "Error: unknown option passed to create : ${i^^}"
                 exit 1
             ;;
           esac
