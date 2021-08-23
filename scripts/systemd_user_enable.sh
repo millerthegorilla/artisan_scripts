@@ -12,4 +12,6 @@ do
   fi
 done
 
+runuser --login ${USER_NAME} -c "${XDESK} systemctl --user daemon-reload"
+
 cd ${SCRIPTS_ROOT}   ## DIRECTORY CHANGE HERE
