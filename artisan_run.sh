@@ -73,8 +73,9 @@ while (( "$#" )); do
       fi
       echo -e "${labels[@]}"
 
-      for i in "( ${labels[@]} )"
+      for i in "${labels[@]}"
       do
+          echo "i=${i}"
           case "${i^^}" in
             'VARIABLES')
                 echo -e "\nOkay, lets find out more about you...\n"
