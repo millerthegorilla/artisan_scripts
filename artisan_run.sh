@@ -52,8 +52,8 @@ while (( "$#" )); do
               vars['containers']=3
               vars['systemd']=4
               i=0
-              echo ${parray[*]}
-              for j in "${parray[*]}"
+              echo ${parray[@]}
+              for j in "${parray[@]}"
               do
                   echo "j=${j}"
                   iarray[$i]=${vars[$j]}
