@@ -36,9 +36,9 @@ while (( "$#" )); do
     create)
       labels=()
       iarray=()
-      alllabels=('variables' 'directories' 'images' 'create' 'systemd')
+      alllabels=('variables' 'directories' 'images' 'containers' 'systemd')
       parray=( "${@:2}" )
-      if [[  -gt 1 ]]
+      if [[ ${#parray} -gt 0 ]]
       then
           if [[ ${parray[2]^^} == 'ALL' ]]
           then
@@ -49,7 +49,7 @@ while (( "$#" )); do
               vars['variables']=0
               vars['directories']=1
               vars['images']=2
-              vars['create']=3
+              vars['containers']=3
               vars['systemd']=4
               i=0
               for j in "${parray:1}"
@@ -86,7 +86,7 @@ while (( "$#" )); do
                 echo -e "\nI will now download and provision container images, if they are not already present.\n"
                 ${SCRIPTS_ROOT}/scripts/initial_provision.sh
             ;;
-            'CREATE')
+            'CONTAINERS')
                 echo -e "\n and now I will create the containers...\n"
                 ${SCRIPTS_ROOT}/scripts/create_all.sh
             ;;
