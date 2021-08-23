@@ -54,7 +54,7 @@ while (( "$#" )); do
               i=0
               for j in "${parray[*]}"
               do
-                  iarray[i]=${vars[$j]}
+                  iarray[$i]=${vars[$j]}
                   i=$i+1
               done
               echo ${iarray[*]}
