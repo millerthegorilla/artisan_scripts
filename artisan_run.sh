@@ -69,7 +69,10 @@ while (( "$#" )); do
       else
           labels=( ${alllabels[@]} )
       fi
-      echo "labels = ${labels[@]}"
+      if [[ ${#labels[@]} -eq 0 ]]
+      then
+        labels=( ${parray[@]} )
+      fi
       for i in "${labels[@]}"
       do
           case "${i^^}" in
