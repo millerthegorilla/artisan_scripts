@@ -38,6 +38,7 @@ while (( "$#" )); do
       iarray=()
       alllabels=('variables' 'directories' 'images' 'containers' 'systemd')
       parray=( "${@:2}" )
+      echo ${parray[@]}
       if [[ ${#parray} -gt 0 ]]
       then
           if [[ ${parray[0]^^} == 'ALL' ]]
