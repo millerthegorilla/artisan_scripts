@@ -55,9 +55,10 @@ while (( "$#" )); do
               echo ${parray[*]}
               for j in "${parray[*]}"
               do
+                  echo "j=${j}"
                   iarray[$i]=${vars[$j]}
-                  echo ${vars[$j]}
-                  echo ${iarray[$i]}
+                  echo "vars[j]=${vars[$j]}"
+                  echo "iarray[i]=${iarray[$i]}"
                   i=$i+1
               done
               IFS=$'\n' sorted=($(sort <<<"${iarray[*]}"))
