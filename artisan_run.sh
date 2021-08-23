@@ -52,12 +52,12 @@ while (( "$#" )); do
               vars['containers']=3
               vars['systemd']=4
               i=0
-              echo ${parray[*]}
               for j in "${parray[*]}"
               do
                   iarray[i]=${vars[$j]}
                   i=$i+1
               done
+              echo ${iarray[*]}
               IFS=$'\n' sorted=($(sort <<<"${iarray[*]}"))
               unset IFS
               i=0
