@@ -42,7 +42,7 @@ while (( "$#" )); do
       then
           if [[ ${parray[0]^^} == 'ALL' ]]
           then
-              labels="(${alllabels[*]})"
+              labels="(${alllabels[@]})"
           else
               # labels=${parray[@]:1}
               declare -A vars
@@ -67,7 +67,7 @@ while (( "$#" )); do
               done
           fi
       else
-          labels="(${alllabels[*]})"
+          labels="(${alllabels[@]})"
       fi
 
       for i in "${labels[@]}"
