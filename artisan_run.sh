@@ -130,6 +130,7 @@ while (( "$#" )); do
       exit $?
       ;;
     status)
+      echo -e "User is ${USER_NAME}"
       if [[ -n ${POD_NAME} ]]
       then
           if [[ $(runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"; echo $?) -eq 0 ]]
