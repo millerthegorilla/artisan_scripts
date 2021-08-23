@@ -44,7 +44,7 @@ while (( "$#" )); do
           if [[ ${parray[0]^^} == 'ALL' ]]
           then
               echo -e "yup"
-              labels="(${alllabels[@]})"
+              labels=${alllabels[@]}
           else
               # labels=${parray[@]:1}
               declare -A vars
@@ -69,9 +69,9 @@ while (( "$#" )); do
               done
           fi
       else
-          labels="(${alllabels[@]})"
+          labels=${alllabels[@]}
       fi
-      echo -e "${labels[@]}"
+      echo -e "${labels[@]:2}"
 
       for i in "${labels[@]}"
       do
