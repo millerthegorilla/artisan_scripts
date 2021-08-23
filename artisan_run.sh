@@ -52,6 +52,7 @@ while (( "$#" )); do
               vars['containers']=3
               vars['systemd']=4
               i=0
+              echo ${parray[*]}
               for j in "${parray[*]}"
               do
                   iarray[i]=${vars[$j]}
@@ -69,7 +70,7 @@ while (( "$#" )); do
       else
           labels="(${alllabels[*]})"
       fi
-      echo "${labels[*]}"
+      echo "${labels[*]^^}"
 
       for i in "${labels[*]}"
       do
