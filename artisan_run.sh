@@ -37,9 +37,10 @@ while (( "$#" )); do
       labels=()
       iarray=()
       alllabels=('variables' 'directories' 'images' 'create' 'systemd')
-      if [[ ${#@} -gt 1 ]]
+      parray=( "${@:2}" )
+      if [[  -gt 1 ]]
       then
-          if [[ ${@[2]^^} == 'ALL' ]]
+          if [[ ${parray[2]^^} == 'ALL' ]]
           then
               labels="(${alllabels[@]})"
           else
@@ -51,7 +52,7 @@ while (( "$#" )); do
               vars['create']=3
               vars['systemd']=4
               i=0
-              for j in "${@:2}"
+              for j in "${parray:1}"
               do
                   iarray[i]=${vars[$j]}
                   i=$i+1
@@ -72,24 +73,24 @@ while (( "$#" )); do
 
       for i in "${labels[@]}"
       do
-          case "$i" in
-            'variables')
+          case "${i^^}" in
+            'VARIABLES')
                 echo -e "\nOkay, lets find out more about you...\n"
                 ${SCRIPTS_ROOT}/scripts/get_variables.sh
             ;;
-            'directories')
+            'DIRECTORIES')
                 echo -e "\nNow I will create the directtories, and I will open ports below 1024 on this machine.\n"
                 ${SCRIPTS_ROOT}/scripts/create_directories.sh
             ;;
-            'images')
+            'IMAGES')
                 echo -e "\nI will now download and provision container images, if they are not already present.\n"
                 ${SCRIPTS_ROOT}/scripts/initial_provision.sh
             ;;
-            'create')
+            'CREATE')
                 echo -e "\n and now I will create the containers...\n"
                 ${SCRIPTS_ROOT}/scripts/create_all.sh
             ;;
-            'systemd')
+            'SYSTEMD')
                 echo -e "\n fancy some systemd?...\n"
                 echo -e "Generate and install systemd --user unit files? : "
                 select yn in "Yes" "No"; do
@@ -107,7 +108,7 @@ while (( "$#" )); do
             ;;
             *)
                 echo -e "Error: unknown option passed to create"
-                exit
+                exit 1
             ;;
           esac
       done
