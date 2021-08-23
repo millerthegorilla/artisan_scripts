@@ -12,15 +12,15 @@ then
 fi
 
 cd ${SCRIPTS_ROOT}/systemd
+cp -a * /etc/systemd/user/
 
 FILES=*
 for f in ${FILES}
 do
-  if [[ -e /etc/systemd/system/${f} ]]
+  echo ${f} >> .gitignore
+  if [[ -e /etc/systemd/user/${f} ]]
   then
-      systemctl disable ${f}
-      rm -rf /etc/systemd/system/${f}
+      chcon -u system_u -t systemd_unit_file_t /etc/systemd/user/${f}
   fi
 done
-
 cd ${SCRIPTS_ROOT}

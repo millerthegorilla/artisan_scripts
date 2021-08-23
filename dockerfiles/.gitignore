@@ -1,0 +1,4 @@
+/swag/default
+/django/**/*
+!/django
+!/django/.gitignore

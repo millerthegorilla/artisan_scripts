@@ -1,15 +1,67 @@
 #!/bin/bash
+set -a
+
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
+USER_NAME=${USER_NAME:-"artisan_sysd"}
+if [[ $(id ${USER_NAME} > /dev/null 2>&1; echo $?) -ne 0 ]]
+then
+    echo -e "Error, account with username ${USER_NAME} does not exist!"
+    exit 1
+# else
+#     if [[ $(id -u ${USER_NAME}) -ge 1000 ]]
+#     then
+#         echo -e "Error, ${USER_NAME} account is not a system account"
+#     fi
+fi
 
 echo -e "\nThe following questions are to fill out the env files that are called upon by the scripts when executing, and by the settings file during production.  The settings .env file is called from the settings file using os.getenv, after the env file is loaded into the environment by the python program dotenv.  This .env file is located in the settings folder, along with settings.py.  You can edit either of those files to edit your site.   Press enter to accept default value[] where listed...\n\n"
 
-set -a
-project_name=${PROJECT_NAME}
-echo -e "\n"
+echo -e "#******************************************************************"
+echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
+echo -e "#**** and have a password protected system user account       *****"
+echo -e "#**** with a home directory ready                             *****"
+echo -e "#******************************************************************"
+
+read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' project_name
+read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
+read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " USER_DIR
+USER_DIR=${USER_DIR:-/home/${USER_NAME}}
+
+PROJECT_NAME=${project_name}
 
 PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
-
 read -p "Enter the name of the django project ie the folder in which wsgi.py resides [${PN}] : " django_project_name
 django_project_name=${django_project_name:-${PN}}
+DJANGO_PROJECT_NAME=$django_project_name
+
+if [[ $(type Xorg | echo $?) -eq 0 ]]
+then
+    XDESK="XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\""
+else
+    XDESK=""
+fi
+
+if [[ -z "${DEBUG}" ]]
+then
+    echo -e "\nIs this development ie debug? : "
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) DEBUG="TRUE"; break;;
+            No ) DEBUG="FALSE"; break;;
+        esac
+    done
+fi
+
+if [[ ${DEBUG} == "TRUE" && $(id -u ${USER_NAME}) -lt 1000 ]]
+then
+    echo -e "      ** warning **\n\nIt is not reccommended to use a service account when using debug mode.\n  If you wish to continue, use ./artisan_run.sh output to display the output from the runserver command.\nAlternatively, and better still (more secure), use a standard user account.\n"
+fi
 
 echo -e "Enter your....\n"
 read -p "Site name as used in the website header/logo : " site_name
@@ -40,10 +92,10 @@ read -p "Static base root [${SBR}] : " sbr
 static_base_root=${sbr:-${SBR}}
 
 ## LOGS
-read -p "Host log dir [${HOME}/${project_name}/logs/] : " hld
-host_log_dir=${hld:-${HOME}/${project_name}/logs/}
-read -p "Swag Host log dir (must be different to Host Log Dir) [${HOME}/${project_name}/swag_logs] : " shld
-swag_host_log_dir=${shld:-${HOME}/${project_name}/swag_logs}
+read -p "Host log dir [${USER_DIR}/${project_name}/logs] : " hld
+host_log_dir=${hld:-${USER_DIR}/${project_name}/logs}
+read -p "Swag Host log dir (must be different to Host Log Dir) [${USER_DIR}/${project_name}/swag_logs] : " shld
+swag_host_log_dir=${shld:-${USER_DIR}/${project_name}/swag_logs}
 # host static dir mounts on to static base root from django and swag conts.
 
 ## HOST STATIC
@@ -51,13 +103,6 @@ host_static_dir=/etc/opt/${project_name}/static_files/
 
 ## SECRET KEYGEN
 secret_key=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
-
-## DUCKDNS  -  used by duckdns container and swag
-read -p "Duckdns token : " duckdns_token
-read -p "Duckdns domain : " duckdns_domain
-
-## SWAG ONLY DUCKDNS
-read -p "Your top level domain that points at your duckdns domain : " tld_domain
 
 ## DATABASE USED BY MARIADB_CONT AND DJANGO_CONT
 db_name=${project_name}_db
@@ -71,15 +116,33 @@ db_host=127.0.0.1
 read -p "Your django database host address [${db_host}] : " dbh
 db_host=${dbh:-${db_host}}
 
+## DUCKDNS
+read -p "Duckdns domain : " duckdns_domain
+echo -e "\nDo you have a top level domain pointing at your duckdns domain ? : "
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) tldomain="TRUE"; break;;
+        No ) tldomain="FALSE"; break;;
+    esac
+done
+if [[ ${tldomain} == "TRUE" ]]
+then
+    read -p "Your top level domain that points at your duckdns domain : " tl_domain
+    EXTRA_DOMAINS="${tl_domain}"
+else
+    EXTRA_DOMAINS="NONE"
+fi
+DUCKDNS_SUBDOMAIN="${duckdns_domain}"
+
 ## DJANGO_EMAIL_VERIFICATION AND EMAIL MODERATORS ETC
 echo -e "#************* email settings ***************"
 echo -e "# https://support.google.com/accounts/answer/185833?hl=en"
 echo -e "#********************************************"
 read -p "Your app email server address : " email_app_address
 read -p "Your app email server address secret password : " email_app_key
-if [[ ! -z "$tld_domain" ]]
+if [[ ! -z "$tl_domain" ]]
 then
-    return_mail=noreply@${tld_domain}
+    return_mail=noreply@${tl_domain}
 else
     return_mail=noreply@${duckdns_domain}
 fi
@@ -96,19 +159,88 @@ read -p "Google Recaptcha private key : " recaptcha_private
 recaptcha_public="${recaptcha_public}"
 recaptcha_private="${recaptcha_private}"
 
-## DROPBOX
-read -p "Dropbox OAuth Token : " dropbox_oauth_token
+if [[ ${DEBUG} == "TRUE" ]]
+then
+    django_image="python:${PROJECT_NAME}_debug"
+else
+    django_image="python:${PROJECT_NAME}_prod"
+fi
 set +a
 
-### TEMPLATES
+cp -ar ${CODE_PATH}/media ${SCRIPTS_ROOT}/dockerfiles/django/media
 
+## parameters : prompt (string), secret name
+function make_secret()
+{  
+    if [[ $(runuser --login ${USER_NAME} -c "podman secret inspect ${1} &>/dev/null"; echo $?) == 0 ]]
+    then
+        echo -e "podman secret ${1} already exists - reuse ?"
+        select yn in "Yes" "No"; do
+            case $yn in
+                Yes ) REUSE="TRUE"; break;;
+                No ) REUSE="FALSE"; break;;
+            esac
+        done
+        if [[ ${REUSE} == "FALSE" ]]
+        then
+            runuser --login ${USER_NAME} -c "podman secret rm ${1}"
+            read -p "Enter variable for ${1} : " token && echo -n "$token" | runuser --login "${USER_NAME}" -c "podman secret create \"${1}\" -" 
+        fi
+    else
+        read -p "Enter variable for ${1} : " token && echo -n "$token" | runuser --login "${USER_NAME}" -c "podman secret create \"${1}\" -"
+    fi
+}
+
+if [[ ${DEBUG} == "FALSE" ]]
+then 
+    make_secret DUCKDNSTOKEN
+fi
+
+make_secret MARIADB_ROOT_PASSWORD
+
+runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
+echo -n $db_password | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
+
+# variables for create_directories.sh
+echo PROJECT_NAME=${PROJECT_NAME} > .proj
+echo USER_NAME=${USER_NAME} >> .proj
+echo USER_DIR=${USER_DIR} >> .proj
+echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
+echo CODE_PATH=${CODE_PATH} >> .proj
+echo EXTRA_DOMAINS=${EXTRA_DOMAINS} >> .proj
+echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj
+echo DB_NAME=${db_name} >> .proj
+echo DB_USER=${db_user} >> .proj
+echo DB_HOST=${db_host} >> .proj
+echo DB_PASSWORD=${db_password} >> .proj
+echo DEBUG=${DEBUG} >> .proj
+echo XDESK=${XDESK} >> .proj
+
+### TEMPLATES
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
-cat ${SCRIPTS_ROOT}/templates/archive | envsubst > ${SCRIPTS_ROOT}/.archive
-cat ${SCRIPTS_ROOT}/templates/manage.py | envsubst > ${CODE_PATH}/manage.py
-cat ${SCRIPTS_ROOT}/templates/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
-cat ${SCRIPTS_ROOT}/templates/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
-cat ${SCRIPTS_ROOT}/templates/supervisor_gunicorn | envsubst > ${SCRIPTS_ROOT}/settings/supervisor_gunicorn
+cat ${SCRIPTS_ROOT}/templates/settings/archive | envsubst > ${SCRIPTS_ROOT}/.archive
+cat ${SCRIPTS_ROOT}/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.py
+chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/manage.py
+cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
+chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/${django_project_name}/wsgi.py
+cat ${SCRIPTS_ROOT}/templates/gunicorn/start | envsubst > ${SCRIPTS_ROOT}/dockerfiles/django/start.sh
+cat ${SCRIPTS_ROOT}/templates/maria/maria.sh | envsubst '$db_user:$db_host:$db_name' > ${SCRIPTS_ROOT}/dockerfiles/maria.sh
+if [[ ${DEBUG} == "FALSE" ]]
+then
+    set -a
+        NUM_OF_WORKERS=$(($(nproc --all) * 2 + 1))
+    set +a
+    cat ${SCRIPTS_ROOT}/templates/gunicorn/gunicorn.conf.py | envsubst > ${SCRIPTS_ROOT}/settings/gunicorn.conf.py
+    if [[ ${tldomain} == "TRUE" ]]
+    then
+        cat ${SCRIPTS_ROOT}/templates/swag/default_tld | envsubst '$tl_domain:$duckdns_domain' > ${SCRIPTS_ROOT}/dockerfiles/swag/default
+    else
+        cat ${SCRIPTS_ROOT}/templates/swag/default | envsubst '$duckdns_domain' > ${SCRIPTS_ROOT}/dockerfiles/swag/default
+    fi
+fi
+
+### Systemd system account creation
 
 unset site_name
 unset pod_name
@@ -117,9 +249,9 @@ unset static_base_root
 unset host_log_dir
 unset swag_host_static_dir
 unset secret_key
-unset duckdns_token
+unset tl_domain
 unset duckdns_domain
-unset tld_domain
+unset duckdns_token
 unset db_name
 unset db_user
 unset db_password

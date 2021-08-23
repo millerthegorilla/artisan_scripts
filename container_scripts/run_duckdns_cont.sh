@@ -1,7 +1,20 @@
 #!/bin/bash
 
-if [[ -n ${DUCKDNS_TOKEN} && -n ${DUCKDNS_SUBDOMAIN} ]]
+if [[ $EUID -ne 0 ]]
 then
-    podman run -d --pod=${POD_NAME} --name=${DUCKDNS_CONT_NAME} -e SUBDOMAINS=${DUCKDNS_SUBDOMAIN} -e TZ=Europe/London -e TOKEN=${DUCKDNS_TOKEN} --restart unless-stopped ${DUCKDNS_IMAGE}
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+echo -e "run_duckdns_cont.sh"
+
+source ${SCRIPTS_ROOT}/.env
+source ${SCRIPTS_ROOT}/.proj
+
+if [[ -n ${DUCKDNS_SUBDOMAIN} ]]
+then
+    runuser --login ${USER_NAME} -c "podman run -d --pod=${POD_NAME} --name=${DUCKDNS_CONT_NAME} -e SUBDOMAINS=${DUCKDNS_SUBDOMAIN} -e TZ=\"Europe/London\" --secret=DUCKDNSTOKEN,type=env --restart unless-stopped ${DUCKDNS_IMAGE}"
+else
+	echo -e "DUCKDNS VARIABLES ARE NOT SET"
 fi
 

@@ -13,14 +13,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 ## TODO: clearsessions cron job
 
-import sys, os
-
 from pathlib import Path
-from dotenv import load_dotenv
-
+import sys, os
 from django.urls import reverse_lazy
-from django.utils import timezone
 
+from dotenv import load_dotenv
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -115,7 +112,7 @@ Q_CLUSTER = {
 # dbbackup
 DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
 DBBACKUP_STORAGE_OPTIONS = {
-    'oauth2_access_token': 'my_token',
+    'oauth2_access_token': os.getenv("DROPBOX_OAUTH_TOKEN"),
 }
 
 # Database
@@ -256,25 +253,22 @@ EMAIL_USE_TLS = True
 CUSTOM_SALT = os.getenv("CUSTOM_SALT")
 
 ## RECAPTCHA SETTINGS
-RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
-RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
+rpubkey = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
+rpubkey = rpubkey if rpubkey != "" else "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
 
-# SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+rprivkey = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
+rprivkey = rprivkey if rprivkey != "" else "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+
+RECAPTCHA_PUBLIC_KEY = rpubkey
+RECAPTCHA_PRIVATE_KEY = rprivkey
+
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 ## SESSION SETTINGS
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ESSION_COOKIE_AGE = 129600 # 36 hours.  # defaults to two weeks
 SESSION_COOKIE_SECURE = True    # set this to true when using https
 # SESSION_SAVE_EVERY_REQUEST = True  #updates timestamp to increase session_cookie_age
-
-# the amount of time before a comment or post is hard deleted
-DELETION_TIMEOUT = timezone.timedelta(days=21)
-# the amount of time to wait before emails are sent to subscribed users
-COMMENT_WAIT = timezone.timedelta(seconds=600)
-# msg sent to subscribed users
-# the msg must include one pair of brackets, which will contain
-# the href of the post
-SUBSCRIBED_MSG = "<h3 style='color: blue;'>Ceramic Isles</h3><br>A new comment has been added to a post that you are subscribed to!<br>Follow this link to view the post and comments: {}"
 
 
 # settings for bleach
@@ -308,8 +302,7 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # django crispy forms
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 CLAMAV_SOCKET = str(os.getenv("CLAMAV_ADDRESS"))
 
@@ -331,13 +324,11 @@ ABOUT_US_SPIEL = "<span class='spiel-headline'>Ceramic Isles</span> <span class=
 ### NAVBAR
 NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
                 local to the Channel Islands are able to meet, chat, and show off their work. \
-                If you are a ceramic artist local to one of the Channel Islands, consider \
-                registering as a user to be able to access the forum, \
-                and to be able present images of your work here, on this page.<br> \
-                Click the Ceramic Isles Logo to return to the landing page \
-                which acts as a gallery for member's work.<br> \
-                On a diet???  This site is cookie free!<br> \
-                Problems??? contact - ceramic_isles [at] gmail.com"
+                 If you are a ceramic artist local to one of the Channel Islands, consider \
+                 registering as a user to be able to access the forum, \
+                 and to be able present images of your work here, on this page.<br> \
+                    Click the Ceramic Isles Logo to return to the landing page \
+                    which acts as a gallery for member's work.</p>"
 
 ### The following are used by django_artisan and django_forum_app
 SITE_NAME = str(os.getenv("SITE_NAME"))
@@ -345,6 +336,7 @@ SITE_LOGO = 'django_artisan/images/vase.svg'
 SITE_DOMAIN = str(os.getenv("DUCKDNS_DOMAIN"))
 #for the sites framework so that sitemaps will work
 SITE_ID = 1
+
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -362,19 +354,40 @@ class LOCATION(models.TextChoices):
     JERSEY = 'JE', _('Jersey')
     SARK = 'SK', _('Sark')
 
+def skip_mtime_seen(record):
+    if 'mtime' in record.getMessage():  # filter whatever you want
+        return False
+    return True
+
+def skip_djangoq_schedule(record):
+    if 'schedule' in record.getMessage():
+        return False
+    return True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        # use Django's built in CallbackFilter to point to your filter
+        'skip_mtime_seen': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_mtime_seen
+        },
+        'skip_djangoq_schedule': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_djangoq_schedule
+        }
+    },
     'formatters': {
-        'simple': {
+        'django': {
             '()': 'django.utils.log.ServerFormatter',
-            'format': '[{server_time}] - [{levelname}] - {message}',
+            'format': '[{server_time}] - {pathname} - {message}',
             'style': '{',
         },
         'verbose': {
             'format': '{levelname} {asctime} {pathname} {module} {process:d} {thread:d} {message}',
             'style': '{',
-        },
+        }
     },
     'handlers': {
         'file': {
@@ -382,43 +395,38 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
             'formatter': 'verbose',
+            'filters': ['skip_mtime_seen', 'skip_djangoq_schedule'],
         },
-        'mail_admins': {
+        'console': {
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'formatter': 'verbose',
-        }
+            'class': 'logging.StreamHandler',
+            'formatter': 'django',
+        },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
-       },
-       'django.request': {
-           'handlers': ['mail_admins', 'file'],
-           'level': 'ERROR',
-           'propagate': False,
-       }
-    },
-}
+            'django': {
+                'handlers': ['file', 'console'],
+                'level': 'ERROR',
+                'propagate': True,
+           },
+        },
+    }
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
-
-sentry_sdk.init(
-    dsn="https://092b068e99e143cf9ccdb848d421930a@o803843.ingest.sentry.io/5803015",
-    integrations=[DjangoIntegration(), RedisIntegration()],
-
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=0.5,
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
-
-
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#        },
+#     },
+# }

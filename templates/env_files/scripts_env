@@ -17,7 +17,7 @@ PORT2_DESCRIPTION=0.0.0.0:80:80
 
 ## DJANGO
 DJANGO_CONT_NAME="django_cont"
-DJANGO_IMAGE="python:django"
+DJANGO_IMAGE=${django_image}
 DJANGO_CONT_LOG_DIR="/var/log/${PROJECT_NAME}/"
 DJANGO_HOST_STATIC_VOL="${host_static_dir}"
 DJANGO_CONT_STATIC_VOL="/etc/opt/${PROJECT_NAME}/static_files"
@@ -28,9 +28,8 @@ CLAM_IMAGE="docker.io/mkodockx/docker-clamav:latest"
 
 ## DUCKDNS/SWAG
 DUCKDNS_CONT_NAME="duckdns_cont"
-DUCKDNS_SUBDOMAIN="${duckdns_domain}"
 DUCKDNS_IMAGE="docker.io/linuxserver/duckdns:latest"
-DUCKDNS_TOKEN="${duckdns_token}"
+DUCKDNS_SUBDOMAIN=${duckdns_domain}
 
 ## REDIS CACHE
 REDIS_CONT_NAME="redis_cont"
@@ -42,7 +41,7 @@ ELASTIC_IMAGE="docker.io/library/elasticsearch:7.11.2"
 
 ## MARIADB
 MARIA_CONT_NAME="mariadb_cont"
-MARIA_IMAGE="docker.io/library/mariadb:10.5.9"
+MARIA_IMAGE="maria:artisan"
 DB_NAME="${db_name}"
 DB_USER="${db_user}"
 DB_PASSWORD="${db_password}"
@@ -50,9 +49,9 @@ DB_HOST="${db_host}"
 
 ## SWAG
 SWAG_CONT_NAME="swag_cont"
-SWAG_IMAGE="docker.io/linuxserver/swag:version-1.14.0"
-EXTRA_DOMAINS="${tld_domain}"
+SWAG_IMAGE="swag:artisan"
 SWAG_HOST_VOL_STATIC="${host_static_dir}"
 SWAG_HOST_LOG_DIR="${swag_host_log_dir}"
 SWAG_CONT_VOL_STATIC="/opt/static_files/"
 SWAG_CONT_LOG_DIR="/config/log/"
+TLDOMAIN="${tldomain}"

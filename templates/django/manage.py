@@ -8,7 +8,7 @@ def main():
     """Run administrative tasks."""
 
     from dotenv import load_dotenv
-    project_folder = os.path.expanduser('/etc/opt/${PROJECT_NAME}/settings/')  # adju$
+    project_folder = os.path.expanduser('/etc/opt/${PROJECT_NAME}/settings/')
     load_dotenv(os.path.join(project_folder, '.env'))
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')

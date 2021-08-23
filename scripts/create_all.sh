@@ -1,14 +1,19 @@
 #!/bin/bash
 
-if [[ -z "${DEBUG}" ]]
+if [[ $EUID -ne 0 ]]
 then
-    echo -e "\nIs this development ie debug? : "
-    select yn in "Yes" "No"; do
-        case $yn in
-            Yes ) DEBUG="TRUE"; break;;
-            No ) DEBUG="FALSE"; break;;
-        esac
-    done
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+if [[ -f "${SCRIPTS_ROOT}/.archive" ]]
+then
+    source ${SCRIPTS_ROOT}/.archive
+fi
+
+if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
+then
+    source ${SCRIPTS_ROOT}/.proj
 fi
 
 function settings_copy()
@@ -30,16 +35,11 @@ function settings_copy()
     cp ${SCRIPTS_ROOT}/settings/${1}/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
 }
 
-if [[ ${DEBUG} == "TRUE" ]]   ## TODO function 
+if [[ "${DEBUG}" == "TRUE" ]]   ## TODO function 
 then
     settings_copy "development"
 else
     settings_copy "production"
-fi
-
-if [[ -f "${SCRIPTS_ROOT}/.proj" ]]
-then
-    source ${SCRIPTS_ROOT}/.proj
 fi
 
 if [[ -n "${PROJECT_NAME}" ]]
@@ -49,102 +49,46 @@ else
     echo -e "\n*** PROJECT NAME IS NOT SET ***"
 fi
 
-if [[ -z "${PROJECT_NAME}" ]]
-then
-    read -p "Enter your project name - this is used as a directory name, so must be conformant to bash requirements [${PROJECT_NAME}] : " pn
-
-    project_name=${pn:-${PROJECT_NAME}}
-else
-    project_name=$PROJECT_NAME
-fi
-
-if [[ -z "$CODE_PATH" ]]
-then
-    read -p 'Path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
-else
-    echo -e "\nCODE PATH is ${CODE_PATH}\n"
-fi
-
-set -a
-DEBUG=${DEBUG}
-CODE_PATH=${CODE_PATH}
-PROJECT_NAME=${project_name}
-set +a
-
-${SCRIPTS_ROOT}/scripts/get_variables.sh
-
 set -a
 source ${SCRIPTS_ROOT}/.env
 set +a
 
-echo -e "\n" >> ${SCRIPTS_ROOT}/.archive
+if [[ ! -f ${HOST_LOG_DIR} ]]
+then
+    mkdir -p ${HOST_LOG_DIR}
+    mkdir ${HOST_LOG_DIR}/django
+    mkdir ${HOST_LOG_DIR}/gunicorn
+    chown ${USER_NAME}:${USER_NAME} ${HOST_LOG_DIR}/django ${HOST_LOG_DIR}/gunicorn
+fi
+
 echo CURRENT_SETTINGS=${file[${input}]} >> .archive 
 echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
-echo CODE_PATH=${CODE_PATH} >> ${SCRIPTS_ROOT}/.archive
 
-if [[ ${DEBUG} == "TRUE" ]]
+if [[ "${DEBUG}" == "TRUE" ]]
 then
-   podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000
+   runuser --login ${USER_NAME} -c "podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000"
 else
-   podman pod create --name ${POD_NAME} -p ${PORT1_DESCRIPTION} -p ${PORT2_DESCRIPTION} # --dns-search=${POD_NAME} --dns-opt=timeout:30 --dns-opt=attempts:5
+   runuser --login ${USER_NAME} -c "podman pod create --name ${POD_NAME} -p ${PORT1_DESCRIPTION} -p ${PORT2_DESCRIPTION}" # --dns-search=${POD_NAME} --dns-opt=timeout:30 --dns-opt=attempts:5
 fi
 
-if [[ ${DEBUG} == "FALSE" ]]
+if [[ "${DEBUG}" == "FALSE" ]]
 then
-   ${SCRIPTS_ROOT}/container_scripts/run_duckdns_cont.sh
+   SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_duckdns_cont.sh
 fi
 
-${SCRIPTS_ROOT}/container_scripts/run_clamd_cont.sh
-${SCRIPTS_ROOT}/container_scripts/run_redis_cont.sh
-${SCRIPTS_ROOT}/container_scripts/run_elastic_search_cont.sh
-${SCRIPTS_ROOT}/container_scripts/run_maria_cont.sh
+## TODO change dbvol to env var set in get_variables.sh
+## -o uid etc creates euid inside container ie 166355 when viewed on host.
+runuser --login ${USER_NAME} -c "podman volume create dbvol"
 
-if [[ ${DEBUG} == "FALSE" ]]
+SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_clamd_cont.sh
+SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_redis_cont.sh
+SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_elastic_search_cont.sh
+SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_maria_cont.sh
+
+if [[ "${DEBUG}" == "FALSE" ]]
 then
-   ${SCRIPTS_ROOT}/container_scripts/run_swag_cont.sh
+    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_swag_cont.sh
 fi
 
-${SCRIPTS_ROOT}/container_scripts/run_django_cont.sh
-
-## systemd generate files
-
-echo -e "Generate and install systemd --user unit files? : "
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) SYSD="TRUE"; break;;
-        No ) SYSD="FALSE"; break;;
-    esac
-done
-
-if [[ ${SYSD} == "TRUE" ]]
-then
-    cd ${SCRIPTS_ROOT}/systemd/   ## DIRECTORY CHANGE HERE
-
-    podman generate systemd --files ${POD_NAME}
-    set -a
-     django_service=$(cat .django_container_id)
-     django_cont_name=${DJANGO_CONT_NAME}
-     project_name=${PROJECT_NAME}
-     terminal_cmd=${TERMINAL_CMD}
-    set +a
-
-    ## TEMPLATE
-    if [[ ${DEBUG} == "TRUE" ]]
-    then
-        cat ${SCRIPTS_ROOT}/templates/manage_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/manage_start.service 
-        cat ${SCRIPTS_ROOT}/templates/qcluster_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
-    else
-        cat ${SCRIPTS_ROOT}/templates/gunicorn_start.service | envsubst > ${SCRIPTS_ROOT}/systemd/gunicorn_start.service 
-    fi
-    
-    source ${SCRIPTS_ROOT}/scripts/utils.sh
-    
-    super_access "SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_init.sh"
-
-    systemctl --user enable $(ls -p ${SCRIPTS_ROOT}/systemd | grep -v / | tr '\n' ' ')
-
-    cd ${SCRIPTS_ROOT}   ## DIRECTORY CHANGE HERE
-fi
-
-rm .env
+SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_django_cont.sh

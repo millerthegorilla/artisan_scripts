@@ -1,35 +1,152 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 PARAMS=""
 
 set -a
-SCRIPTS_ROOT=$(pwd)
-source ${SCRIPTS_ROOT}/options
-if [[ -e .archive ]]
+SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
-  source .archive
+    source ${SCRIPTS_ROOT}/options
+fi
+if [[ -e ${SCRIPTS_ROOT}/.archive ]]
+then
+    source ${SCRIPTS_ROOT}/.archive
 fi
 set +a
 
 while (( "$#" )); do
   case "$1" in
+    install)
+      ## added this option to archive it.
+      chown root:root -R * *.
+      find . -type d -exec chmod 0550 {} +
+      find . -type f -exec chmod 0440 {} +
+      chmod 0550 -R *.sh
+      find .git -type d | xargs chmod 755
+      find .git/objects -type f | xargs chmod 444
+      find .git -type f | grep -v /objects/ | xargs chmod 644
+      exit $?
+      ;;
     create)
-      ${SCRIPTS_ROOT}/scripts/initial_provision.sh  
+      labels=()
+      iarray=()
+      alllabels=('variables' 'directories' 'images' 'create' 'systemd')
+      if [[ ${#@} -gt 1 ]]
+      then
+          if [[ ${parray[2]^^} == 'ALL' ]]
+          then
+              labels="(${alllabels[@]})"
+          else
+              # labels=${parray[@]:1}
+              declare -A vars
+              vars['variables']=0
+              vars['directories']=1
+              vars['images']=2
+              vars['create']=3
+              vars['systemd']=4
+              i=0
+              for j in "${@:2}"
+              do
+                  iarray[i]=${vars[$j]}
+                  i=$i+1
+              done
+              IFS=$'\n' sorted=($(sort <<<"${iarray[*]}"))
+              unset IFS
+              i=0
+              for j in "${sorted[@]}"
+              do
+                 labels[i]="${alllabels[$j]}"
+                 i=$i+1
+              done
+          fi
+      else
+          labels="(${alllabels[@]})"
+      fi
+
+      for i in "${labels[@]}"
+      do
+          case "$i" in
+            'variables')
+                echo -e "\nOkay, lets find out more about you...\n"
+                ${SCRIPTS_ROOT}/scripts/get_variables.sh
+            ;;
+            'directories')
+                echo -e "\nNow I will create the directtories, and I will open ports below 1024 on this machine.\n"
+                ${SCRIPTS_ROOT}/scripts/create_directories.sh
+            ;;
+            'images')
+                echo -e "\nI will now download and provision container images, if they are not already present.\n"
+                ${SCRIPTS_ROOT}/scripts/initial_provision.sh
+            ;;
+            'create')
+                echo -e "\n and now I will create the containers...\n"
+                ${SCRIPTS_ROOT}/scripts/create_all.sh
+            ;;
+            'systemd')
+                echo -e "\n fancy some systemd?...\n"
+                echo -e "Generate and install systemd --user unit files? : "
+                select yn in "Yes" "No"; do
+                    case $yn in
+                        Yes ) SYSD="TRUE"; break;;
+                        No ) SYSD="FALSE"; break;;
+                    esac
+                done
+                if [[ ${SYSD} == "TRUE" ]]
+                then
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh
+                fi
+            ;;
+            *)
+                echo -e "Error: unknown option passed to create"
+                exit
+            ;;
+          esac
+      done
+      
+      # if [[ ${DEBUG} == "FALSE" ]]
+      # then
+      #     usermod -s /bin/nologin ${USER_NAME}
+      # fi
       exit $? 
       ;;
     clean)
       ${SCRIPTS_ROOT}/scripts/cleanup.sh
       exit $?
       ;;
-    replace) # preserve positional arguments
+    replace)
       ${SCRIPTS_ROOT}/scripts/make_manage_wsgi.sh
       exit $?
       ;;    
-    reload) # preserve positional arguments
-      ${SCRIPTS_ROOT}/scripts/reload.sh
+    reload) 
+      su ${USER_NAME} -c "${SCRIPTS_ROOT}/scripts/reload.sh"
       exit $?
       ;;
-    manage) # preserve positional arguments
+    status)
+      echo -e "User is ${USER_NAME}"
+      if [[ -n ${POD_NAME} ]]
+      then
+          if [[ $(runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"; echo $?) -eq 0 ]]
+          then         
+              echo -e "pod ${POD_NAME} exists!  State is $(runuser --login ${USER_NAME} -c "podman pod inspect ${POD_NAME}" | grep -m1 State)"
+              exit 0
+          else
+              echo -e "pod ${POD_NAME} doesn't exist - but there are settings files - you might want to clean up dot settings files manually, or run artisan_run clean"
+              exit 1
+          fi
+      else
+        echo -e "No project running currently"
+      fi
+      exit 1
+      ;;
+    manage) ## TODO - if the below variables don't exist then save them.
       if [[ -z "${DJANGO_CONT_NAME}" ]]
       then
         read -p "Enter the name of the container running python/django : " DJANGO_CONT_NAME
@@ -40,7 +157,7 @@ while (( "$#" )); do
       fi
       shift;
       COMMANDS="$*"
-      podman exec -e COMMANDS="$*" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}"
+      runuser --login ${USER_NAME} -c "podman exec -e COMMANDS=\"$*\" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}\""
       exit $?
       ;;
     settings)
@@ -91,7 +208,6 @@ while (( "$#" )); do
           file[i]=$j
           i=$(( i + 1 ))
           done
-
           echo "Enter number"
           read input
           cp ${SCRIPTS_ROOT}/settings/production/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
@@ -99,7 +215,49 @@ while (( "$#" )); do
       sed -i '/CURRENT_SETTINGS/d' ${SCRIPTS_ROOT}/.archive
       echo "CURRENT_SETTINGS="${file[${input}]} >> ${SCRIPTS_ROOT}/.archive
       cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings
+      su ${USERNAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan /etc/opt/${PROJECT_NAME}/settings/settings.py\""
       exit $?
+      ;;
+    interact)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      runuser --login ${USER_NAME} -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" ${2}"
+      exit $?
+      ;;
+    output)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      if [[ -z ${DJANGO_CONT_NAME} ]]
+      then
+          read -p "Enter the name of the django container : " DJANGO_CONT_NAME
+      fi
+      su ${USER_NAME} -c "cd; podman exec -it ${DJANGO_CONT_NAME} tail -f /tmp/manage_output"
+      exit $?
+      ;;
+    update)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      su ${USER_NAME} -c "cd; podman ps --format=\"{{.Names}}\" | grep -oP '^((?!infra).)*$' | while read name; do podman exec -u root ${name} bash -c \"apt-get update; apt-get upgrade -y\"; done"
+      exit $?
+      ;;
+    refresh)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      if [[ -z ${POD_NAME} ]]
+      then
+          read -p "Enter username : " POD_NAME
+      fi
+      su ${USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman image prune --all -f"
+      ${SCRIPTS_ROOT}/scripts/initial_provision.sh
+      systemctl reboot
       ;;
     help|-h|-?|--help)
       echo "$ artisan_run command   - where command is one of create, clean, replace, manage or settings."

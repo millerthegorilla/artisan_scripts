@@ -1,67 +1,40 @@
 #!/bin/bash
 
-podman run -dit --name ${MARIA_CONT_NAME} --pod ${POD_NAME} -e MYSQL_ALLOW_EMPTY_PASSWORD="True" ${MARIA_IMAGE} 
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
 
-sleep 2;
+echo -e "run_maria_cont.sh"
 
-echo -e "\nupdating database defaults...\n"
+source ${SCRIPTS_ROOT}/.env
+source ${SCRIPTS_ROOT}/.proj
 
-podman cp ${SCRIPTS_ROOT}/templates/maria ${MARIA_CONT_NAME}:/maria.sh
+runuser --login ${USER_NAME} -P -c "podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --secret=DB_PASSWORD,type=env --name \"${MARIA_CONT_NAME}\" -v dbvol:/var/lib/mysql:Z --pod \"${POD_NAME}\" --restart unless-stopped ${MARIA_IMAGE}"
 
-# podman stop ${MARIA_CONT_NAME}
-
-# podman start ${MARIA_CONT_NAME}
-
-echo -e "\nYou will need to have the new database root password handy.\n\nThe database root password is not stored anywhere on the file system so take a careful note of what it is and make sure it is a secure password - chars and numbers with a length of greater than 30 if possible.  Try the bash command: \n\n < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;\n\nI am about to run the script mysql_secure_installation.\n\nThe database currently has no root password set, so press enter to the first question, and **disable socket authentication** for the second question.\n\nMake certain that you then enter the new database root password to secure the database for the third question.\n\nThen press enter through the rest of the questions to accept the defaults.\n\n"
-
-sleep 8;
-while read -t 0.01; do :; done
-
-echo -e "Waiting for mysql to be ready.."
-until podman exec -it ${MARIA_CONT_NAME} bash -c "ls /run/mysqld/mysqld.sock" &>/dev/null;
+echo -n "Waiting for mariadb restart..."
+until ! runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'ls /tmp/.finished'" > /dev/null 2>&1
 do
-  echo -n "."
+	echo -n "."
 done
+runuser --login ${USER_NAME} -c "podman stop ${MARIA_CONT_NAME}"
+runuser --login ${USER_NAME} -c "podman start ${MARIA_CONT_NAME}"
 
-until podman exec -it ${MARIA_CONT_NAME} bash -c "mysql_secure_installation"
-do
-#if [[ $? -ne 0 ]]
-#then
-	if [[ $(podman ps -f name=${MARIA_CONT_NAME} | wc -l) -eq 1 ]]
-	then
-		podman start ${MARIA_CONT_NAME}
-	fi
-	echo -e "\n\n************************* WARNING **************************"
-	echo -e "\nIt looks like the mysql_secure_installation script failed ie you didn't see the message \n\n'Thanks for using MariaDB!' \n so you will need to exec into the mysql container (start it if necessary) and run the script mysql_secure_installation again, before continuing.\n"
-	read -p "Press enter to continue" buttoxx
-	echo -e "\n\n"
+runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'rm /docker-entrypoint-initdb.d/maria.sh'"
 
-#fi
-done
-
-echo -e "\nSo I'm going to configure the database for your webapp - please enter the database root password."
-
-read -p "Db root password:" DB_ROOT_PASSWORD
-
-echo -e "Waiting for mysql to be ready.."
-
-until podman exec -it ${MARIA_CONT_NAME} bash -c "ls /run/mysqld/mysqld.sock" &>/dev/null;
-do
-    if [[ $(podman ps -f name=${MARIA_CONT_NAME} | wc -l) -eq 1 ]]
-    then
-    	podman start ${MARIA_CONT_NAME} &>/dev/null;
-    fi
-    echo -n "."
-done
-
-until podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_HOST=${DB_HOST} -e DB_PASSWORD=${DB_PASSWORD} -e DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} -it ${MARIA_CONT_NAME} bash -c "sh /maria.sh"
-do
-   if [[ $(podman ps -f name=${MARIA_CONT_NAME} | wc -l) -eq 1 ]]
-   then
-   	podman start ${MARIA_CONT_NAME} &>/dev/null;
-   fi
-done	
-sleep 8;
-
-podman stop ${MARIA_CONT_NAME}
-podman start ${MARIA_CONT_NAME}
+# echo "Waiting for Database container to be ready"
+# read -p "Enter your MYSQL_ROOT_PASSWORD : " mysql_root_password
+# until runuser --login ${USER_NAME} -P -c "podman exec -e ROOT_PASSWORD=\"${mysql_root_password}\" -it \"${MARIA_CONT_NAME}\" bash -c \"mysql\" -uroot  -p\"\${ROOT_PASSWORD}\" -h'localhost' --protocol=tcp -e \"delete from mysql.global_priv where user='root' and host='%'; flush privileges;\" > /dev/null 2>\&"
+# do
+# 	echo -n "."
+# done
+# until runuser --login ${USER_NAME} -P -c "podman exec -e ROOT_PASSWORD=\"${mysql_root_password}\" -e DB_NAME=\"${DB_NAME}\" -e DB_USER=\"${DB_USER}\" -e DB_HOST=\"${DB_HOST}\" -e DB_PASSWORD=\"${DB_PASSWORD}\" -it \"${MARIA_CONT_NAME}\" bash -c \"mysql -uroot -h'localhost' -p\"\"\${ROOT_PASSWORD}\"\" -e \"\"CREATE DATABASE ${DB_NAME} CHARSET utf8; grant all privileges on ${DB_NAME}.* TO '${DB_USER}'@'${DB_HOST}' identified by '${DB_PASSWORD}';\"\""
+# do
+# 	if [[ $(runuser --login ${USER_NAME} -c "podman inspect ${MARIA_CONT_NAME} |grep running > /dev/null 2>&1; echo $?)" -eq 1 ]]
+# 	then
+# 		runuser --login ${USER_NAME} -c "podman start ${MARIA_CONT_NAME}"
+# 	fi
+# 	echo -n "."
+# done
+# unset mysql_root_password

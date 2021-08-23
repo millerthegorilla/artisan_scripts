@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     'django_q',
     'dbbackup',
     'debug_toolbar',
-    'cookie_consent',
 ]
 
 MIDDLEWARE = [
