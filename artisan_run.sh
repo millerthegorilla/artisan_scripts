@@ -73,9 +73,9 @@ while (( "$#" )); do
       else
           labels="(${alllabels[*]})"
       fi
-      echo "${labels[*]^^}"
+      echo "${labels[@]^^}"
 
-      for i in "${labels[*]}"
+      for i in "${labels[@]}"
       do
           case "${i^^}" in
             'VARIABLES')
