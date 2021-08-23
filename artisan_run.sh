@@ -39,6 +39,7 @@ while (( "$#" )); do
       alllabels=('variables' 'directories' 'images' 'create' 'systemd')
       if [[ ${#@} -gt 1 ]]
       then
+        echo "yup"
           if [[ ${parray[2]^^} == 'ALL' ]]
           then
               labels="(${alllabels[@]})"
@@ -68,6 +69,7 @@ while (( "$#" )); do
       else
           labels="(${alllabels[@]})"
       fi
+      echo "${labels[@]}"
 
       for i in "${labels[@]}"
       do
