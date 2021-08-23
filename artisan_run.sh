@@ -34,6 +34,62 @@ while (( "$#" )); do
       exit $?
       ;;
     create)
+      labels=()
+      iarray=()
+      alllabels=('variables' 'directories' 'images' 'create' 'systemd')
+      if [[ ${#@} -gt 1 ]]
+      then
+          if [[ ${parray[2]^^} == 'ALL' ]]
+          then
+              labels="(${alllabels[@]})"
+          else
+              # labels=${parray[@]:1}
+              declare -A vars
+              vars['variables']=0
+              vars['directories']=1
+              vars['images']=2
+              vars['create']=3
+              vars['systemd']=4
+              i=0
+              for j in "${@:2}"
+              do
+                  iarray[i]=${vars[$j]}
+                  i=$i+1
+              done
+              IFS=$'\n' sorted=($(sort <<<"${iarray[*]}"))
+              unset IFS
+              i=0
+              for j in "${sorted[@]}"
+              do
+                 labels[i]="${alllabels[$j]}"
+                 i=$i+1
+              done
+          fi
+      else
+          labels="(${alllabels[@]})"
+      fi
+
+      for i in "${labels[@]}"
+          case $i in
+            'variables')
+
+            ;;
+            'directories')
+
+            ;;
+            'images')
+
+            ;;
+            'create')
+     
+            ;;
+            'systemd')
+
+            ;;
+            *)
+                echo -e "Error: unknown option passed to create"
+            ;;
+          esac
       echo -e "\nOkay, lets find out more about you...\n"
       ${SCRIPTS_ROOT}/scripts/get_variables.sh
       source ${SCRIPTS_ROOT}/.archive ## todo do I need to source this here...?

@@ -42,4 +42,6 @@ do
   fi
 done
 
+runuser --login ${USER_NAME} -c "${XDESK} systemctl --user reset-failed"
+
 cd ${SCRIPTS_ROOT}

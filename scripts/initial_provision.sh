@@ -22,7 +22,7 @@ function build_django()
   chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/django
   cp ${SCRIPTS_ROOT}/dockerfiles/${1} /home/${USER_NAME}/${1}
   cp ${SCRIPTS_ROOT}/dockerfiles/${2} /home/${USER_NAME}/${2}
-  runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_debug\" -f=${1} ./"
+  runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_${3}\" -f=${1} ./"
   rm /home/${USER_NAME}/${1} /home/${USER_NAME}/${2}
   rm -r /home/${USER_NAME}/django
 }
@@ -32,7 +32,7 @@ then
     runuser --login ${USER_NAME} -c "podman image exists \"python:${PROJECT_NAME}_debug\""
     if [[ ! $? -eq 0 ]]
     then
-        build_django dockerfile_django_dev pip_requirements_dev
+        build_django dockerfile_django_dev pip_requirements_dev debug
         # mkdir -p /home/${USER_NAME}/django && cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/* /home/${USER_NAME}/django/
         # chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/django
         # cp ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev /home/${USER_NAME}/dockerfile_django_dev
@@ -52,7 +52,7 @@ else
         # runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --tag=\"python:${PROJECT_NAME}_prod\" -f='dockerfile_django_prod' ./"
         # rm /home/${USER_NAME}/dockerfile_django_prod /home/${USER_NAME}/pip_requirements_prod
         # rm -r /home/${USER_NAME}/django
-        build_django dockerfile_django_prod pip_requirements_prod
+        build_django dockerfile_django_prod pip_requirements_prod prod
     fi
 fi
 
