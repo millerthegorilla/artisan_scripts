@@ -40,9 +40,9 @@ while (( "$#" )); do
       parray=( "${@:2}" )
       if [[ ${#parray} -gt 0 ]]
       then
-          if [[ ${parray[2]^^} == 'ALL' ]]
+          if [[ ${parray[0]^^} == 'ALL' ]]
           then
-              labels="(${alllabels[@]})"
+              labels="(${alllabels[*]})"
           else
               # labels=${parray[@]:1}
               declare -A vars
@@ -52,7 +52,7 @@ while (( "$#" )); do
               vars['containers']=3
               vars['systemd']=4
               i=0
-              for j in "${parray:1}"
+              for j in "${parray[*]}"
               do
                   iarray[i]=${vars[$j]}
                   i=$i+1
@@ -67,11 +67,11 @@ while (( "$#" )); do
               done
           fi
       else
-          labels="(${alllabels[@]})"
+          labels="(${alllabels[*]})"
       fi
-      echo "${labels[@]}"
+      echo "${labels[*]}"
 
-      for i in "${labels[@]}"
+      for i in "${labels[*]}"
       do
           case "${i^^}" in
             'VARIABLES')
