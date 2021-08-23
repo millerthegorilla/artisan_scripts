@@ -70,49 +70,47 @@ while (( "$#" )); do
       fi
 
       for i in "${labels[@]}"
-          case $i in
+      do
+          case "$i" in
             'variables')
-
+                echo -e "\nOkay, lets find out more about you...\n"
+                ${SCRIPTS_ROOT}/scripts/get_variables.sh
             ;;
             'directories')
-
+                echo -e "\nNow I will create the directtories, and I will open ports below 1024 on this machine.\n"
+                ${SCRIPTS_ROOT}/scripts/create_directories.sh
             ;;
             'images')
-
+                echo -e "\nI will now download and provision container images, if they are not already present.\n"
+                ${SCRIPTS_ROOT}/scripts/initial_provision.sh
             ;;
             'create')
-     
+                echo -e "\n and now I will create the containers...\n"
+                ${SCRIPTS_ROOT}/scripts/create_all.sh
             ;;
             'systemd')
-
+                echo -e "\n fancy some systemd?...\n"
+                echo -e "Generate and install systemd --user unit files? : "
+                select yn in "Yes" "No"; do
+                    case $yn in
+                        Yes ) SYSD="TRUE"; break;;
+                        No ) SYSD="FALSE"; break;;
+                    esac
+                done
+                if [[ ${SYSD} == "TRUE" ]]
+                then
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh
+                fi
             ;;
             *)
                 echo -e "Error: unknown option passed to create"
+                exit
             ;;
           esac
-      echo -e "\nOkay, lets find out more about you...\n"
-      ${SCRIPTS_ROOT}/scripts/get_variables.sh
-      source ${SCRIPTS_ROOT}/.archive ## todo do I need to source this here...?
-      echo -e "\nSo, first I will create the directtories, and I will open ports below 1024 on this machine.\n"
-      ${SCRIPTS_ROOT}/scripts/create_directories.sh
-      echo -e "\nI will now download and provision container images, if they are not already present.\n"
-      ${SCRIPTS_ROOT}/scripts/initial_provision.sh
-      echo -e "\n and now I will create the containers...\n"
-      ${SCRIPTS_ROOT}/scripts/create_all.sh
-      echo -e "\n fancy some systemd?...\n"
-      echo -e "Generate and install systemd --user unit files? : "
-      select yn in "Yes" "No"; do
-          case $yn in
-              Yes ) SYSD="TRUE"; break;;
-              No ) SYSD="FALSE"; break;;
-          esac
       done
-      if [[ ${SYSD} == "TRUE" ]]
-      then
-          SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh
-          SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh
-          SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh
-      fi
+      
       # if [[ ${DEBUG} == "FALSE" ]]
       # then
       #     usermod -s /bin/nologin ${USER_NAME}
