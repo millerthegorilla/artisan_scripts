@@ -52,13 +52,9 @@ while (( "$#" )); do
               vars['containers']=3
               vars['systemd']=4
               i=0
-              echo ${parray[@]}
               for j in "${parray[@]}"
               do
-                  echo "j=${j}"
                   iarray[$i]=${vars[$j]}
-                  echo "vars[j]=${vars[$j]}"
-                  echo "iarray[i]=${iarray[$i]}"
                   i=$i+1
               done
               IFS=$'\n' sorted=($(sort <<<"${iarray[*]}"))
@@ -73,7 +69,6 @@ while (( "$#" )); do
       else
           labels="(${alllabels[*]})"
       fi
-      echo "${labels[@]^^}"
 
       for i in "${labels[@]}"
       do
@@ -111,7 +106,6 @@ while (( "$#" )); do
                 fi
             ;;
             *)
-                echo -e "${i^^}"
                 echo -e "Error: unknown option passed to create"
                 exit 1
             ;;
