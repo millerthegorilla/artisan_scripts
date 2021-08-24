@@ -89,6 +89,7 @@ fi
 
 # prune any miscellaneous images that may have been left over during builds.
 runuser --login ${USER_NAME} -c "podman image prune -f"
+runuser --login ${USER_NAME} -c "podman volume prune -f"
 
 echo -e "remove code (choose a number)?"
 
