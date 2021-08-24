@@ -32,6 +32,7 @@ runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${D
 
 echo "burp - "$?
 runuser --login ${USER_NAME} -P -c "podman inspect django_cont"
+exit 
 
 runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd /opt/${PROJECT_NAME}/ && python manage.py collectstatic --noinput && python manage.py migrate --noinput && python manage.py createcachetable;\""
 
