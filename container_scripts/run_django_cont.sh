@@ -31,7 +31,7 @@ chown ${USER_NAME}:${USER_NAME} /etc/opt/${PROJECT_NAME}/settings/settings.py
 runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z --restart unless-stopped ${DJANGO_IMAGE}" # > ${SCRIPTS_ROOT}/systemd/.django_container_id 
 
 echo -e "waiting for django to finish starting..."
-until ! ruuser --login ${USER_NAME} -P -c "podman exec -it ${DJANGO_CONT_NAME} ls /start.sh"  > /dev/null 2>&1
+until [[ $(top -b -n1 | grep "Cpu(s)" | awk '{print $2 + $4}') -le 10 ]] > /dev/null 2>&1
 do
     echo -n "."
 done
