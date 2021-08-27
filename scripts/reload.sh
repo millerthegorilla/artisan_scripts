@@ -42,7 +42,7 @@ if [[ ${DEBUG} == "TRUE" ]]
 then
 	echo "this is a development setup - manage.py should reload automatically on file changes."
 else
-	 runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"su artisan -c \"killall5 gunicorn && gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py\" & \""
+	 runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -dit ${DJANGO_CONT_NAME} bash -c \"su artisan -c \"killall5 gunicorn && gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py\"\""
 fi
 
 ####   need to reload nginx - try svscanctl inside swag container.
