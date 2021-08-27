@@ -259,8 +259,8 @@ rpubkey = rpubkey if rpubkey != "" else "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKh
 rprivkey = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
 rprivkey = rprivkey if rprivkey != "" else "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
 
-RECAPTCHA_PUBLIC_KEY = rpubkey
-RECAPTCHA_PRIVATE_KEY = rprivkey
+RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
+RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
 
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
