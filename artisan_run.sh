@@ -130,7 +130,7 @@ while (( "$#" )); do
       exit $?
       ;;    
     reload) 
-      su ${USER_NAME} -c "${SCRIPTS_ROOT}/scripts/reload.sh"
+      ${SCRIPTS_ROOT}/scripts/reload.sh
       exit $?
       ;;
     status)
