@@ -89,7 +89,6 @@ fi
 
 # prune any miscellaneous images that may have been left over during builds.
 runuser --login ${USER_NAME} -c "podman image prune -f"
-runuser --login ${USER_NAME} -c "podman volume prune -f"
 
 echo -e "remove code (choose a number)?"
 
@@ -149,7 +148,9 @@ then
     cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
 fi
 
-runuser --login ${USER_NAME} -c "podman volume rm dbvol"
+runuser --login ${USER_NAME} -c "podman volume rm db_vol"
+runuser --login ${USER_NAME} -c "podman volume rm cert_vol"
+runuser --login ${USER_NAME} -c "podman volume prune -f"
 
 rm .env
 rm .archive

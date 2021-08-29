@@ -115,6 +115,9 @@ db_password=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
 db_host=127.0.0.1
 read -p "Your django database host address [${db_host}] : " dbh
 db_host=${dbh:-${db_host}}
+db_vol_name="db_vol"
+read -p "Host db volume name [ ${db_vol_name} ] : " dvn
+db_vol_name=${dvn:-${db_vol_name}}
 
 ## DUCKDNS
 read -p "Duckdns domain : " duckdns_domain
@@ -133,6 +136,10 @@ else
     EXTRA_DOMAINS="NONE"
 fi
 DUCKDNS_SUBDOMAIN="${duckdns_domain}"
+
+swag_vol_name="cert_vol"
+read -p "Swag Volume Name [${swag_vol_name}] : " svn
+swag_vol_name=${svn:-${swag_vol_name}}
 
 ## DJANGO_EMAIL_VERIFICATION AND EMAIL MODERATORS ETC
 echo -e "#************* email settings ***************"
@@ -201,6 +208,7 @@ make_secret MARIADB_ROOT_PASSWORD
 runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
 echo -n $db_password | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
 
+
 # variables for create_directories.sh
 echo PROJECT_NAME=${PROJECT_NAME} > .proj
 echo USER_NAME=${USER_NAME} >> .proj
@@ -240,6 +248,15 @@ then
     fi
 fi
 
+## automatic updates
+
+echo -e "\nEnable container updates where possible ? : "
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) updates="--label 'io.containers.autoupdate=registry'"; break;;
+        No ) updates=""; break;;
+    esac
+done
 ### Systemd system account creation
 
 unset site_name

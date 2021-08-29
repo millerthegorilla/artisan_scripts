@@ -9,6 +9,7 @@
 ## SHARED
 PROJECT_NAME=${project_name}
 HOST_LOG_DIR=${host_log_dir}
+UPDATES=${updates}
 
 ## POD SETTINGS
 POD_NAME=${pod_name}
@@ -46,6 +47,7 @@ DB_NAME="${db_name}"
 DB_USER="${db_user}"
 DB_PASSWORD="${db_password}"
 DB_HOST="${db_host}"
+DB_VOL_NAME="${db_vol_name}"
 
 ## SWAG
 SWAG_CONT_NAME="swag_cont"
@@ -55,3 +57,4 @@ SWAG_HOST_LOG_DIR="${swag_host_log_dir}"
 SWAG_CONT_VOL_STATIC="/opt/static_files/"
 SWAG_CONT_LOG_DIR="/config/log/"
 TLDOMAIN="${tldomain}"
+SWAG_VOL_NAME="${swag_vol_name}"
