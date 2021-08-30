@@ -137,9 +137,12 @@ else
 fi
 DUCKDNS_SUBDOMAIN="${duckdns_domain}"
 
-swag_vol_name="cert_vol"
-read -p "Swag Volume Name [${swag_vol_name}] : " svn
-swag_vol_name=${svn:-${swag_vol_name}}
+if [[ ${DEBUG} == "FALSE" ]]
+then
+    swag_vol_name="cert_vol"
+    read -p "Swag Volume Name [${swag_vol_name}] : " svn
+    swag_vol_name=${svn:-${swag_vol_name}}
+fi
 
 ## DJANGO_EMAIL_VERIFICATION AND EMAIL MODERATORS ETC
 echo -e "#************* email settings ***************"
