@@ -40,7 +40,7 @@ read -p "Enter the name of the django project ie the folder in which wsgi.py res
 django_project_name=${django_project_name:-${PN}}
 DJANGO_PROJECT_NAME=$django_project_name
 
-if [[ $(type Xorg | echo $?) -eq 0 ]]
+if [[ $(type Xorg > /dev/null 2>&1 | echo $?) -eq 0 ]]
 then
     XDESK="XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\""
 else
