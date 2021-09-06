@@ -37,8 +37,8 @@ done
 mkdir -p \
     /config/{log/letsencrypt,log/fail2ban,etc/letsencrypt,fail2ban,crontabs,dns-conf,geoip2db} \
     /var/run/fail2ban
-# rm -rf /etc/letsencrypt
-# ln -s /config/etc/letsencrypt /etc/letsencrypt
+rm -rf /etc/letsencrypt
+ln -s /config/etc/letsencrypt /etc/letsencrypt
 
 # copy dns default configs
 cp -n /defaults/dns-conf/* /config/dns-conf/
@@ -267,13 +267,13 @@ else
 fi
 
 # setting the symlink for key location
-# rm -rf /config/keys/letsencrypt
-# if [ "$ONLY_SUBDOMAINS" = "true" ] && [ ! "$SUBDOMAINS" = "wildcard" ] ; then
-#     DOMAIN="$(echo "$SUBDOMAINS" | tr ',' ' ' | awk '{print $1}').${URL}"
-#     ln -s ../etc/letsencrypt/live/"$DOMAIN" /config/keys/letsencrypt
-# else
-#     ln -s ../etc/letsencrypt/live/"$URL" /config/keys/letsencrypt
-# fi
+rm -rf /config/keys/letsencrypt
+if [ "$ONLY_SUBDOMAINS" = "true" ] && [ ! "$SUBDOMAINS" = "wildcard" ] ; then
+    DOMAIN="$(echo "$SUBDOMAINS" | tr ',' ' ' | awk '{print $1}').${URL}"
+    ln -s ../etc/letsencrypt/live/"$DOMAIN" /config/keys/letsencrypt
+else
+    ln -s ../etc/letsencrypt/live/"$URL" /config/keys/letsencrypt
+fi
 
 # checking for changes in cert variables, revoking certs if necessary
 if [ ! "$URL" = "$ORIGURL" ] || [ ! "$SUBDOMAINS" = "$ORIGSUBDOMAINS" ] || [ ! "$ONLY_SUBDOMAINS" = "$ORIGONLY_SUBDOMAINS" ] || [ ! "$EXTRA_DOMAINS" = "$ORIGEXTRA_DOMAINS" ] || [ ! "$VALIDATION" = "$ORIGVALIDATION" ] || [ ! "$DNSPLUGIN" = "$ORIGDNSPLUGIN" ] || [ ! "$PROPAGATION" = "$ORIGPROPAGATION" ] || [ ! "$STAGING" = "$ORIGSTAGING" ] || [ ! "$DUCKDNSTOKEN" = "$ORIGDUCKDNSTOKEN" ] || [ ! "$CERTPROVIDER" = "$ORIGCERTPROVIDER" ]; then
@@ -298,8 +298,8 @@ if [ ! "$URL" = "$ORIGURL" ] || [ ! "$SUBDOMAINS" = "$ORIGSUBDOMAINS" ] || [ ! "
         REV_ACMESERVER="https://acme-v02.api.letsencrypt.org/directory"
     fi
     [[ -f /config/etc/letsencrypt/live/"$ORIGDOMAIN"/fullchain.pem ]] && certbot revoke --non-interactive --cert-path /config/etc/letsencrypt/live/"$ORIGDOMAIN"/fullchain.pem --server $REV_ACMESERVER
-    #rm -rf /config/etc/letsencrypt
-    # mkdir -p /config/etc/letsencrypt
+    rm -rf /config/etc/letsencrypt
+    mkdir -p /config/etc/letsencrypt
 fi
 
 # saving new variables
