@@ -3,6 +3,7 @@ RUN rm -rf /var/run/s6/etc/services.d/php-fpm
 RUN rm -rf /etc/services.d/php-fpm
 COPY ./default /config/nginx/site-confs/default
 COPY ./nginx /config/nginx/nginx.conf
+COPY ./50-config /etc/cont-init.d/50-config
 RUN chown abc:users /config/nginx/nginx.conf
 RUN chown abc:users /config/nginx/site-confs/default
 RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
