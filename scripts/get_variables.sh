@@ -226,6 +226,8 @@ echo DB_HOST=${db_host} >> .proj
 echo DB_PASSWORD=${db_password} >> .proj
 echo DEBUG=${DEBUG} >> .proj
 echo XDESK=${XDESK} >> .proj
+echo SWAG_VOL_NAME=${swag_vol_name} >> .proj
+echo DB_VOL_NAME=${db_vol_name} >> .proj
 
 ### TEMPLATES
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env

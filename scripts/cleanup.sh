@@ -148,8 +148,8 @@ then
     cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
 fi
 
-runuser --login ${USER_NAME} -c "podman volume rm db_vol"
-runuser --login ${USER_NAME} -c "podman volume rm cert_vol"
+runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL_NAME}"
+runuser --login ${USER_NAME} -c "podman volume rm ${SWAG_VOL_NAME}"
 runuser --login ${USER_NAME} -c "podman volume prune -f"
 
 rm .env
