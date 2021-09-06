@@ -13,7 +13,7 @@ VALIDATION=${VALIDATION}\\n\
 CERTPROVIDER=${CERTPROVIDER}\\n\
 DNSPLUGIN=${DNSPLUGIN}\\n\
 EMAIL=${EMAIL}\\n\
-STAGING=${STAGING}\\n"
+STAGING=${STAGING}\\n" >> /config/bob
 
 # Echo init finish for test runs
 if [ -n "${TEST_RUN}" ]; then
