@@ -39,9 +39,10 @@ do
    fi
 done
 
+cd /
 until [[ -d "${CODE_PATH}" && ! -L "${CODE_PATH}" ]] 
 do
-    read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
+    read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' -e CODE_PATH
     if [[ ! -d "${CODE_PATH}" ]]
     then
        echo -e "That path doesn't exist!"
@@ -52,7 +53,7 @@ do
     fi
 done
 echo -e "code path is ${CODE_PATH}"
-
+cd -
 
 read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " USER_DIR
 USER_DIR=${USER_DIR:-/home/${USER_NAME}}
