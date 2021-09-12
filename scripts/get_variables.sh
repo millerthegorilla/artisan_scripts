@@ -27,9 +27,33 @@ echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
 echo -e "#**** and have a password protected system user account       *****"
 echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
+isValidVarName() {
+    echo "$1" | grep -q '^[_[:alpha:]][_[:alpha:][:digit:]]*$' && return || return 1
+}
+until isValidVarName "${project_name}"
+do
+   read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' project_name
+   if ! isValidVarName "${project_name}"
+   then
+       echo -e "That is not a valid variable name.  Your project name must conform to bash directory name standards"
+   fi
+done
 
-read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' project_name
-read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
+until [[ -d "${CODE_PATH}" && ! -L "${CODE_PATH}" ]] 
+do
+    read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' CODE_PATH
+    if [[ ! -d "${CODE_PATH}" ]]
+    then
+       echo -e "That path doesn't exist!"
+    fi
+    if [[ -L "${CODE_PATH}" ]]
+    then
+        echo -e "Code path must not be a symbolic link"
+    fi
+done
+echo -e "code path is ${CODE_PATH}"
+
+
 read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " USER_DIR
 USER_DIR=${USER_DIR:-/home/${USER_NAME}}
 
