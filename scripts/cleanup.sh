@@ -149,6 +149,7 @@ then
 fi
 
 runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL_NAME}"
+echo "swag vol name is ${SWAG_VOL_NAME}"
 runuser --login ${USER_NAME} -c "podman volume rm ${SWAG_VOL_NAME}"
 runuser --login ${USER_NAME} -c "podman volume prune -f"
 

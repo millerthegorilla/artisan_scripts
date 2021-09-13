@@ -27,9 +27,11 @@ echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
 echo -e "#**** and have a password protected system user account       *****"
 echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
+
 isValidVarName() {
     echo "$1" | grep -q '^[_[:alpha:]][_[:alpha:][:digit:]]*$' && return || return 1
 }
+
 until isValidVarName "${project_name}"
 do
    read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' project_name

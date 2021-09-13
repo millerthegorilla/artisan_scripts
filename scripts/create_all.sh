@@ -65,6 +65,8 @@ echo CURRENT_SETTINGS=${file[${input}]} >> .archive
 echo SWAG_CONT_NAME=${SWAG_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 echo DJANGO_CONT_NAME=${DJANGO_CONT_NAME} >> ${SCRIPTS_ROOT}/.archive
 
+echo "pod exist? $(runuser --login ${USER_NAME} -c \"podman pod ps\")"
+
 if [[ "${DEBUG}" == "TRUE" ]]
 then
    runuser --login ${USER_NAME} -c "podman pod create --name ${POD_NAME} -p 127.0.0.1:8000:8000"
