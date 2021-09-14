@@ -10,7 +10,7 @@ After=container-${django_service}.service
 [Service]
 Restart=on-failure
 TimeoutStopSec=70
-ExecStart=${terminal_cmd} /usr/bin/podman exec -e PYTHONPATH="/etc/opt/${project_name}/settings/:/opt/${project_name}/" -it ${django_cont_name} bash -c "source /home/artisan/django_venv/bin/activate; python -u /opt/${project_name}/manage.py runserver 0.0.0.0:8000 |& /tmp/manage_output"
+ExecStart=${terminal_cmd} /usr/bin/podman exec -e PYTHONPATH="/etc/opt/${project_name}/settings/:/opt/${project_name}/" -it ${django_cont_name} bash -c "source /home/artisan/django_venv/bin/activate; python -u /opt/${project_name}/manage.py runserver 0.0.0.0:8000 |& tee /tmp/manage_output"
 
 [Install]
 WantedBy=graphical.target default.target
