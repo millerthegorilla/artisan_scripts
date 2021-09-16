@@ -33,7 +33,8 @@ then
 fi
 
 cat ${SCRIPTS_ROOT}/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.py
-cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
+cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/manage.py ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
 runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -e DJANGO_PROJECT_NAME=${django_project_name} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan /opt/${PROJECT_NAME}/manage.py /opt/${PROJECT_NAME}/${DJANGO_PROJECT_NAME}/wsgi.py\"" 
 
 ## TODO - reload gunicorn? ie reload.sh?
