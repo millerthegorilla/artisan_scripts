@@ -114,11 +114,6 @@ while (( "$#" )); do
             ;;
           esac
       done
-      
-      # if [[ ${DEBUG} == "FALSE" ]]
-      # then
-      #     usermod -s /bin/nologin ${USER_NAME}
-      # fi
       exit $? 
       ;;
     clean)
@@ -267,6 +262,23 @@ while (( "$#" )); do
       su ${USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman image prune --all -f"
       ${SCRIPTS_ROOT}/scripts/initial_provision.sh
       systemctl reboot
+      ;;
+    postgit)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
+      if [[ -z ${PROJECT_NAME} ]]
+      then
+          read -p "Enter project name : " PROJECT_NAME
+      fi
+      if [[ -z ${DJANGO_CONT_NAME} ]]
+      then
+          read -p "Enter django container name : " DJANGO_CONT_NAME
+      fi
+      ${SCRIPTS_ROOT}/scripts/make_manage_wsgi.sh
+      runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /opt/${PROJECT_NAME}&& find /opt/${PROJECT_NAME} -type d -exec chmod 0550 {} + && find /opt/${PROJECT_NAME} -type f -exec chmod 0440 {} +\""
+      runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + && find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0550 {} +\""
       ;;
     help|-h|-?|--help)
       echo "$ artisan_run command   - where command is one of create, clean, replace, manage or settings."
