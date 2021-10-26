@@ -55,7 +55,7 @@ do
     fi
 done
 echo -e "code path is ${CODE_PATH}"
-cd -
+cd ${SCRIPTS_ROOT}
 
 read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " USER_DIR
 USER_DIR=${USER_DIR:-/home/${USER_NAME}}
