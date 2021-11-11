@@ -38,10 +38,10 @@ ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS1"), os.getenv("ALLOWED_HOSTS2"), os.ge
 INSTALLED_APPS = [
     'django_password_validators',
     'django_password_validators.password_history',
-    'django_users_app',
+    'django_users',
     'django_profile',
     'django_posts_and_comments',
-    'django_forum_app',
+    'django_forum',
     'django_artisan',
     'django_email_verification',
     'django.contrib.admin',
@@ -75,7 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_users_app.middleware.ReauthenticateMiddleware',
+    'django_users.middleware.ReauthenticateMiddleware',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
@@ -94,7 +94,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django_forum_app.context_processors.siteName',
+                'django_forum.context_processors.siteName',
                 'django_artisan.context_processors.navbarSpiel',
                 'django_artisan.context_processors.siteLogo',
             ],
@@ -220,7 +220,7 @@ MAX_UPLOAD_SIZE = 10485760
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o700
 FILE_UPLOAD_PERMISSIONS = 0o644
 
-# django_users_app
+# django_users
 LOGIN_REDIRECT_URL = reverse_lazy('django_artisan:post_list_view')
 LOGOUT_REDIRECT_URL = reverse_lazy('django_artisan:landing_page')
 LOGIN_URL = reverse_lazy('login')
@@ -231,7 +231,7 @@ THUMBNAIL_SIZE = (120,120)
 #THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.wand_engine.Engine'
 MAX_USER_IMAGES = 3
 
-# django_forum_app
+# django_forum
 IMAGE_UPLOAD_PATH = '/uploads/users/'
 
 # DJANGO-EMAIL-VERIFICATION SETTINGS
@@ -340,7 +340,7 @@ NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
                 On a diet???  This site is cookie free!<br> \
                 Problems??? contact - ceramic_isles [at] gmail.com"
 
-### The following are used by django_artisan and django_forum_app
+### The following are used by django_artisan and django_forum
 SITE_NAME = str(os.getenv("SITE_NAME"))
 SITE_LOGO = 'django_artisan/images/vase.svg'
 SITE_DOMAIN = '127.0.0.1:8000'
@@ -413,7 +413,12 @@ LOGGING = {
         },
     },
     'loggers': {
-            'django': {
+            'django_artisan': {
+                'handlers': ['file', 'console'],
+                'level': 'DEBUG',
+                'propagate': True,
+           },
+            'safe_imagefield': {
                 'handlers': ['file', 'console'],
                 'level': 'DEBUG',
                 'propagate': True,
