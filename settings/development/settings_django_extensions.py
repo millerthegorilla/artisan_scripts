@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django_password_validators.password_history',
     'django_users',
     'django_profile',
-    'django_posts_and_comments',
+    'django_messages',
     'django_forum',
     'django_artisan',
     'django_email_verification',
