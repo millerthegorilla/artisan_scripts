@@ -17,8 +17,8 @@ rm -rf ${USER_DIR}/systemd
 
 ## TEMPLATES
 set -a
- django_service=${DJANGO_CONT_NAME}
  django_cont_name=${DJANGO_CONT_NAME}
+ elastic_cont_name=${ELASTIC_CONT_NAME}
  project_name=${PROJECT_NAME}
  terminal_cmd=${TERMINAL_CMD}
 set +a

@@ -4,13 +4,13 @@ Description=manage.py runserver
 Documentation=https://github.com/millerthegorilla/artisan_scripts
 Wants=network.target
 After=network-online.target
-BindsTo=container-${django_service}.service
-After=container-${django_service}.service
+BindsTo=container-${django_cont_name}.service
+After=container-${django_cont_name}.service
 
 [Service]
 Restart=on-failure
 TimeoutStopSec=70
-ExecStart=/usr/bin/podman exec -e PYTHONPATH="/etc/opt/${project_name}/settings/:/opt/${project_name}/" -it ${django_cont_name} bash -c "source /home/artisan/django_venv/bin/activate; python /opt/${project_name}/manage.py search_index --rebuild -f && python /opt/${project_name}/manage.py runserver 0.0.0.0:8000 &>/tmp/manage_output"
+ExecStart=/usr/bin/podman exec -e PYTHONPATH="/etc/opt/${project_name}/settings/:/opt/${project_name}/" -it ${django_cont_name} bash -c "source /home/artisan/django_venv/bin/activate; python /opt/${project_name}/manage.py runserver 0.0.0.0:8000 &>/tmp/manage_output"
 
 [Install]
 WantedBy=multi-user.target default.target

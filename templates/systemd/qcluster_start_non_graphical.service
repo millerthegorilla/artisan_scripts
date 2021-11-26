@@ -4,8 +4,8 @@ Description=manage.py qcluster
 Documentation=https://github.com/millerthegorilla/artisan_scripts
 Wants=network.target
 After=network-online.target
-BindsTo=container-${django_service}.service
-After=container-${django_service}.service
+BindsTo=container-${django_cont_name}.service
+After=container-${django_cont_name}.service
 
 [Service]
 Restart=on-failure
