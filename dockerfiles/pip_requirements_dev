@@ -41,3 +41,6 @@ dropbox==11.12.0
 mypy==0.910
 django-stubs==1.9.0
 ipython==7.29.0
+# django-pipeline==2.0.7
+git+git@github.com:millerthegorilla/django-pipeline.git#egg=django-pipeline
+jsmin==3.0.0

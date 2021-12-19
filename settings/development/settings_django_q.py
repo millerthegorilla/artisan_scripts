@@ -61,16 +61,17 @@ INSTALLED_APPS = [
     'django_q',
     'dbbackup',
     'debug_toolbar',
+    'pipeline',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    #'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -134,7 +135,7 @@ DATABASES = {
 CACHES = {
      "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://127.0.0.1:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -219,6 +220,34 @@ CONTENT_TYPES = ['image', 'video']
 MAX_UPLOAD_SIZE = 10485760
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o700
 FILE_UPLOAD_PERMISSIONS = 0o644
+
+#django-pipeline
+STATICFILES_STORAGE = 'pipeline.storage.PipelineManifestStorage'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
+PIPELINE = {
+    'PIPELINE_ENABLED': True,
+    'JS_COMPRESSOR': 'pipeline.compressors.jsmin.JSMinCompressor',
+    'JAVASCRIPT': {
+        'django_artisan_carousel': {
+            'source_filenames': (
+              'django_artisan/js/carousel.js',
+            ),
+            'output_filename': 'django_artisan/js/carousel_min.js',
+        },
+        'django_forum': {
+            'source_filenames': (
+              'django_forum/js/*.js',
+            ),
+            'output_filename': 'js/django_forum.js',
+        }
+    }
+}
+
 
 # django_users
 LOGIN_REDIRECT_URL = reverse_lazy('django_artisan:post_list_view')
