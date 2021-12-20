@@ -103,6 +103,13 @@ TEMPLATES = [
     },
 ]
 
+# to get debug toolbar to show up
+def show_toolbar(request):
+    return True
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+}
+
 # django-q
 Q_CLUSTER = {
     'name': 'DJRedis',
