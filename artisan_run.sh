@@ -184,7 +184,7 @@ while (( "$#" )); do
           echo -e "\nCurrent Settings is ${CURRENT_SETTINGS}"
       fi
       if [[ ${DEBUG} == "TRUE" ]]   ## TODO function 
-      then
+      then   # TODO function for below
           echo "Please select the settings file from the list"
 
           files=$(ls ${SCRIPTS_ROOT}/settings/development)
@@ -230,18 +230,18 @@ while (( "$#" )); do
       runuser --login ${USER_NAME} -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" cd; ${2}"
       exit $?
       ;;
-    output)
-      if [[ -z ${USER_NAME} ]]
-      then
-          read -p "Enter username : " USER_NAME
-      fi
-      if [[ -z ${DJANGO_CONT_NAME} ]]
-      then
-          read -p "Enter the name of the django container : " DJANGO_CONT_NAME
-      fi
-      su ${USER_NAME} -c "cd; podman exec -it ${DJANGO_CONT_NAME} tail -f /tmp/manage_output"
-      exit $?
-      ;;
+    # output)
+    #   if [[ -z ${USER_NAME} ]]
+    #   then
+    #       read -p "Enter username : " USER_NAME
+    #   fi
+    #   if [[ -z ${DJANGO_CONT_NAME} ]]
+    #   then
+    #       read -p "Enter the name of the django container : " DJANGO_CONT_NAME
+    #   fi
+    #   su ${USER_NAME} -c "cd; podman exec -it ${DJANGO_CONT_NAME} tail -f /tmp/manage_output"
+    #   exit $?
+    #   ;;
     update)
       if [[ -z ${USER_NAME} ]]
       then
@@ -281,7 +281,7 @@ while (( "$#" )); do
       runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + && find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0550 {} +\""
       ;;
     help|-h|-?|--help)
-      echo "$ artisan_run command   - where command is one of create, clean, replace, manage or settings."
+      echo "$ artisan_run command   - where command is one of clean, create [ variables, directories, help, images, containers, systemd ], install, interact, manage, postgit, refresh, replace, reload, status, settings, or update."
       exit 0
       ;;
     *) # unsupported flags
