@@ -42,55 +42,55 @@ If at any point the scripts fail or you break out of them, you can run the scrip
 
 To clean up completely, run the `./artisan_run clean`, answer yes to code removal, and to image removal, and to log removal.
 
-* ./artisan_run create
+* `./artisan_run create`
 
 The create verb runs the script create_directories.sh and then checks the podman images, and downloads them and/or builds them as necessary, in the script initial_provision.sh.  Then the script 'create_all.sh' is called which creates and provisions the containers.  Depending on your options, either a development setup will be created, running manage.py on port 8000, or a production setup will be created, opening ports 443 and 80.  In any case the create_directories.sh script will edit and reload sysctl to lower the available port numbers to 80.  Be aware that this can be a ***SECURITY ISSUE***.  As long as you manage your firewall sensibly it should be ok.
 
-* ./artisan_run create [ variables, directories, images, containers, systemd ]
+* `./artisan_run create [ variables, directories, images, containers, systemd ]`
 
 Create the appropriate section of the install.  Variables asks for appropriate variables, directories creates the directories and lowers the ports, images downloads and constructs the images, containers creates the containers and systemd creates the systemd files that start the containers and installs them.  Once systemd has run either on its own, or as part the create verb, the containers will be replaced at startup of host machine.   In the case of a development install, when you start the host machine, two terminal windows will open when you login, one displaying the output from the runserver command, and the other displaying output from the qcluster that is part of djangoQ.  After systemd install has finished, you can run the runserver command in a shell in the $USERNAME account with `systemctl --user start manage_start.service` and the djangoq cluster with `systemctl --user start qcluster_start.service`.
 
 In the case of a production install, it is best to create the system account with a shell set to /usr/bin/nologin and enable lingering for the account ie loginctl --enable-linger $USERNAME
 
-* ./artisan_run install
+* `./artisan_run install`
 
 This verb installs the artisan scripts, making certain that the directories and files are set to their most restrictive permissions.  All artisan_run commands require the commands to be run as root, ie sudo.
 
-* ./artisan_run interact
+* `./artisan_run interact`
 
 This command attempts to run the command that follows 'interact' in the correct systemd context of the user account.   There are a few ways to do this, such as `su $USERNAME && command` or `runuser $USERNAME` etc.   For example, I often start a shell in the $USERNAME account and then run the command `podman exec -it container_name bash`, and then work inside the container.
 
-* ./artisan_run manage
+* `./artisan_run manage`
 
 The manage verb is an alias for running the runserver command inside the podman container, with whatever command follows, ie:
 `sudo ./artisan_run manage makemigrations`
 
-* ./artisan_run postgit
+* `./artisan_run postgit`
 
 This command runs inside the containers and sets the directories and files to the strictest permissions possible.
 
-* ./artisan_run refresh
+* `./artisan_run refresh`
 
 This command deletes and remakes the containers from the images.  It is an alias for `./artisan_run create images`.  When the images have been rebuilt the host machine is restarted.
 
-* ./artisan_run replace
+* `./artisan_run replace`
 
 This verb takes the manage.py and the wsgi file as templates from artisan_scripts and copies them over to the appropriate locations within the django_artisan folder structure completed with the appropriate options.
 
-* ./artisan_run reload
+* `./artisan_run reload`
 
 Aimed at production installs, this command kills the gunicorn process, and then restarts it.
 
-* ./artisan_run status
+* `./artisan_run status`
 
 This prints some details about the running project, if it is running, the username etc
 
-* ./artisan_run settings
+* `./artisan_run settings`
 
 Because the settings.py file for django_artisan code base is stored in this codebase, you can create different settings files for different git branches of django_artisan.  So, this verb asks you to choose from a settings file, and then copies that settings file into the project directory appropriately and sets ownership/permissions etc
 To create a settings file, simply copy an existing one and paste it into the appropriate directory, either ${SCRIPTS_ROOT}/settings/development or ${SCRIPTS_ROOT}/settings/production 
 
-* ./artisan_run update
+* `./artisan_run update`
 
 This command attempts to run a package update in all of the containers.  When you run the `artisan_run create` command, you can select to update the containers the systemd way, which will check for an updated container in the registry, and pull it and restart the container if one exists.
 https://www.redhat.com/sysadmin/podman-auto-updates-rollbacks
