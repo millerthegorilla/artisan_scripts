@@ -19,7 +19,9 @@ You will need the following created and ready...
 #### optional
 * a top level url, such as www.ceramicisles.org that you own and can access.  You can then point the domain at the duckdns address, or place an nginx reverse proxy or similar at the url address pointing to the duckdns address.  The `./artisan_run create [variables]` will prompt for the top level domain, and configure the swag container automatically.
 
-I run the production install on a raspberry pi 4b with 8gb of RAM, running fedora coreos (currently).  With the immutable file system of coreos, and the rootless configuration of podman, the server should be quite secure.  The development install, I run inside a gnome-boxes VM.  This allows me to restart the host if necessary, without restarting the machine.
+I run the production install on a raspberry pi 4b with 8gb of RAM, running fedora coreos (currently).  I have a user created with /sbin/nologin shell, and with lingering enabled (`loginctl --enable-linger $USERNAME`).  I have secured ssh `https://www.redhat.com/sysadmin/eight-ways-secure-ssh`.  I also have installed fail2ban, and have set the firewall to be as restrictive as possible, and have disabled any services that I don't need.
+
+With the immutable file system of coreos, and the rootless configuration of podman, the server should be quite secure.  The development install, I run inside a gnome-boxes VM.  This allows me to restart the host if necessary, without restarting the machine.
 
 ### disclaimer...
 
