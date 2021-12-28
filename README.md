@@ -15,8 +15,8 @@ You will need the following created and ready...
 * an app password for that account (you need to set up 2 step verification... https://support.google.com/accounts/answer/185833?hl=en")
 * google recaptcha public key   https://developers.google.com/recaptcha/intro
 * google recaptcha private key
-* the path to the directory where you have cloned django_artisan
-# optional
+* the path to the directory where you have cloned django_artisan : https://github.com/millerthegorilla/django_artisan
+#### optional
 * a top level url, such as www.ceramicisles.org that you own and can access.  You can then point the domain at the duckdns address, or place an nginx reverse proxy or similar at the url address pointing to the duckdns address.  The `./artisan_run create [variables]` will prompt for the top level domain, and configure the swag container automatically.
 
 ### disclaimer...
