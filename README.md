@@ -95,6 +95,10 @@ To create a settings file, simply copy an existing one and paste it into the app
 This command attempts to run a package update in all of the containers.  When you run the `artisan_run create` command, you can select to update the containers the systemd way, which will check for an updated container in the registry, and pull it and restart the container if one exists.
 https://www.redhat.com/sysadmin/podman-auto-updates-rollbacks
 
+### systemd
+
+When the systemd units have been created and installed, be aware that the podman container systemd units are created with the --new flag.  This completely breaks down and rebuilds the containers as clean, whenever the systemd unit shuts down/the host machine restarts etc.  The database is maintained in its current state despite the container being created from scratch.
+
 ### django_artisan development
 
 It is a sensible idea to only make changes to the django_artisan codebase when the development server is up and running.  If you run `artisan_run clean` and take down and remove the pod and containers, and then make changes to the django_artisan codebase, then if there are any bugs, then when you run `artisan_run create` the script will fail if there are any bugs.  You can comment changes or fix the bugs, but until either of these `artisan_run create` will fail.  In order to see the output, start a shell in the $USERNAME account and then run the command `podman exec -it $DJANGO_CONTAINER_NAME bash`.  This will open a shell in the container (defaults to the name 'django_cont'), where you can then run the command `python /opt/$PROJECT_NAME/manage.py runserver 0.0.0.0:8000` to see the output.
