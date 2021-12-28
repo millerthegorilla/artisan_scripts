@@ -16,8 +16,8 @@ You will need the following created and ready...
 * google recaptcha public key   https://developers.google.com/recaptcha/intro
 * google recaptcha private key
 * the path to the directory where you have cloned django_artisan
-## optional
-* a top level url, such as www.ceramicisles.org that you own and can access.  You can then point the domain at the duckdns address, or place an nginx reverse proxy or similar at the url address pointing to the duckdns address.
+# optional
+* a top level url, such as www.ceramicisles.org that you own and can access.  You can then point the domain at the duckdns address, or place an nginx reverse proxy or similar at the url address pointing to the duckdns address.  The `./artisan_run create [variables]` will prompt for the top level domain, and configure the swag container automatically.
 
 ### disclaimer...
 
@@ -36,7 +36,7 @@ Before running the scripts, download them into a directory in your home folder, 
 Then run the script artisan_run.sh which takes one command to direct it to the correct scripts.
 The commands are clean, create [ variables, directories, images, containers, systemd ], help, install, interact, manage, postgit, refresh, replace, reload, status, settings, or update.
 
-* ./artisan_run clean
+* `./artisan_run clean`
 
 If at any point the scripts fail or you break out of them, you can run the script cleanup.sh to remove the containers and to reset the script environment to the beginning.
 
