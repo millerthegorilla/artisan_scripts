@@ -21,7 +21,7 @@ You will need the following created and ready...
 
 I run the production install on a raspberry pi 4b with 8gb of RAM, running fedora coreos (currently).  I have a user created with /sbin/nologin shell, and with lingering enabled (`loginctl --enable-linger $USERNAME`).  I have secured ssh `https://www.redhat.com/sysadmin/eight-ways-secure-ssh`.  I also have installed fail2ban, and have set the firewall to be as restrictive as possible, and have disabled any services that I don't need.
 
-With the immutable file system of coreos, and the rootless configuration of podman, the server should be quite secure. 
+With the immutable file system of coreos, and the rootless configuration of podman, the server should theoretically be quite secure. 
 
 I run the development install inside a gnome-boxes VM.  This allows me to restart the host if necessary, without restarting the machine.
 
