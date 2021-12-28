@@ -16,7 +16,7 @@ You will need the following created and ready...
 * google recaptcha public key   https://developers.google.com/recaptcha/intro
 * google recaptcha private key
 * the path to the directory where you have cloned django_artisan
-- optional
+## optional
 * a top level url, such as www.ceramicisles.org that you own and can access.  You can then point the domain at the duckdns address, or place an nginx reverse proxy or similar at the url address pointing to the duckdns address.
 
 ### disclaimer...
