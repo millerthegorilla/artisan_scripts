@@ -139,7 +139,7 @@ The directory structure on the host machine is:
 
 ### .env file
 
-When you have run the get_variables script or `./artisan_run create [ variables ]` an .env file that is read by the command os.getenv inside the settings.py file, is created in the /etc/opt/$PROJECT_NAME/settings/ directory.  This file is readable by $USERNAME by default, for ease of development etc.  The best strategy for production is to start gunicorn, which reads the settings in the wsgi.py file, and once the server has started, then change the owner/permissions of the .env file to root/restrictive. 
+When you have run the get_variables script or `./artisan_run create [ variables ]` an .env file that is read by the command os.getenv inside the settings.py file, is created in the /etc/opt/$PROJECT_NAME/settings/ directory.  This file is readable by $USERNAME by default, for ease of development etc.  The best strategy for production is to start gunicorn, which reads the settings in the wsgi.py file, and once the server has started, then change the owner/permissions of the .env file to root/restrictive.  This may become part of the scripts in the future...
 
 ### firewall and router...
 
@@ -162,10 +162,14 @@ podman exec -it mariadb_cont bash
 ```
 for example, to inspect the database (ie run mysql -uroot -p$PASSWORD).   http://docs.podman.io/en/latest/markdown/podman-exec.1.html
 
-### customising scripts
+### customising scripts / using artisan_scripts with different projects...
+
+There is no reason that you can't use artisan scripts with a different django project, or even some other project that uses podman containers.  Just fork this project and edit as necessary.
+
+In the case of django projects, the current python image is used to contain the codebase and to create a venv and pip install the requirements.  There is a different image dockerfile for production and development.  You can find the specific dockerfiles and requirements.txt files in the 'dockerfiles' directory.  For django_artisan there is a custom swag image (which you may want to keep), and a custom database image.
 
 If you want to add a container, or customise an existing container, you can either edit initial_provision.sh to install a new image, or customise/add a script to the container_scripts directory.
-The script create_all.sh shells out to a bunch of scripts in that container_scripts directory.  
+The script create_all.sh, called by the create verb, shells out to a bunch of scripts in that container_scripts directory.  
 
 In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
 
@@ -173,7 +177,7 @@ The script get_variables.sh reads user input to get environment variables.
 
 This then uses the envsubst command to complete a ./templates/env_files/scripts_env and ./templates/env_files/settings_env.
 
-The scripts_env provides environment variables to the scripts, and the settings_env is copied to the directory /etc/opt/$PROJECT_NAME/settings to be read as and when by settings.py.
+The scripts_env provides environment variables to the scripts, and the settings_env is copied to the directory /etc/opt/$PROJECT_NAME/settings to be read as and when by settings.py (in production, wsgi.py reads the settings into memory, just once, as the server is initialised).
 
 If you want to change any podman image tag then you will need to do so in the script ./initial_provision.sh and also the file ./templates/env_files/scripts_env.
 
