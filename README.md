@@ -4,6 +4,18 @@ scripts to provision django_artisan ... https://github.com/millerthegorilla/djan
 ### license
 As poor as these scripts are, and keeping in mind I accept no responsibility for any errors or headaches they may create, they are released, like Django Artisan, under an MIT license.
 
+### containers
+Currently the script installs into a standard user account, containers:
+* a customised python container, with a venv and packages from dockerfiles/pip_requirements_dev/_prod.  The runserver command runs inside here and the django_artisan codebase is mounted into the container.
+* a customised mariasql container.  The database is stored in a volume mount that is mounted each time the container is recreated, ie the container can be recreated from scratch and is each time the machine restarts, for example, but the database persists.
+* a clamd container.  This is used to scan images when they are uploaded.
+* a duckdns container.  This is used to update the dns record at duckdns.org for the site.
+* an elasticsearch container.  This is used to provide elasticsearch capabilities to django_artisan.
+* a redis container.  This is used for caching for the site, for the thumbnail images and for djangoq, an asynchronous task scheduler.
+* swag.  This is the linuxserver.io container, which provides an nginx reverse proxy, and https via letsencrypt.
+
+The containers are recreated from scratch each time the machine restarts or if they have shutdown and are restarted with systemd commands.  The database, and codebase persists, as do static files, which in the case of a production install, are served by the nginx reverse proxy via a volume mount.
+
 ### requirements...
 
 You will need the following created and ready...
@@ -60,7 +72,7 @@ In the case of a production install, it is best to create the system account wit
 
 * `./artisan_run install`
 
-This verb installs the artisan scripts, making certain that the directories and files are set to their most restrictive permissions.  All artisan_run commands require the commands to be run as root, ie sudo.
+This verb installs the artisan scripts, making certain that the directories and files are set to their most restrictive permissions.  All artisan_run commands require the commands to be run as root, ie sudo.  So, when you first clone this repository, immediately run `sudo ./artisan_run install`
 
 * `./artisan_run interact`
 
@@ -108,6 +120,7 @@ When the systemd units have been created and installed, be aware that the podman
 ### django_artisan development
 
 It is a sensible idea to only make changes to the django_artisan codebase when the development server is up and running.  If you run `artisan_run clean` and take down and remove the pod and containers, and then make changes to the django_artisan codebase, then if there are any bugs, then when you run `artisan_run create` the script will fail if there are any bugs.  You can comment changes or fix the bugs, but until either of these `artisan_run create` will fail.  In order to see the output, start a shell in the $USERNAME account and then run the command `podman exec -it $DJANGO_CONTAINER_NAME bash`.  This will open a shell in the container (defaults to the name 'django_cont'), where you can then run the command `python /opt/$PROJECT_NAME/manage.py runserver 0.0.0.0:8000` to see the output.
+If you want to add a pip package to the installation, then you can run the command `podman exec -it $DJANGO_CONTAINER bash`.  $DJANGO_CONTAINER defaults to the string 'django_cont'.  When you are inside the container, activate the venv by running the command `source /home/artisan/bin/activate`.  Then run the command `pip install [package_name]`.  Once you are happy that you are keeping that package, you can edit the file 'pip_requirements_dev' or 'pip_requirements_prod' (or both), inside the dockerfiles directory.  I tend to add the package version number as standard to make sure I get a known working version. 
 
 ### options
 
