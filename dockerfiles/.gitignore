@@ -1,2 +1,4 @@
 /swag/default
 !/django/.gitignore
+/django/start.sh
+maria.sh
