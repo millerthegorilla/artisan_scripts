@@ -44,3 +44,4 @@ ipython==7.29.0
 # django-pipeline==2.0.7
 git+https://github.com/millerthegorilla/django-pipeline.git@main
 jsmin==3.0.0
+faker==11.1.0

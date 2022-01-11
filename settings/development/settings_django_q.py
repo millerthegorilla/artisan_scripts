@@ -274,6 +274,11 @@ THUMBNAIL_SIZE = (120,120)
 #THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.wand_engine.Engine'
 MAX_USER_IMAGES = 3
 
+# async front end
+MAX_USER_IMAGES = 3
+NUM_IMAGES_PER_REQUEST = 2
+LAZYLOAD_OFFSET = 1
+
 # django_forum
 IMAGE_UPLOAD_PATH = '/uploads/users/'
 
