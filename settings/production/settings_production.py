@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django_profile',
     'django_posts_and_comments',
     'django_forum',
+    'django_bs_carousel',
     'django_artisan',
     'django_email_verification',
     'django.contrib.admin',
@@ -57,16 +58,17 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl',
     'django_q',
     'dbbackup',
+    'pipeline',
 ]
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    #'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -218,6 +220,73 @@ MAX_UPLOAD_SIZE = 10485760
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o700
 FILE_UPLOAD_PERMISSIONS = 0o644
 
+# make packages abstract
+ABSTRACTPROFILE = True
+ABSTRACTFORUMPROFILE = True
+ABSTRACTMESSAGE = True
+ABSTRACTPOST = True
+POST_MODEL = 'django_artisan.Post'
+
+#django-pipeline
+STATICFILES_STORAGE = 'pipeline.storage.PipelineManifestStorage'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
+PIPELINE = {
+   'PIPELINE_ENABLED': True,
+    'JS_COMPRESSOR': 'pipeline.compressors.jsmin.JSMinCompressor',
+    'CSS_COMPRESSOR': 'pipeline.compressors.csshtmljsminify.CssHtmlJsMinifyCompressor',
+    'STYLESHEETS': {
+        'main_styles': {
+            'source_filenames': (
+              'django_artisan/css/styles.css',
+            ),
+            'output_filename': 'css/styles_min.css',
+        },
+        'registration_styles': {
+            'source_filenames': (
+              'django_users/css/balloons.css',
+            ),
+            'output_filename': 'css/blns_min.css',
+        },
+        'carousel_styles': {
+            'source_filenames': (
+                'django_bs_carousel/css/styles.css',
+            ),
+            'output_filename': 'css/crsl_min.css',
+        },
+    },
+    'JAVASCRIPT': {
+        'django_bs_carousel': {
+            'source_filenames': (
+              'django_bs_carousel/js/carousel.js',
+            ),
+            'output_filename': 'django_bs_carousel/js/c_min.js',
+        },
+        'django_bs_image_loader': {
+            'source_filenames': (
+                'django_bs_carousel/js/imageLoader.js',
+            ),
+            'output_filename': 'django_bs_carousel/js/il_min.js',
+        },
+        'django_forum': {
+            'source_filenames': (
+              'django_forum/js/*.js',
+         ),
+            'output_filename': 'js/df_min.js',
+        },
+        'django_artisan': {
+            'source_filenames': (
+                'django_artisan/js/profileUpdate.js',
+            ),
+            'output_filename': 'js/da_min.js',
+        }
+    }
+}
+
 # django_users
 LOGIN_REDIRECT_URL = reverse_lazy('django_artisan:post_list_view')
 LOGOUT_REDIRECT_URL = reverse_lazy('django_artisan:landing_page')
@@ -228,6 +297,12 @@ THUMBNAIL_SIZE = (120,120)
 # THUMBNAIL_DEBUG = True
 #THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.wand_engine.Engine'
 MAX_USER_IMAGES = 3
+
+# django_bs_carousel_lazy_load
+NUM_IMAGES_PER_REQUEST = 15
+LAZYLOAD_OFFSET = 2
+
+DJANGO_BS_CAROUSEL_IMAGE_MODEL = "django_artisan.UserProductImage"
 
 # django_forum
 IMAGE_UPLOAD_PATH = '/uploads/users/'

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_profile',
     'django_messages',
     'django_forum',
+    'django_bs_carousel',
     'django_artisan',
     'django_email_verification',
     'django.contrib.admin',
@@ -244,20 +245,53 @@ STATICFILES_FINDERS = (
 )
 
 PIPELINE = {
-    'PIPELINE_ENABLED': True,
+   'PIPELINE_ENABLED': True,
     'JS_COMPRESSOR': 'pipeline.compressors.jsmin.JSMinCompressor',
-    'JAVASCRIPT': {
-        'django_artisan_carousel': {
+    'CSS_COMPRESSOR': 'pipeline.compressors.csshtmljsminify.CssHtmlJsMinifyCompressor',
+    'STYLESHEETS': {
+        'main_styles': {
             'source_filenames': (
-              'django_artisan/js/carousel.js',
+              'django_artisan/css/styles.css',
             ),
-            'output_filename': 'django_artisan/js/carousel_min.js',
+            'output_filename': 'css/styles_min.css',
+        },
+        'registration_styles': {
+            'source_filenames': (
+              'django_users/css/balloons.css',
+            ),
+            'output_filename': 'css/blns_min.css',
+        },
+        'carousel_styles': {
+            'source_filenames': (
+                'django_bs_carousel/css/styles.css',
+            ),
+            'output_filename': 'css/crsl_min.css',
+        },
+    },
+    'JAVASCRIPT': {
+        'django_bs_carousel': {
+            'source_filenames': (
+              'django_bs_carousel/js/carousel.js',
+            ),
+            'output_filename': 'django_bs_carousel/js/c_min.js',
+        },
+        'django_bs_image_loader': {
+            'source_filenames': (
+                'django_bs_carousel/js/imageLoader.js',
+            ),
+            'output_filename': 'django_bs_carousel/js/il_min.js',
         },
         'django_forum': {
             'source_filenames': (
               'django_forum/js/*.js',
+         ),
+            'output_filename': 'js/df_min.js',
+        },
+        'django_artisan': {
+            'source_filenames': (
+                'django_artisan/js/profileUpdate.js',
             ),
-            'output_filename': 'js/django_forum.js',
+            'output_filename': 'js/da_min.js',
         }
     }
 }
@@ -274,10 +308,11 @@ THUMBNAIL_SIZE = (120,120)
 #THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.wand_engine.Engine'
 MAX_USER_IMAGES = 3
 
-# async front end
-MAX_USER_IMAGES = 3
-NUM_IMAGES_PER_REQUEST = 2
-LAZYLOAD_OFFSET = 1
+# django_bs_carousel_lazy_load
+NUM_IMAGES_PER_REQUEST = 15
+LAZYLOAD_OFFSET = 2
+
+DJANGO_BS_CAROUSEL_IMAGE_MODEL = "django_artisan.UserProductImage"
 
 # django_forum
 IMAGE_UPLOAD_PATH = '/uploads/users/'
