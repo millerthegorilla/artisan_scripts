@@ -24,7 +24,6 @@ while (( "$#" )); do
   case "$1" in
     install)
       ## added this option to archive it.
-      chown root:root -R * *.
       find . -type d -exec chmod 0550 {} +
       find . -type f -exec chmod 0440 {} +
       chmod 0550 -R *.sh
