@@ -299,6 +299,13 @@ THUMBNAIL_SIZE = (120,120)
 MAX_USER_IMAGES = 3
 
 # django_bs_carousel_lazy_load
+# the first two settings are used when uploading and imageby the management command makeusers
+# and are also used by the carousel.  In the management command, or when
+# images are uploaded, sorl-thumbnail creates two memoized images for later use
+# by the carousel, when the two values below are used as sizes for carousel.html
+IMAGE_SIZE_LARGE = "1024x768"
+IMAGE_SIZE_SMALL = "360x640"
+
 NUM_IMAGES_PER_REQUEST = 15
 LAZYLOAD_OFFSET = 2
 
