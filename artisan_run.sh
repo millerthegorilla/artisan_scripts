@@ -283,6 +283,7 @@ while (( "$#" )); do
       shift;
       COMMANDS="$*"
       runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"source /home/artisan/django_venv/bin/activate; echo ${COMMANDS}\""
+      exit $?
       ;;
     help|-h|-?|--help)
       echo -e "$ artisan_run command   - where command is one of clean,
