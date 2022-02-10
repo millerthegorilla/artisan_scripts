@@ -312,7 +312,7 @@ manage - connects to the python manage.py command inside the pod.  Run with
 
 postgit - in case you reinstall django_artisan filebase completes and copies
           manage.py and wsgi.py and copies them to the appropriate places and
-          sets the file and directory permissions inside the container correctly.
+          sets the file and directory permissions inside the container correctly
 
 refresh - deletes all images, downloads them and rebuilds the custom images.
 
@@ -322,8 +322,8 @@ reload - for production use only, kills and restarts the gunicorn process.
 
 status - reports the current status of the project.
 
-settings - replaces the settings file with one you choose from the dev/production
-           directory.
+settings - replaces the settings file with one you choose from the 
+           dev/production directory.
 
 update - runs apt-get update in all the containers.  Note that when you create a
          project you can specify that the containers are updated where possible,
