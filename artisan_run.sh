@@ -281,9 +281,9 @@ while (( "$#" )); do
       ;;
     help|-h|-?|--help)
       echo -e "$ artisan_run command   - where command is one of clean,\n 
-                 create [ variables, directories, help, images, containers, systemd ],\n
-                 install, interact, manage, postgit, refresh, replace, reload, status,\n
-                 settings, or update."
+create [ variables, directories, help, images, containers, systemd ],\n
+install, interact, manage, postgit, refresh, replace, reload, status,\n
+settings, or update."
       exit 0
       ;;
     *) # unsupported flags
