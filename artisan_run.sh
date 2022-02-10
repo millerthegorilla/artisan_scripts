@@ -284,29 +284,51 @@ while (( "$#" )); do
 create [ variables, directories, images, containers, systemd ],
 install, interact, manage, postgit, refresh, replace, reload, status,
 settings, update or help.
-clean - cleans the project, deleting the containers and pod, and deleting settings files etc
+
+clean - cleans the project, deleting the containers and pod, and deleting 
+        settings files etc.
+
 create - on its own creates a new project, running through the various stages
     which are:
        variables - gets variables from user
-       directories - creates the directories and lowers the machine's port numbers from 1024 to 80
-       images - pulls the podman images and creates the custom images - can take a long time.
+       directories - creates the directories and lowers the machine's port 
+                     numbers from 1024 to 80
+       images - pulls the podman images and creates the custom images - can
+                take a long time.
        containers - creates the containers from the container scripts
        systemd - creates and installs the systemd units
-    Use any combination of the stage names after the create verb to perform those stages
-install - when you first clone the repository, you can set the appropriate permissions using this verb.
-interact - commands following the interact verb will be run inside the podman pod using
-    systemd context.  You are often better to run podman pod exec -it container_name bash in the user account.
-manage - connects to the python manage.py command inside the pod.  Run with any manage commmand ie.
-    sudo ./artisan_run.sh manage createsuperuser.
-postgit - in case you reinstall django_artisan filebase completes and copies manage.py and wsgi.py and copies them
-    to the appropriate places and sets the file and directory permissions inside the container correctly.
+    Use any combination of the stage names after the create verb to perform
+    those stages.
+
+install - when you first clone the repository, you can set the appropriate 
+          permissions using this verb.
+
+interact - commands following the interact verb will be run inside the podman
+           pod using systemd context.  You are often better to run 
+           'podman pod exec -it container_name bash' in the user account.
+
+manage - connects to the python manage.py command inside the pod.  Run with 
+         any manage commmand ie.  sudo ./artisan_run.sh manage createsuperuser.
+
+postgit - in case you reinstall django_artisan filebase completes and copies
+          manage.py and wsgi.py and copies them to the appropriate places and
+          sets the file and directory permissions inside the container correctly.
+
 refresh - deletes all images, downloads them and rebuilds the custom images.
+
 replace - replaces manage.py and wsgi.py.
+
 reload - for production use only, kills and restarts the gunicorn process.
+
 status - reports the current status of the project.
-settings - replaces the settings file with one you choose from the dev/production directory.
-update - runs apt-get update in all the containers.  Note that when you create a project you can specify that the
-    containers are updated where possible, which will be done automatically by podman.
+
+settings - replaces the settings file with one you choose from the dev/production
+           directory.
+
+update - runs apt-get update in all the containers.  Note that when you create a
+         project you can specify that the containers are updated where possible,
+         which will be done automatically by podman.
+
 help - this text."
       exit 0
       ;;
