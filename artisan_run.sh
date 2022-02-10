@@ -280,7 +280,7 @@ while (( "$#" )); do
       runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + && find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0550 {} +\""
       ;;
     help|-h|-?|--help)
-      echo "$ artisan_run command   - where command is one of clean, \ncreate [ variables, directories, help, images, containers, systemd ], install, interact, manage, postgit, refresh, replace, reload, status, settings, or update."
+      echo -e "$ artisan_run command   - where command is one of clean, create [ variables, directories, help, images, containers, systemd ], install, interact, manage, postgit, refresh, replace, reload, status, settings, or update."
       exit 0
       ;;
     *) # unsupported flags
