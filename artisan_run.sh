@@ -288,7 +288,7 @@ while (( "$#" )); do
     help|-h|-?|--help)
       echo -e "$ artisan_run command   - where command is one of clean,
 create [ variables, directories, images, containers, systemd ],
-install, interact, manage, postgit, refresh, replace, reload, status,
+install, interact, manage, pip, postgit, refresh, replace, reload, status,
 settings, update or help.
 
 clean - cleans the project, deleting the containers and pod, and deleting 
@@ -316,6 +316,9 @@ interact - commands following the interact verb will be run inside the podman
 manage - connects to the python manage.py command inside the pod.  Run with 
          any manage commmand ie.  sudo ./artisan_run.sh manage createsuperuser.
 
+pip - enters a venv inside the django container and runs pip with the commands
+      that you supply.
+      
 postgit - in case you reinstall django_artisan filebase completes and copies
           manage.py and wsgi.py and copies them to the appropriate places and
           sets the file and directory permissions inside the container correctly
