@@ -282,7 +282,7 @@ while (( "$#" )); do
     pip)
       shift;
       COMMANDS="$*"
-      runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"source /home/artisan/django_venv/bin/activate; pip ${COMMANDS}\""
+      runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"su artisan; source /home/artisan/django_venv/bin/activate; pip ${COMMANDS}\""
       exit $?
       ;;
     help|-h|-?|--help)
