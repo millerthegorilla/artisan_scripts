@@ -202,12 +202,22 @@ So, the workflow to add some feature to django_artisan, is,
 5. if you do so, then add to the appropriate template, such as ${SCRIPTS_ROOT}/templates/env_files/settings_env, and put a corresponding import into settings.py ie if you are installing a new setting into settings.py
 6. update the systemd unit file if neccessary.
 
-### Problems
-The container_scripts `run_django_cont.sh` mounts the django source code volume inside the container.  If you want to symlink an app to the source code, the app needs to be mounted to a location inside the container, and then a symlink created inside the container using `podman exec -it django_cont bash`.  So, to edit the run_django_cont.sh file, look for the line:
+### App Source Code
+The container_scripts `run_django_cont.sh` mounts the django source code volume inside the container.  Edit the run_django_cont.sh file in the container_scripts directory, look for the line:
 
 ```
 runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" 
 ```
-and add a new -v path.  This takes two parameters, that are separated by a colon.  The first is the path on the host, and the second is the path inside the container.  
+and add a new -v path.  This takes two parameters, that are separated by a colon.  The first is the path on the host, and the second is the path inside the container.  Before you do this you need to edit the appropriate dockerfile, `dockerfile_django_dev`, adding the line `RUN mkdir -p /opt/${PROJECT_NAME}/[app_name]`.  This is the container directory that you will mount the app source code into.
 
-Have fun!
+So, I git clone my app's source code from github, and then edit the dockerfile to add the mkdir with the appname, and then mount the code directory into that directory, from the host source code directory (the one inside the git repo), using the -v switch to the podman run command.
+```
+runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z -v /home/dev/src/github_app_repo/app_name:/opt/${PROJECT_NAME}/app_name:Z ${DJANGO_IMAGE}" 
+```
+Note the :Z at the end of the -v switch parameters.  This is to tell selinux that the directory is private and unshared, and waives a bunch of selinux complaints, should you have selinux on your host system.
+<https://docs.podman.io/en/latest/markdown/podman-run.1.html#volume-v-source-volume-host-dir-container-dir-options>
+
+Then before creating the containers, you must delete the existing customised python image.  To do that, run the command `podman images` inside your standard user account, note the name of the custom image, and run the command `podman rmi python:custom_image_tag`.
+Then run `artisan_run.sh clean` and `artisan_run.sh create` and the code base will have the app source code mounted as a directory inside the django project.
+
+## Have fun!
