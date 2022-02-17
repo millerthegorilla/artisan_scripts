@@ -202,4 +202,12 @@ So, the workflow to add some feature to django_artisan, is,
 5. if you do so, then add to the appropriate template, such as ${SCRIPTS_ROOT}/templates/env_files/settings_env, and put a corresponding import into settings.py ie if you are installing a new setting into settings.py
 6. update the systemd unit file if neccessary.
 
+### Problems
+The container_scripts `run_django_cont.sh` mounts the django source code volume inside the container.  If you want to symlink an app to the source code, the app needs to be mounted to a location inside the container, and then a symlink created inside the container using `podman exec -it django_cont bash`.  So, to edit the run_django_cont.sh file, look for the line:
+
+```
+runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" 
+```
+and add a new -v path.  This takes two parameters, that are separated by a colon.  The first is the path on the host, and the second is the path inside the container.  
+
 Have fun!
