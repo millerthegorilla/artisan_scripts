@@ -7,6 +7,7 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y libmagic1 libmagickwand-dev libjpeg62-turbo-dev zlib1g-dev python3-pil python3-pil.imagetk graphviz graphviz-dev
 RUN rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /opt/${PROJECT_NAME}; 
+RUN mkdir -p /opt/${PROJECT_NAME}/django_bs_carousel;
 RUN mkdir -p /var/log/${PROJECT_NAME}; 
 RUN mkdir -p /etc/opt/${PROJECT_NAME}/settings; 
 RUN mkdir -p /etc/opt/${PROJECT_NAME}/static_files;
