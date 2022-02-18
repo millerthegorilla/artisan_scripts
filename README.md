@@ -63,6 +63,7 @@ To clean up completely, run the `./artisan_run clean`, answer yes to code remova
 * `./artisan_run create`
 
 The create verb runs the script create_directories.sh and then checks the podman images, and downloads them and/or builds them as necessary, in the script initial_provision.sh.  Then the script 'create_all.sh' is called which creates and provisions the containers.  Depending on your options, either a development setup will be created, running manage.py on port 8000, or a production setup will be created, opening ports 443 and 80.  In any case the create_directories.sh script will edit and reload sysctl to lower the available port numbers to 80.  Be aware that this can be a ***SECURITY ISSUE***.  As long as you manage your firewall sensibly it should be ok.
+Be aware that on a first install, or if rebuilding the custom image, this command takes a long time, as it builds the custom images from the dockerfiles.   When the custom images have been made, rerunning this command is reasonably quick.
 
 * `./artisan_run create [ variables, directories, images, containers, systemd ]`
 
@@ -73,6 +74,10 @@ In the case of a production install, it is best to create the system account wit
 * `./artisan_run install`
 
 This verb installs the artisan scripts, making certain that the directories and files are set to their most restrictive permissions.  All artisan_run commands require the commands to be run as root, ie sudo.  So, when you first clone this repository, immediately run `sudo ./artisan_run install`
+
+* `./artisan_run uninstall`
+
+This does the opposite of the install command, and puts files and directories back to the permissions that they had on the remote git repo.  So, when you want to git pull, you need to run this command first, or git will complain about unreachable files etc...
 
 * `./artisan_run interact`
 
@@ -218,6 +223,8 @@ Note the :Z at the end of the -v switch parameters.  This is to tell selinux tha
 <https://docs.podman.io/en/latest/markdown/podman-run.1.html#volume-v-source-volume-host-dir-container-dir-options>
 
 Then before creating the containers, you must delete the existing customised python image.  To do that, run the command `podman images` inside your standard user account, note the name of the custom image, and run the command `podman rmi python:custom_image_tag`.
-Then run `artisan_run.sh clean` and `artisan_run.sh create` and the code base will have the app source code mounted as a directory inside the django project.
+Then run `artisan_run.sh clean` and `artisan_run.sh create` and after the long build of the custom image the code base will have the app source code mounted as a directory inside the django project.
+However, you will not be able to access the files of that directory from your host.  You will be able to see the app directory name but none of the files inside.
+Not ideal, but it works.
 
 ## Have fun!
