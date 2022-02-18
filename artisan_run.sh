@@ -34,7 +34,7 @@ while (( "$#" )); do
     uninstall)
       read -p "Enter name of owner of scripts: " OWNER_NAME
       find . | xargs chown ${OWNER_NAME}:${OWNER_NAME}
-      chmod 0755 ./artisan_run.sh
+      chmod 0775 ./artisan_run.sh
       find . -type d | xargs chmod 0775
       find . -type f | xargs chmod 0664
       find . -type f -name "*.sh" | xargs chmod 0660
