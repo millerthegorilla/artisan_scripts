@@ -28,7 +28,7 @@ fi
 cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings/
 chown ${USER_NAME}:${USER_NAME} /etc/opt/${PROJECT_NAME}/settings/settings.py
 
-runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v /home/dev/django_bs_carousel:/opt/${PROJECT_NAME}/django_bs_carousel:Z,shared -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" # > ${SCRIPTS_ROOT}/systemd/.django_container_id 
+runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v /home/dev/django_bs_carousel/django_bs_carousel:/opt/${PROJECT_NAME}/django_bs_carousel:Z -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" # > ${SCRIPTS_ROOT}/systemd/.django_container_id 
 
 ## hack to prevent memory issues.  Clamav starts immediately from other container and hogs memory.  This waits until it finishes - moreorless... :)
 echo -e "waiting for django to finish starting..."
