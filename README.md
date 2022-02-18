@@ -225,6 +225,7 @@ Note the :Z at the end of the -v switch parameters.  This is to tell selinux tha
 Then before creating the containers, you must delete the existing customised python image.  To do that, run the command `podman images` inside your standard user account, note the name of the custom image, and run the command `podman rmi python:custom_image_tag`.
 Then run `artisan_run.sh clean` and `artisan_run.sh create` and after the long build of the custom image the code base will have the app source code mounted as a directory inside the django project.
 However, you will not be able to access the files of that directory from your host.  You will be able to see the app directory name but none of the files inside.
+So, in order to see the code, you will need to create a symbolic link from the app source directory that is inside the local git repo, to a link named 'app_name_shadow', inside the project directory.  You can then see the shadow copy inside the file browser of your editor or ide, and when you edit the code inside the shadow directory, runserver command will pick up the changes as the files are mounted inside the container's project directory.
 Not ideal, but it works.
 
 ## Have fun!
