@@ -104,6 +104,10 @@ TEMPLATES = [
     },
 ]
 
+# base_html for context_processors
+BASE_HTML = 'django_artisan/base.html'
+
+
 # to get debug toolbar to show up
 def show_toolbar(request):
     return True
@@ -363,8 +367,13 @@ SESSION_COOKIE_SECURE = True    # set this to true when using https
 # SESSION_SAVE_EVERY_REQUEST = True  #updates timestamp to increase session_cookie_age
 
 # the amount of time before a comment or post is hard deleted
-DELETION_TIMEOUT = timezone.timedelta(days=21)
-# the amount of time to wait before emails are sent to subscribed users
+DELETION_TIMEOUT = { 
+        'POST':timezone.timedelta(days=21),
+        'COMMENT':timezone.timedelta(days=14) 
+}
+
+# the amount of time to wait before emails are sent to subscribed users.  This is in case someone
+# deletes their comment immediately.
 COMMENT_WAIT = timezone.timedelta(seconds=600)
 # msg sent to subscribed users
 # the msg must include one pair of brackets, which will contain

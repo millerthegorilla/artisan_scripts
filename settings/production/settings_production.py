@@ -102,6 +102,9 @@ TEMPLATES = [
     },
 ]
 
+# base_html for context_processors
+BASE_HTML = 'django_artisan/base.html'
+
 # django-q
 Q_CLUSTER = {
     'name': 'DJRedis',
@@ -207,6 +210,7 @@ STATIC_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), STATIC_URL)
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), MEDIA_URL)
 
+# django artisan
 CONTENT_TYPES = ['image', 'video']
 # 2.5MB - 2621440
 # 5MB - 5242880
@@ -225,6 +229,7 @@ ABSTRACTPROFILE = True
 ABSTRACTFORUMPROFILE = True
 ABSTRACTMESSAGE = True
 ABSTRACTPOST = True
+ABSTRACTCOMMENT = False
 POST_MODEL = 'django_artisan.Post'
 
 #django-pipeline
@@ -292,31 +297,6 @@ LOGIN_REDIRECT_URL = reverse_lazy('django_artisan:post_list_view')
 LOGOUT_REDIRECT_URL = reverse_lazy('django_artisan:landing_page')
 LOGIN_URL = reverse_lazy('login')
 
-# sorl-thumbnail
-THUMBNAIL_SIZE = (120,120)
-# THUMBNAIL_DEBUG = True
-#THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.wand_engine.Engine'
-MAX_USER_IMAGES = 3
-
-# django_bs_carousel_lazy_load
-# the first two settings are used when uploading and imageby the management command makeusers
-# and are also used by the carousel.  In the management command, or when
-# images are uploaded, sorl-thumbnail creates two memoized images for later use
-# by the carousel, when the two values below are used as sizes for carousel.html
-IMAGE_SIZE_LARGE = "1024x768"
-IMAGE_SIZE_SMALL = "360x640"
-
-NUM_IMAGES_PER_REQUEST = 5
-
-CAROUSEL_RANDOMIZE_IMAGES = True
-CAROUSEL_USE_CACHE = False
-CAROUSEL_OFFSET = True
-CAROUSEL_IMG_PAUSE = 6500
-DJANGO_BS_CAROUSEL_IMAGE_MODEL = "django_artisan.UserProductImage"
-
-# django_forum
-IMAGE_UPLOAD_PATH = '/uploads/users/'
-
 # DJANGO-EMAIL-VERIFICATION SETTINGS
 def verified_callback(user):
     user.is_active = True
@@ -347,7 +327,33 @@ rprivkey = rprivkey if rprivkey != "" else "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4Wi
 RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
 RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
 
-SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error'
+
+# django_bs_carousel_lazy_load
+# the first two settings are used when uploading and imageby the management command makeusers
+# and are also used by the carousel.  In the management command, or when
+# images are uploaded, sorl-thumbnail creates two memoized images for later use
+# by the carousel, when the two values below are used as sizes for carousel.html
+IMAGE_SIZE_LARGE = "1024x768"
+IMAGE_SIZE_SMALL = "360x640"
+
+NUM_IMAGES_PER_REQUEST = 5
+
+CAROUSEL_RANDOMIZE_IMAGES = True
+CAROUSEL_USE_CACHE = False
+CAROUSEL_OFFSET = True
+CAROUSEL_IMG_PAUSE = 6500
+DJANGO_BS_CAROUSEL_IMAGE_MODEL = "django_artisan.UserProductImage"
+
+# django_forum
+IMAGE_UPLOAD_PATH = '/uploads/users/'
+
+# django messages
+# soft deletion
+DELETION_TIMEOUT = { 
+        'POST':timezone.timedelta(days=21),
+        'COMMENT':timezone.timedelta(days=14) 
+}
 
 ## SESSION SETTINGS
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -355,6 +361,20 @@ ESSION_COOKIE_AGE = 129600 # 36 hours.  # defaults to two weeks
 SESSION_COOKIE_SECURE = True    # set this to true when using https
 # SESSION_SAVE_EVERY_REQUEST = True  #updates timestamp to increase session_cookie_age
 
+# sorl-thumbnail
+THUMBNAIL_SIZE = (120,120)
+# THUMBNAIL_DEBUG = True
+#THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.wand_engine.Engine'
+MAX_USER_IMAGES = 3
+
+# django forum
+# the amount of time to wait before emails are sent to subscribed users.  This is in case someone
+# deletes their comment immediately.
+COMMENT_WAIT = timezone.timedelta(seconds=600)
+# msg sent to subscribed users
+# the msg must include one pair of brackets, which will contain
+# the href of the post
+SUBSCRIBED_MSG = "<h3 style='color: blue;'>Ceramic Isles</h3><br>A new comment has been added to a post that you are subscribed to!<br>Follow this link to view the post and comments: {}"
 
 # settings for bleach
 
