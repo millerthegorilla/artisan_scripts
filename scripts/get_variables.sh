@@ -97,7 +97,7 @@ then
     if [[ ${MOUNT_SRC_CODE} == "TRUE" ]]
     then
         cd /
-        untisl [[ -d "${SRC_CODE_PATH}" && ! -L "${SRC_CODE_PATH}" ]] 
+        until [[ -d "${SRC_CODE_PATH}" && ! -L "${SRC_CODE_PATH}" ]] 
         do
             echo -e 'mount source code directories (1) or mount git directories (2)'
             select sg in "src" "git"; do
