@@ -89,14 +89,26 @@ while (( "$#" )); do
             'VARIABLES')
                 echo -e "\nOkay, lets find out more about you...\n"
                 ${SCRIPTS_ROOT}/scripts/get_variables.sh
+                if [[ $? -ne 0 ]]
+                then
+                  exit $?
+                fi
             ;;
             'DIRECTORIES')
                 echo -e "\nNow I will create the directtories, and I will open ports below 1024 on this machine.\n"
                 ${SCRIPTS_ROOT}/scripts/create_directories.sh
+                if [[ $? -ne 0 ]]
+                then
+                  exit $?
+                fi
             ;;
             'IMAGES')
                 echo -e "\nI will now download and provision container images, if they are not already present.\n"
                 ${SCRIPTS_ROOT}/scripts/initial_provision.sh
+                if [[ $? -ne 0 ]]
+                then
+                  exit $?
+                fi
             ;;
             'CONTAINERS')
                 echo -e "\n and now I will create the containers...\n"
