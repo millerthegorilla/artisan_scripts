@@ -33,7 +33,8 @@ while (( "$#" )); do
       exit $?
       ;;
     uninstall)
-      read -p "Enter name of owner of scripts: " OWNER_NAME
+      SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+      OWNER_NAME=$(stat -c "%U" SCRIPT_DIR)
       find . | xargs chown ${OWNER_NAME}:${OWNER_NAME}
       find . -type d | xargs chmod 0775
       find . -type f | xargs chmod 0664
