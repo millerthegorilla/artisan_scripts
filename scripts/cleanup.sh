@@ -196,7 +196,7 @@ then
     then
         PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
     fi
-    read -p "enter the name of the django project folder (where wsgi.py resides) [${PN}] : " DJANGO_PROJECT_NAME
+    read -p "enter the name of the django project folder (where wsgi.py resides) [${PN}] : " -e DJANGO_PROJECT_NAME
     DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME:-${PN}}
 fi
 

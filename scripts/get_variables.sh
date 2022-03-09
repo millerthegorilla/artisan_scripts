@@ -128,17 +128,8 @@ then
         dockerfile_app_names="RUN "
         for app_name in $(ls ${SRC_CODE_PATH});
         do 
-            echo -e ${app_name}
             dockerfile_app_names="${dockerfile_app_names}mkdir -p /opt/${PROJECT_NAME}/${app_name}; "
-            echo -e ${dockerfile_app_names}
         done
-#         RUN mkdir -p /opt/${PROJECT_NAME}/django_artisan;
-#         RUN mkdir -p /opt/${PROJECT_NAME}/django_bs_carousel;
-#         RUN mkdir -p /opt/${PROJECT_NAME}/django_forum;
-# RUN mkdir -p /opt/${PROJECT_NAME}/django_messages;
-# RUN mkdir -p /opt/${PROJECT_NAME}/django_profile;
-# RUN mkdir -p /opt/${PROJECT_NAME}/django_users;
-# RUN mkdir -p /opt/${PROJECT_NAME}/safe_imagefield;
     fi
 fi
 echo -e dockerfile_app_names is ${dockerfile_app_names}
@@ -320,7 +311,6 @@ echo DB_VOL_NAME=${db_vol_name} >> .proj
 
 ### TEMPLATES
 cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst > ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
-exit 1
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
 cat ${SCRIPTS_ROOT}/templates/settings/archive | envsubst > ${SCRIPTS_ROOT}/.archive
