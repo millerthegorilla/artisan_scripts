@@ -33,7 +33,7 @@ if [[ ! -n "$CODE_PATH" ]]
 then
     until [[ -n "${CODE_PATH}" ]]
     do
-        read -p "enter path to code (where manage.py resides) : " CODE_PATH
+        read -e "enter path to code (where manage.py resides) : " CODE_PATH
         if [[ -z "${CODE_PATH}" ]]
         then
             echo -e "the path to the code must be set to continue.  Try again or ctrl/c to quit."
