@@ -122,7 +122,9 @@ fi
 rm -r ${SCRIPTS_ROOT}/dockerfiles/django/*
 rm ${SCRIPTS_ROOT}/dockerfiles/maria.sh
 rm ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
-if [ -z ${CODE_PATH} ];
+echo code path is ${CODE_PATH}
+
+if [ -n ${CODE_PATH} ];
 then
     echo "CODE_PATH has been found and links are to be deleted!"
     find ${CODE_PATH} -type l -delete
@@ -180,7 +182,7 @@ fi
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
-    if [ -z ${CODE_PATH} ];
+    if [ -n ${CODE_PATH} ];
     then
         chown ${USER_NAME}:${USER_NAME} -R ${CODE_PATH}
         find ${CODE_PATH} -type f -exec chmod 0644 {} +
@@ -193,7 +195,7 @@ fi
 
 if [[ ! -n "$DJANGO_PROJECT_NAME" ]]
 then
-    if [ -z ${CODE_PATH} ];
+    if [ -n ${CODE_PATH} ];
     then
         PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
     fi
@@ -213,7 +215,7 @@ if [[ ${mediafiles_remove} == 1 ]]
 then
     if [[ -n ${DEBUG} && ${DEBUG} == "TRUE" ]]
     then
-        if [ -z ${CODE_PATH} ];
+        if [ -n ${CODE_PATH} ];
         then  
             rm -rf ${CODE_PATH}/media/cache
             rm -rf ${CODE_PATH}/media/uploads
@@ -225,7 +227,7 @@ then
     fi
 fi
 
-if [ -z ${CODE_PATH} ];
+if [ -n ${CODE_PATH} ];
 then
     if [[ ${DEBUG} == "TRUE" ]]
     then
