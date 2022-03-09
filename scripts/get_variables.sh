@@ -113,7 +113,8 @@ then
                 SMSG='Symlinks will be to the source code directories inside the git repository.  You will have to manually track source code changes, updating each git in each repository.'
             fi
             echo -e 'Absolute path to git repository (the folder where your app directories reside) - *IMPORTANT* There must only be git repository directories at this path, ie each subdirectory of this path must be of the form "app_name" which must be a git repository for your app, and must have the subdirectory "app_name" containing the django_source_code.'
-            read -p ${SMSG} -e SRC_CODE_PATH
+            echo -e ${SMSG}
+            read -e SRC_CODE_PATH
             if [[ ! -d "${SRC_CODE_PATH}" ]]
             then
                echo -e "That path doesn't exist!"
