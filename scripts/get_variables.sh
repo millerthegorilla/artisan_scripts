@@ -87,20 +87,37 @@ fi
 
 if [[ ${DEBUG} ]] == "TRUE"
 then
-    cd /
-    until [[ -d "${SRC_CODE_PATH}" && ! -L "${SRC_CODE_PATH}" ]] 
-    do
-        read -p 'Absolute path to source code (th folder where your app directories reside) - *IMPORTANT* There must only be app source code directories at this path, ie each
-        subdirectory of this path must be of the form 'app_name/app_name/django_source_code/' : ' -e SRC_CODE_PATH
-        if [[ ! -d "${SRC_CODE_PATH}" ]]
-        then
-           echo -e "That path doesn't exist!"
-        fi
-        if [[ -L "${SRC_CODE_PATH}" ]]
-        then
-            echo -e "Code path must not be a symbolic link"
-        fi
+    echo -e 'mount app source code directories'
+    select sg in "src" "git"; do
+        case $sg in
+            src ) MOUNT_SRC_CODE="TRUE"; break;;
+            git ) MOUNT_SRC_CODE="FALSE"; break;;
+        esac
     done
+    if [[ ${MOUNT_SRC_CODE} == "TRUE" ]]
+    then
+        cd /
+        until [[ -d "${SRC_CODE_PATH}" && ! -L "${SRC_CODE_PATH}" ]] 
+        do
+            read -p 'Absolute path to source code (the folder where your app directories reside) - *IMPORTANT* There must only be app source code directories at this path, ie each
+            subdirectory of this path must be of the form 'app_name/app_name/django_source_code/' : ' -e SRC_CODE_PATH
+            if [[ ! -d "${SRC_CODE_PATH}" ]]
+            then
+               echo -e "That path doesn't exist!"
+            fi
+            if [[ -L "${SRC_CODE_PATH}" ]]
+            then
+                echo -e "Code path must not be a symbolic link"
+            fi
+        done
+        echo -e 'mount source code directories (1) or mount git directories (2)'
+        select sg in "src" "git"; do
+            case $sg in
+                src ) MOUNT_GIT="FALSE"; break;;
+                git ) MOUNT_GIT="TRUE"; break;;
+            esac
+        done
+    fi
 fi
 
 if [[ ${DEBUG} == "TRUE" && $(id -u ${USER_NAME}) -lt 1000 ]]
@@ -264,6 +281,8 @@ echo USER_DIR=${USER_DIR} >> .proj
 echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
 echo CODE_PATH=${CODE_PATH} >> .proj
 echo SRC_CODE_PATH=${SRC_CODE_PATH} >> .proj
+echo MOUNT_SRC_CODE=${MOUNT_SRC_CODE} >> .proj
+echo MOUNT_GIT=${MOUNT_GIT} >> .proj
 echo EXTRA_DOMAINS=${EXTRA_DOMAINS} >> .proj
 echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj
 echo DB_NAME=${db_name} >> .proj
