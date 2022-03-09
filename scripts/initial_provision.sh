@@ -18,7 +18,7 @@ rm /home/${USER_NAME}/image_acq.sh /home/${USER_NAME}/.proj
 
 function build_django()
 {
-  echo -e "building custom image.  This can take a long time..."
+  echo -e "\n*** Building custom image.  This can take a *long* time... ***\n"
   mkdir -p /home/${USER_NAME}/django && cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/* /home/${USER_NAME}/django/
   chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/django
   cp ${SCRIPTS_ROOT}/dockerfiles/${1} /home/${USER_NAME}/${1}

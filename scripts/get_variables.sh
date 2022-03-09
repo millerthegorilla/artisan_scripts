@@ -124,6 +124,18 @@ then
                 echo -e "Code path must not be a symbolic link"
             fi
         done
+        dockerfile_app_names=""
+        for app_name in $(ls ${SRC_CODE_PATH});
+        do 
+            dockerfile_app_names=${dockerfile_app_names}RUN mkdir -p /opt/${PROJECT_NAME}/${app_name};
+        done
+#         RUN mkdir -p /opt/${PROJECT_NAME}/django_artisan;
+#         RUN mkdir -p /opt/${PROJECT_NAME}/django_bs_carousel;
+#         RUN mkdir -p /opt/${PROJECT_NAME}/django_forum;
+# RUN mkdir -p /opt/${PROJECT_NAME}/django_messages;
+# RUN mkdir -p /opt/${PROJECT_NAME}/django_profile;
+# RUN mkdir -p /opt/${PROJECT_NAME}/django_users;
+# RUN mkdir -p /opt/${PROJECT_NAME}/safe_imagefield;
     fi
 fi
 cd ${SCRIPTS_ROOT}
@@ -303,6 +315,8 @@ echo SWAG_VOL_NAME=${swag_vol_name} >> .proj
 echo DB_VOL_NAME=${db_vol_name} >> .proj
 
 ### TEMPLATES
+cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
+exit 1
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
 cat ${SCRIPTS_ROOT}/templates/settings/archive | envsubst > ${SCRIPTS_ROOT}/.archive
