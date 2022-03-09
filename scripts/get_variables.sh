@@ -282,26 +282,24 @@ echo -n $db_password | runuser --login "${USER_NAME}" -c "podman secret create \
 
 
 # variables for create_directories.sh
-echo $(whoami)
-touch .proj
-echo PROJECT_NAME=${PROJECT_NAME} > .proj
-echo USER_NAME=${USER_NAME} >> .proj
-echo USER_DIR=${USER_DIR} >> .proj
-echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
-echo CODE_PATH=${CODE_PATH} >> .proj
-echo SRC_CODE_PATH=${SRC_CODE_PATH} >> .proj
-echo MOUNT_SRC_CODE=${MOUNT_SRC_CODE} >> .proj
-echo MOUNT_GIT=${MOUNT_GIT} >> .proj
-echo EXTRA_DOMAINS=${EXTRA_DOMAINS} >> .proj
-echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj
-echo DB_NAME=${db_name} >> .proj
-echo DB_USER=${db_user} >> .proj
-echo DB_HOST=${db_host} >> .proj
-echo DB_PASSWORD=${db_password} >> .proj
-echo DEBUG=${DEBUG} >> .proj
-echo XDESK=${XDESK} >> .proj
-echo SWAG_VOL_NAME=${swag_vol_name} >> .proj
-echo DB_VOL_NAME=${db_vol_name} >> .proj
+sudo bash -c 'echo PROJECT_NAME=${PROJECT_NAME} > .proj;
+echo USER_NAME=${USER_NAME} >> .proj;
+echo USER_DIR=${USER_DIR} >> .proj;
+echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj;
+echo CODE_PATH=${CODE_PATH} >> .proj;
+echo SRC_CODE_PATH=${SRC_CODE_PATH} >> .proj;
+echo MOUNT_SRC_CODE=${MOUNT_SRC_CODE} >> .proj;
+echo MOUNT_GIT=${MOUNT_GIT} >> .proj;
+echo EXTRA_DOMAINS=${EXTRA_DOMAINS} >> .proj;
+echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj;
+echo DB_NAME=${db_name} >> .proj;
+echo DB_USER=${db_user} >> .proj;
+echo DB_HOST=${db_host} >> .proj;
+echo DB_PASSWORD=${db_password} >> .proj;
+echo DEBUG=${DEBUG} >> .proj;
+echo XDESK=${XDESK} >> .proj;
+echo SWAG_VOL_NAME=${swag_vol_name} >> .proj;
+echo DB_VOL_NAME=${db_vol_name} >> .proj;'
 
 ### TEMPLATES
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
