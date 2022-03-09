@@ -126,7 +126,6 @@ echo code path is ${CODE_PATH}
 
 if [ -n ${CODE_PATH} ];
 then
-    echo "CODE_PATH has been found and links are to be deleted!"
     find ${CODE_PATH} -type l -delete
 fi
 
