@@ -85,7 +85,7 @@ then
     done
 fi
 
-if [[ ${DEBUG} ]] == "TRUE"
+if [[ ${DEBUG} == "TRUE" ]]
 then
     echo -e 'mount app source code directories'
     select sg in "src" "git"; do
