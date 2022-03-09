@@ -88,10 +88,10 @@ fi
 if [[ ${DEBUG} == "TRUE" ]]
 then
     echo -e 'mount app source code directories'
-    select sg in "src" "git"; do
-        case $sg in
-            src ) MOUNT_SRC_CODE="TRUE"; break;;
-            git ) MOUNT_SRC_CODE="FALSE"; break;;
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) MOUNT_SRC_CODE="TRUE"; break;;
+            No ) MOUNT_SRC_CODE="FALSE"; break;;
         esac
     done
     if [[ ${MOUNT_SRC_CODE} == "TRUE" ]]
