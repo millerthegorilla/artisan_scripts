@@ -124,6 +124,7 @@ rm ${SCRIPTS_ROOT}/dockerfiles/maria.sh
 rm ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
 if [ -z ${CODE_PATH} ];
 then
+    echo "CODE_PATH has been found and links are to be deleted!"
     find ${CODE_PATH} -type l -delete
 fi
 
