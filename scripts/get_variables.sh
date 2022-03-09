@@ -132,7 +132,7 @@ then
         done
     fi
 fi
-echo -e dockerfile_app_names is ${dockerfile_app_names}
+
 cd ${SCRIPTS_ROOT}
 
 if [[ ${DEBUG} == "TRUE" && $(id -u ${USER_NAME}) -lt 1000 ]]
