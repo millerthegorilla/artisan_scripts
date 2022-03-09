@@ -283,6 +283,7 @@ echo -n $db_password | runuser --login "${USER_NAME}" -c "podman secret create \
 
 # variables for create_directories.sh
 echo $(whoami)
+touch .proj
 echo PROJECT_NAME=${PROJECT_NAME} > .proj
 echo USER_NAME=${USER_NAME} >> .proj
 echo USER_DIR=${USER_DIR} >> .proj
