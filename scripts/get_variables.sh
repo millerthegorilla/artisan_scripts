@@ -129,7 +129,7 @@ then
         for app_name in $(ls ${SRC_CODE_PATH});
         do 
             echo -e ${app_name}
-            dockerfile_app_names=${dockerfile_app_names}\nRUN mkdir -p /opt/${PROJECT_NAME}/${app_name};
+            dockerfile_app_names="${dockerfile_app_names}\nRUN mkdir -p /opt/${PROJECT_NAME}/${app_name};"
             echo -e ${dockerfile_app_names}
         done
 #         RUN mkdir -p /opt/${PROJECT_NAME}/django_artisan;
