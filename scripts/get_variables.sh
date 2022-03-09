@@ -97,10 +97,22 @@ then
     if [[ ${MOUNT_SRC_CODE} == "TRUE" ]]
     then
         cd /
-        until [[ -d "${SRC_CODE_PATH}" && ! -L "${SRC_CODE_PATH}" ]] 
+        untisl [[ -d "${SRC_CODE_PATH}" && ! -L "${SRC_CODE_PATH}" ]] 
         do
-            read -p 'Absolute path to source code (the folder where your app directories reside) - *IMPORTANT* There must only be app source code directories at this path, ie each
-            subdirectory of this path must be of the form 'app_name/app_name/django_source_code/' : ' -e SRC_CODE_PATH
+            echo -e 'mount source code directories (1) or mount git directories (2)'
+            select sg in "src" "git"; do
+                case $sg in
+                    src ) MOUNT_GIT="FALSE"; break;;
+                    git ) MOUNT_GIT="TRUE"; break;;
+                esac
+            done
+            if [[ ${MOUNT_GIT} == "TRUE" ]]
+            then
+                SMSG='Symlinks will be to the git repository to allow you to use git submodules to track your code changes.'
+            else
+                SMSG='Symlinks will be to the source code directories inside the git repository.  You will have to manually track source code changes, updating each git in each repository'
+            fi
+            read -p 'Absolute path to git repository (the folder where your app directories reside) - *IMPORTANT* There must only be git repository directories at this path, ie each subdirectory of this path must be of the form "app_name/" which must be a git repository for your app, and must have the subdirectory "app_name/" containing the django_source_code.  '${SMSG} -e SRC_CODE_PATH
             if [[ ! -d "${SRC_CODE_PATH}" ]]
             then
                echo -e "That path doesn't exist!"
@@ -109,13 +121,6 @@ then
             then
                 echo -e "Code path must not be a symbolic link"
             fi
-        done
-        echo -e 'mount source code directories (1) or mount git directories (2)'
-        select sg in "src" "git"; do
-            case $sg in
-                src ) MOUNT_GIT="FALSE"; break;;
-                git ) MOUNT_GIT="TRUE"; break;;
-            esac
         done
     fi
 fi
