@@ -115,11 +115,17 @@ then
     if [[ code_remove -eq 1 ]]
     then
 	   rm -rf ${CODE_PATH}
+       unset CODE_PATH
     fi
 fi
 
 rm -r ${SCRIPTS_ROOT}/dockerfiles/django/*
 rm ${SCRIPTS_ROOT}/dockerfiles/maria.sh
+rm ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
+if [ -z ${CODE_PATH} ];
+then
+    find ${CODE_PATH} -type l -delete
+fi
 
 echo -e "remove all podman images (choose a number)?"
 select yn in "Yes" "No"; do
@@ -173,17 +179,23 @@ fi
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
-    chown ${USER_NAME}:${USER_NAME} -R ${CODE_PATH}
+    if [ -z ${CODE_PATH} ];
+    then
+        chown ${USER_NAME}:${USER_NAME} -R ${CODE_PATH}
+        find ${CODE_PATH} -type f -exec chmod 0644 {} +
+        find ${CODE_PATH} -type d -exec chmod 0755 {} +
+    fi
     chown ${USER_NAME}:${USER_NAME} -R /etc/opt/${PROJECT_NAME}
-    find ${CODE_PATH} -type f -exec chmod 0644 {} +
-    find ${CODE_PATH} -type d -exec chmod 0755 {} +
     find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0644 {} +
     find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0755 {} +
 fi
 
 if [[ ! -n "$DJANGO_PROJECT_NAME" ]]
 then
-    PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
+    if [ -z ${CODE_PATH} ];
+    then
+        PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
+    fi
     read -p "enter the name of the django project folder (where wsgi.py resides) [${PN}] : " DJANGO_PROJECT_NAME
     DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME:-${PN}}
 fi
@@ -199,9 +211,12 @@ done
 if [[ ${mediafiles_remove} == 1 ]]
 then
     if [[ -n ${DEBUG} && ${DEBUG} == "TRUE" ]]
-    then   
-        rm -rf ${CODE_PATH}/media/cache
-        rm -rf ${CODE_PATH}/media/uploads
+    then
+        if [ -z ${CODE_PATH} ];
+        then  
+            rm -rf ${CODE_PATH}/media/cache
+            rm -rf ${CODE_PATH}/media/uploads
+        fi
     elif [[ -n ${DEBUG} && ${DEBUG} == "FALSE" ]]
     then
         rm -rf $/etc/opt/${PROJECT_NAME}/static/media/cache
@@ -209,12 +224,15 @@ then
     fi
 fi
 
-if [[ ${DEBUG} == "TRUE" ]]
+if [ -z ${CODE_PATH} ];
 then
-    rm ${CODE_PATH}/manage.py
-    rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
-else
-    rm -rf ${CODE_PATH}/manage.py ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+    if [[ ${DEBUG} == "TRUE" ]]
+    then
+        rm ${CODE_PATH}/manage.py
+        rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+    else
+        rm -rf ${CODE_PATH}/manage.py ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+    fi
 fi
 
 if [[ -n "${PROJECT_NAME}" ]]
