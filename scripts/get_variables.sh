@@ -85,6 +85,7 @@ then
     done
 fi
 
+dockerfile_app_names=""
 if [[ ${DEBUG} == "TRUE" ]]
 then
     echo -e 'mount app source code directories'
@@ -138,6 +139,7 @@ then
 # RUN mkdir -p /opt/${PROJECT_NAME}/safe_imagefield;
     fi
 fi
+echo -e dockerfile_app_names is ${dockerfile_app_names}
 cd ${SCRIPTS_ROOT}
 
 if [[ ${DEBUG} == "TRUE" && $(id -u ${USER_NAME}) -lt 1000 ]]
@@ -315,7 +317,7 @@ echo SWAG_VOL_NAME=${swag_vol_name} >> .proj
 echo DB_VOL_NAME=${db_vol_name} >> .proj
 
 ### TEMPLATES
-cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
+cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst > ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
 exit 1
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
