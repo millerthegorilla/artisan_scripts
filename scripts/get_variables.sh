@@ -44,7 +44,7 @@ done
 cd /
 until [[ -d "${CODE_PATH}" && ! -L "${CODE_PATH}" ]] 
 do
-    read -p 'Absolute path to code (the django_artisan folder where manage.py resides) : ' -e CODE_PATH
+    read -p 'Absolute path to code (the folder where manage.py resides) : ' -e CODE_PATH
     if [[ ! -d "${CODE_PATH}" ]]
     then
        echo -e "That path doesn't exist!"
@@ -310,7 +310,7 @@ echo SWAG_VOL_NAME=${swag_vol_name} >> .proj
 echo DB_VOL_NAME=${db_vol_name} >> .proj
 
 ### TEMPLATES
-cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst > ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
+cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst '$dockerfile_app_names' > ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
 cat ${SCRIPTS_ROOT}/templates/settings/archive | envsubst > ${SCRIPTS_ROOT}/.archive
