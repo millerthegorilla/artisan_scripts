@@ -97,6 +97,9 @@ TEMPLATES = [
                 'django_forum.context_processors.siteName',
                 'django_artisan.context_processors.navbarSpiel',
                 'django_artisan.context_processors.siteLogo',
+                'django_artisan.context_processors.base_html',
+                'django_artisan.context_processors.category_visible',
+                'django_artisan.context_processors.location_visible',
             ],
         },
     },
@@ -442,6 +445,9 @@ SITE_DOMAIN = str(os.getenv("DUCKDNS_DOMAIN"))
 #for the sites framework so that sitemaps will work
 SITE_ID = 1
 
+# category and location
+SHOW_CATEGORY = True
+SHOW_LOCATION = True
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _

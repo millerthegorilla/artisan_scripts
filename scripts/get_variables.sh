@@ -85,6 +85,24 @@ then
     done
 fi
 
+if [[ ${DEBUG} ]] == "TRUE"
+then
+    cd /
+    until [[ -d "${SRC_CODE_PATH}" && ! -L "${SRC_CODE_PATH}" ]] 
+    do
+        read -p 'Absolute path to source code (th folder where your app directories reside) - *IMPORTANT* There must only be app source code directories at this path, ie each
+        subdirectory of this path must be of the form 'app_name/app_name/django_source_code/' : ' -e SRC_CODE_PATH
+        if [[ ! -d "${SRC_CODE_PATH}" ]]
+        then
+           echo -e "That path doesn't exist!"
+        fi
+        if [[ -L "${SRC_CODE_PATH}" ]]
+        then
+            echo -e "Code path must not be a symbolic link"
+        fi
+    done
+fi
+
 if [[ ${DEBUG} == "TRUE" && $(id -u ${USER_NAME}) -lt 1000 ]]
 then
     echo -e "      ** warning **\n\nIt is not reccommended to use a service account when using debug mode.\n  If you wish to continue, use ./artisan_run.sh output to display the output from the runserver command.\nAlternatively, and better still (more secure), use a standard user account.\n"
@@ -245,6 +263,7 @@ echo USER_NAME=${USER_NAME} >> .proj
 echo USER_DIR=${USER_DIR} >> .proj
 echo SCRIPTS_ROOT=${SCRIPTS_ROOT} >> .proj
 echo CODE_PATH=${CODE_PATH} >> .proj
+echo SRC_CODE_PATH=${SRC_CODE_PATH} >> .proj
 echo EXTRA_DOMAINS=${EXTRA_DOMAINS} >> .proj
 echo DUCKDNS_SUBDOMAIN=${DUCKDNS_SUBDOMAIN} >> .proj
 echo DB_NAME=${db_name} >> .proj

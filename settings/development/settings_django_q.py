@@ -99,6 +99,9 @@ TEMPLATES = [
                 'django_forum.context_processors.siteName',
                 'django_artisan.context_processors.navbarSpiel',
                 'django_artisan.context_processors.siteLogo',
+                'django_artisan.context_processors.base_html',
+                'django_artisan.context_processors.category_visible',
+                'django_artisan.context_processors.location_visible',
             ],
         },
     },
@@ -449,6 +452,10 @@ SITE_DOMAIN = '127.0.0.1:8000'
 #for the sites framework so that sitemaps will work
 SITE_ID = 1
 
+# category and location
+SHOW_CATEGORY = True
+SHOW_LOCATION = True
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 class CATEGORY(models.TextChoices):
@@ -465,6 +472,7 @@ class LOCATION(models.TextChoices):
     JERSEY = 'JE', _('Jersey')
     SARK = 'SK', _('Sark')
 
+# logging
 def skip_mtime_seen(record):
     if 'mtime' in record.getMessage():  # filter whatever you want
         return False
