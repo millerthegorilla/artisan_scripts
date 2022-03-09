@@ -37,14 +37,14 @@ then
         do  
             APP_MOUNTS="${APP_MOUNTS} -v ${SRC_CODE_PATH}/${app_name}/${app_name}:/opt/${PROJECT_NAME}/${app_name}:Z"
         done
-        runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} ${APP_MOUNTS} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" # > ${SCRIPTS_ROOT}/systemd/.django_container_id
+        runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} "${APP_MOUNTS}" -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" # > ${SCRIPTS_ROOT}/systemd/.django_container_id
         for app_name in $(ls ${SRC_CODE_PATH});
         do 
             if [[ "${MOUNT_GIT}" == "FALSE" ]]
             then
-                ln -s ${SRC_CODE_PATH}/${app_name}/${app_name} ${CODE_PATH}/${app_name}_src
+                ln -s ${SRC_CODE_PATH}${app_name}/${app_name} ${CODE_PATH}/${app_name}_src
             else
-                ln -s ${SRC_CODE_PATH}/${app_name} ${CODE_PATH}/${app_name}_git
+                ln -s ${SRC_CODE_PATH}${app_name} ${CODE_PATH}/${app_name}_git
             fi
         done
     fi 
