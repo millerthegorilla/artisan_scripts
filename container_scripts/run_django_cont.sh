@@ -44,9 +44,9 @@ then
         do 
             if [[ "${MOUNT_GIT}" == "FALSE" ]]
             then
-                ln -s ${SRC_CODE_PATH}${app_name}/${app_name} ${CODE_PATH}/${app_name}_src
+                runuser --login ${USER_NAME} -P -c "ln -s ${SRC_CODE_PATH}${app_name}/${app_name} ${CODE_PATH}/${app_name}_src"
             else
-                ln -s ${SRC_CODE_PATH}${app_name} ${CODE_PATH}/${app_name}_git
+                runuser --login ${USER_NAME} -P -c "ln -s ${SRC_CODE_PATH}${app_name} ${CODE_PATH}/${app_name}_git"
             fi
         done
     fi 
