@@ -81,7 +81,6 @@ fi
 ## -o uid etc creates euid inside container ie 166355 when viewed on host.
 runuser --login ${USER_NAME} -c "podman volume create ${DB_VOL_NAME}"
 runuser --login ${USER_NAME} -c "podman volume create ${SWAG_VOL_NAME}"
-runuser --login ${USER_NAME} -c "podman volume create cert_vol2"
 
 SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_clamd_cont.sh
 SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/container_scripts/run_redis_cont.sh

@@ -25,7 +25,7 @@ DJANGO_CONT_STATIC_VOL="/etc/opt/${PROJECT_NAME}/static_files"
 
 ## CLAMAV
 CLAM_CONT_NAME="clamav_cont"
-CLAM_IMAGE="docker.io/mkodockx/docker-clamav:latest"
+CLAM_IMAGE="docker.io/clamav/clamav:0.104.0_base"
 
 ## DUCKDNS/SWAG
 DUCKDNS_CONT_NAME="duckdns_cont"
