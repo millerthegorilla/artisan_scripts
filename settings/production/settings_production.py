@@ -17,8 +17,14 @@ from pathlib import Path
 import sys, os
 from django.urls import reverse_lazy
 
+## TODO: clearsessions cron job
+from django.utils import timezone
+
 from dotenv import load_dotenv
 load_dotenv()
+
+DEBUG=False
+MYPY=False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = str(os.getenv("BASE_DIR"))
