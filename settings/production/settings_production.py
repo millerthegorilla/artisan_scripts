@@ -330,7 +330,7 @@ rprivkey = rprivkey if rprivkey != "" else "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4Wi
 RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
 RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_PRIVATE_KEY"))
 
-SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error'
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 # django_bs_carousel_lazy_load
 # the first two settings are used when uploading and imageby the management command makeusers
