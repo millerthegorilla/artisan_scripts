@@ -29,7 +29,7 @@ pytz==2021.1
 six==1.15.0
 sorl-thumbnail==12.7.0
 sqlparse==0.4.1
-urllib3==1.26.4
+urllib3==1.23.0
 webencodings==0.5.1
 random_username==1.0.2
 crispy_bootstrap5==0.6
