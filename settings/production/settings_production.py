@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django_password_validators.password_history',
     'django_users',
     'django_profile',
-    'django_posts_and_comments',
+    'django_messages',
     'django_forum',
     'django_bs_carousel',
     'django_artisan',
@@ -68,7 +68,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
