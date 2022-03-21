@@ -26,10 +26,10 @@ then
     podman pull docker.io/library/redis:6.2.2-buster &
 fi
 
-podman image exists clamav:0.104.0_base
+podman image exists docker.io/tiredofit/clamav:latest
 if [[ ! $? -eq 0 ]]
 then
-    podman pull docker.io/clamav/clamav:0.104.0_base &
+    podman pull docker.io/tiredofit/clamav:latest &
 fi
 
 podman image exists duckdns:latest
