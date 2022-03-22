@@ -523,6 +523,11 @@ LOGGING = {
         },
     },
     'loggers': {
+            'django': {
+                'handlers': ['file'],
+                'propagate': True,
+                'level': 'DEBUG',
+           },
             'django_artisan': {
                 'handlers': ['file', 'console'],
                 'level': 'DEBUG',
