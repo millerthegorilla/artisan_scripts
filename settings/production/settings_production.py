@@ -256,6 +256,7 @@ PIPELINE = {
         'main_styles': {
             'source_filenames': (
               'django_artisan/css/styles.css',
+              'django_forum/css/styles.css'
             ),
             'output_filename': 'css/styles_min.css',
         },
