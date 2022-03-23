@@ -10,7 +10,7 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /opt/${PROJECT_NAME} /var/log/${PROJECT_NAME} /etc/opt/${PROJECT_NAME}/settings /etc/opt/${PROJECT_NAME}/static_files/media/cache
 RUN useradd -m artisan
 RUN chown artisan:artisan /opt/${PROJECT_NAME} /var/log/${PROJECT_NAME} /etc/opt/${PROJECT_NAME}/settings
-RUN chown -R /etc/opt/${PROJECT_NAME}/static_files
+RUN chown artisan:artisan -R /etc/opt/${PROJECT_NAME}/static_files
 RUN mkdir /home/artisan/django_venv
 RUN chown artisan:artisan /home/artisan/django_venv
 ENV VIRTUAL_ENV=/home/artisan/django_venv
