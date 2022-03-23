@@ -39,7 +39,7 @@ DUCKDNS_DOMAIN=${duckdns_domain}
 # yoursubdomain.duckdns.org
 CUSTOM_SALT=${custom_salt}
 # a custom salt value for email token generation
-RECAPTCH_PUBLIC_KEY=${recaptcha_public}
+RECAPTCHA_PUBLIC_KEY=${recaptcha_public}
 # google recaptcha pub key  https://developers.google.com/recaptcha/intro
 RECAPTCHA_PRIVATE_KEY=${recaptcha_private}
 # google recaptcha priv key
