@@ -328,7 +328,7 @@ cat ${SCRIPTS_ROOT}/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.
 chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/manage.py
 cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
 chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/${django_project_name}/wsgi.py
-cat ${SCRIPTS_ROOT}/templates/gunicorn/start | envsubst > ${SCRIPTS_ROOT}/dockerfiles/django/start.sh
+cat ${SCRIPTS_ROOT}/templates/gunicorn/init | envsubst > ${SCRIPTS_ROOT}/dockerfiles/django/init
 cat ${SCRIPTS_ROOT}/templates/maria/maria.sh | envsubst '$db_user:$db_host:$db_name' > ${SCRIPTS_ROOT}/dockerfiles/maria.sh
 if [[ ${DEBUG} == "FALSE" ]]
 then

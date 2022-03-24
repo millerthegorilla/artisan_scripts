@@ -20,6 +20,6 @@ RUN su artisan -c "python -m pip install --upgrade pip wheel" && su artisan -c "
 RUN rm -r /tmp/pip_requirements
 # COPY ./django/media /etc/opt/${PROJECT_NAME}/media_files/
 RUN touch /tmp/manage_output && chmod 0666 /tmp/manage_output
-COPY ./django/start.sh /start.sh
-RUN chmod +x /start.sh
-CMD /start.sh
+COPY ./django/init /init
+RUN chmod +x /init
+CMD /init
