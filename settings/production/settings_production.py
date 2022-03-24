@@ -188,7 +188,7 @@ AUTH_PASSWORD_VALIDATORS = [
             'min_length_special': 0,
             'min_length_lower': 1,
             'min_length_upper': 1,
-            'special_characters': ""
+            #'special_characters': ""
         }
     },
 ]
