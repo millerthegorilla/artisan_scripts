@@ -18,7 +18,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY ./pip_requirements_prod /tmp/pip_requirements
 RUN su artisan -c "python -m pip install --upgrade pip wheel" && su artisan -c "pip install --no-cache-dir --use-deprecated=legacy-resolver -r /tmp/pip_requirements"
 RUN rm -r /tmp/pip_requirements
-# COPY ./django/media /etc/opt/${PROJECT_NAME}/media_files/
+COPY ./django/media /etc/opt/${PROJECT_NAME}/media_files/
 RUN touch /tmp/manage_output && chmod 0666 /tmp/manage_output
 COPY ./django/init /init
 RUN chmod +x /init

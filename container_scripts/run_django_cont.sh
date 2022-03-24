@@ -81,5 +81,5 @@ else
     runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chmod 0770 /etc/opt/${PROJECT_NAME}/static_files && find /etc/opt/${PROJECT_NAME}/static_files -type f -exec chmod 0660 {} + && find /etc/opt/${PROJECT_NAME}/static_files -type d -exec chmod 0770 {} +\""
     runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chmod 0770 /etc/opt/${PROJECT_NAME}/static_files && find /etc/opt/${PROJECT_NAME}/static_files -type f -exec chmod 0660 {} + && find /etc/opt/${PROJECT_NAME}/static_files -type d -exec chmod 0770 {} +\""
     
-    runuser --login ${USER_NAME} -P -c "podman cp ${SCRIPTS_ROOT}/django/media ${DJANGO_CONT_NAME}:${DJANGO_CONT_MEDIA_VOL}"
+    #runuser --login ${USER_NAME} -P -c "podman cp ${SCRIPTS_ROOT}/dockerfiles/django/media ${DJANGO_CONT_NAME}:${DJANGO_CONT_MEDIA_VOL}"
 fi
