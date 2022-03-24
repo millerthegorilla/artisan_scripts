@@ -216,7 +216,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), STATIC_URL)
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), MEDIA_URL)
+MEDIA_ROOT = os.path.join(str(os.getenv("MEDIA_BASE_ROOT")), MEDIA_URL)
 
 # django artisan
 CONTENT_TYPES = ['image', 'video']

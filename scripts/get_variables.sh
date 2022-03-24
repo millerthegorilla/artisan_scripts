@@ -168,6 +168,15 @@ fi
 read -p "Static base root [${SBR}] : " sbr
 static_base_root=${sbr:-${SBR}}
 
+if [[ ${DEBUG} == "TRUE" ]]
+then
+    MBR="/opt/${project_name}/"
+else
+    MBR="/etc/opt/${project_name}/media_files/"
+fi
+read -p "Media base root [${MBR}] : " mbr
+media_base_root=${mbr:-${MBR}}
+
 ## LOGS
 read -p "Host log dir [${USER_DIR}/${project_name}/logs] : " hld
 host_log_dir=${hld:-${USER_DIR}/${project_name}/logs}
@@ -175,8 +184,9 @@ read -p "Swag Host log dir (must be different to Host Log Dir) [${USER_DIR}/${pr
 swag_host_log_dir=${shld:-${USER_DIR}/${project_name}/swag_logs}
 # host static dir mounts on to static base root from django and swag conts.
 
-## HOST STATIC
+## HOST STATIC & MEDIA
 host_static_dir=/etc/opt/${project_name}/static_files/
+host_media_dir=/etc/opt/${project_name}/media_files
 
 ## SECRET KEYGEN
 secret_key=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
@@ -349,6 +359,7 @@ unset site_name
 unset pod_name
 unset base_dir
 unset static_base_root
+unset media_base_root
 unset host_log_dir
 unset swag_host_static_dir
 unset secret_key

@@ -29,6 +29,7 @@ DB_HOST=${db_host}
 DB_PORT=3306
 MEMCACHED_ADDRESS=127.0.0.1:11211
 STATIC_BASE_ROOT=${static_base_root}
+MEDIA_BASE_ROOT=${media_base_root}
 # this is the directory that contains links to the static and media files ie /etc/opt/${PROJECT_NAME}/static_files/
 EMAIL_APP_ADDRESS=${email_app_address}
 #most likely something@gmail.com

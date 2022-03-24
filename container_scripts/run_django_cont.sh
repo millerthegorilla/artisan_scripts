@@ -51,7 +51,7 @@ then
         done
     fi 
 else
-    runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL}:Z -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" # > ${SCRIPTS_ROOT}/systemd/.django_container_id 
+    runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_MEDIA_VOL}:${DJANGO_CONT_MEDIA_VOL}:Z -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL}:Z -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" # > ${SCRIPTS_ROOT}/systemd/.django_container_id 
 fi
 ## hack to prevent memory issues.  Clamav starts immediately from other container and hogs memory.  This waits until it finishes - moreorless... :)
 echo -e "waiting for django to finish starting..."
@@ -79,9 +79,7 @@ else
     runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /opt/${PROJECT_NAME}&& find /opt/${PROJECT_NAME} -type d -exec chmod 0550 {} + && find /opt/${PROJECT_NAME} -type f -exec chmod 0440 {} +\""
     runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + && find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0550 {} +\""
     runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chmod 0770 /etc/opt/${PROJECT_NAME}/static_files && find /etc/opt/${PROJECT_NAME}/static_files -type f -exec chmod 0660 {} + && find /etc/opt/${PROJECT_NAME}/static_files -type d -exec chmod 0770 {} +\""
-    runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"touch /var/log/${PROJECT_NAME}/django/debug.log && chown artisan:artisan /var/log/${PROJECT_NAME}/django/debug.log\""
-    # copy media files to media_root
-  #  echo -e "starting gunicorn"
-   # podman exec -d ${DJANGO_CONT_NAME} bash -c "supervisorctl start gunicorn"
-    #podman exec -e PROJECT_NAME=${PROJECT_NAME} -d  ${DJANGO_CONT_NAME} bash -c "gunicorn -c /etc/opt/${PROJECT_NAME}/settings/gunicorn.conf.py ${DJANGO_PROJECT_NAME}.wsgi:application &"
+    runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chmod 0770 /etc/opt/${PROJECT_NAME}/static_files && find /etc/opt/${PROJECT_NAME}/static_files -type f -exec chmod 0660 {} + && find /etc/opt/${PROJECT_NAME}/static_files -type d -exec chmod 0770 {} +\""
+    
+    runuser --login ${USER_NAME} -P -c "podman cp ${SCRIPTS_ROOT}/django/media ${DJANGO_CONT_NAME}:${DJANGO_CONT_MEDIA_VOL}"
 fi
