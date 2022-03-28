@@ -157,7 +157,6 @@ then
 fi
 
 runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL_NAME}"
-echo "swag vol name is ${SWAG_VOL_NAME}"
 runuser --login ${USER_NAME} -c "podman volume rm ${SWAG_VOL_NAME}"
 runuser --login ${USER_NAME} -c "podman volume prune -f"
 
@@ -175,6 +174,7 @@ then
     rm -rf /etc/opt/${PROJECT_NAME}/settings/*
     rm -rf /etc/opt/${PROJECT_NAME}/settings/.env
     rm -rf /etc/opt/${PROJECT_NAME}/static_files/*
+    find ${CODE_PATH} -maxdepth 1 -empty -type d -perm -1000 | xargs -r rmdir
 else
     rm -rf /etc/opt/${PROJECT_NAME}/settings/* /etc/opt/${PROJECT_NAME}/settings/.env /etc/opt/${PROJECT_NAME}/static_files/*
 fi
@@ -210,7 +210,7 @@ select yn in "Yes" "No"; do
     esac
 done
 
-if [[ ${mediafiles_remove} == 1 ]]
+if [[ ${mediafiles_remove} -eq 1 ]]
 then
     if [[ -n ${DEBUG} && ${DEBUG} == "TRUE" ]]
     then
@@ -221,8 +221,8 @@ then
         fi
     elif [[ -n ${DEBUG} && ${DEBUG} == "FALSE" ]]
     then
-        rm -rf $/etc/opt/${PROJECT_NAME}/static/media/cache
-        rm -rf $/etc/opt/${PROJECT_NAME}/static/media/uploads
+        rm -rf ${DJANGO_HOST_MEDIA_VOL}/media/cache
+        rm -rf ${DJANGO_HOST_MEDIA_VOL}/media/uploads
     fi
 fi
 
