@@ -33,5 +33,5 @@ else
 	runuser --login ${USER_NAME} -P -c "podman run -dit --pod=${POD_NAME}  --secret=DUCKDNSTOKEN,type=env,target=DUCKDNSTOKEN --name=${SWAG_CONT_NAME} --cap-add=NET_ADMIN -e PUID=1000 -e PGID=1000 -e TZ=\"Europe/London\" -e URL=${DUCKDNS_SUBDOMAIN} -e EMAIL=${CERTBOT_EMAIL} -e VALIDATION=duckdns -e STAGING=$staging -v ${SWAG_HOST_VOL_STATIC}:${SWAG_CONT_VOL_STATIC}:Z -v ${SWAG_HOST_LOG_DIR}:${SWAG_CONT_LOG_DIR}:Z -v ${SWAG_VOL_NAME}:/config/:Z ${SWAG_IMAGE}"
 fi
     
-runuser --login ${USER_NAME} -P -c "podman exec -it django_cont bash -c \"chown abc -R ${SWAG_CONT_VOL_STATIC}\""
+runuser --login ${USER_NAME} -P -c "podman exec -it ${SWAG_CONT_NAME} bash -c \"chown abc -R ${SWAG_CONT_VOL_STATIC}\""
 
