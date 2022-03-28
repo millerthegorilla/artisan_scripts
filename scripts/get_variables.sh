@@ -321,7 +321,9 @@ echo SWAG_VOL_NAME=${swag_vol_name} >> .proj
 echo DB_VOL_NAME=${db_vol_name} >> .proj
 echo CERTBOT_EMAIL=${certbot_email} >> .proj
 echo DJANGO_HOST_STATIC_VOL=${host_static_dir} >> .proj
+echo DJANGO_CONT_STATIC_VOL=${host_static_dir} >> .proj
 echo DJANGO_HOST_MEDIA_VOL=${host_media_dir} >> .proj
+echo DJANGO_CONT_MEDIA_VOL=${host_media_dir} >> .proj
 
 ### TEMPLATES
 cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst '$dockerfile_app_names' > ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
