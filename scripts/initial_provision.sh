@@ -23,7 +23,7 @@ function build_django()
   chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/django
   cp ${SCRIPTS_ROOT}/dockerfiles/${1} /home/${USER_NAME}/${1}
   cp ${SCRIPTS_ROOT}/dockerfiles/${2} /home/${USER_NAME}/${2}
-  runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --build-arg=STATIC_DIR=${DJANGO_HOST_STATIC_VOL} --build-arg=MEDIA_DIR=${DJANGO_HOST_MEDIA_VOL} --tag=\"python:${PROJECT_NAME}_${3}\" -f=${1} ./"
+  runuser --login ${USER_NAME} -c "podman build --build-arg PROJECT_NAME=${PROJECT_NAME} --build-arg STATIC_DIR=${DJANGO_HOST_STATIC_VOL} --build-arg MEDIA_DIR=${DJANGO_HOST_MEDIA_VOL} --tag=\"python:${PROJECT_NAME}_${3}\" -f=${1} ./"
   rm /home/${USER_NAME}/${1} /home/${USER_NAME}/${2}
   rm -r /home/${USER_NAME}/django
 }

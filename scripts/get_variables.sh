@@ -186,7 +186,7 @@ swag_host_log_dir=${shld:-${USER_DIR}/${project_name}/swag_logs}
 
 ## HOST STATIC & MEDIA
 host_static_dir=/etc/opt/${project_name}/static_files/
-host_media_dir=/etc/opt/${project_name}/media_files
+host_media_dir=/etc/opt/${project_name}/media_files/
 
 ## SECRET KEYGEN
 secret_key=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
