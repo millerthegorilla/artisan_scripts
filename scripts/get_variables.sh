@@ -205,6 +205,7 @@ db_host=${dbh:-${db_host}}
 db_vol_name="db_vol"
 read -p "Host db volume name [ ${db_vol_name} ] : " dvn
 db_vol_name=${dvn:-${db_vol_name}}
+read -p "Email address for letsencrypt certbot : " certbot_email
 
 ## DUCKDNS
 read -p "Duckdns domain : " duckdns_domain
@@ -318,6 +319,7 @@ echo DEBUG=${DEBUG} >> .proj
 echo XDESK=${XDESK} >> .proj
 echo SWAG_VOL_NAME=${swag_vol_name} >> .proj
 echo DB_VOL_NAME=${db_vol_name} >> .proj
+echo CERTBOT_EMAIL=${certbot_email} >> .proj
 
 ### TEMPLATES
 cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst '$dockerfile_app_names' > ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
