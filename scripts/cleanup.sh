@@ -119,7 +119,6 @@ then
     fi
 fi
 
-rm -r ${SCRIPTS_ROOT}/dockerfiles/django/*
 rm ${SCRIPTS_ROOT}/dockerfiles/maria.sh
 rm ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
 echo code path is ${CODE_PATH}
