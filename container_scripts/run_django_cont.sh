@@ -77,9 +77,9 @@ then
   wait
 else
 	## change everything to artisan:artisan - probably do this debug or not TODO
-    cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/media /home/${USER_NAME}
-    runuser --login ${USER_NAME} -P -c "podman cp ~/media /etc/opt/${PROJECT_NAME}/media_files/"
-    rm -rf /home/${USER_NAME}/media
+    cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/media /tmp
+    runuser --login ${USER_NAME} -P -c "podman cp /tmp/media ${DJANGO_CONT_NAME}:/etc/opt/${PROJECT_NAME}/media_files/"
+    rm -rf /tmp/media
     runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /opt/${PROJECT_NAME}&& find /opt/${PROJECT_NAME} -type d -exec chmod 0550 {} + && find /opt/${PROJECT_NAME} -type f -exec chmod 0440 {} +\""
     runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + && find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0550 {} +\""
     runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chmod 0770 /etc/opt/${PROJECT_NAME}/static_files && find /etc/opt/${PROJECT_NAME}/static_files -type f -exec chmod 0660 {} + && find /etc/opt/${PROJECT_NAME}/static_files -type d -exec chmod 0770 {} +\""
