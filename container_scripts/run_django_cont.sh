@@ -50,7 +50,7 @@ then
         done
     fi 
 else
-    cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/media/* ${DJANGO_HOST_MEDIA_VOL}media
+#    cp -ar ${SCRIPTS_ROOT}/dockerfiles/django/media/* ${DJANGO_HOST_MEDIA_VOL}media
 
     runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL}:Z -v ${DJANGO_HOST_MEDIA_VOL}:${DJANGO_CONT_MEDIA_VOL}:Z -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" # > ${SCRIPTS_ROOT}/systemd/.django_container_id 
 fi
