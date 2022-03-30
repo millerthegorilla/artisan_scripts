@@ -221,8 +221,8 @@ then
         fi
     elif [[ -n ${DEBUG} && ${DEBUG} == "FALSE" ]]
     then
-        rm -rf ${DJANGO_HOST_MEDIA_VOL}/media/cache
-        rm -rf ${DJANGO_HOST_MEDIA_VOL}/media/uploads
+        rm -rf ${DJANGO_HOST_MEDIA_VOL}/media/cache/*
+        rm -rf ${DJANGO_HOST_MEDIA_VOL}/media/uploads/*
     fi
 fi
 
