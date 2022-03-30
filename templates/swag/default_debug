@@ -9,12 +9,10 @@ upstream app_server {
 server {                                                                                                                                                                
         listen 80 default_server;                                                                                                                                       
         listen [::]:80 default_server;                                                                                                                                  
-        server_name _;                                                                                                                                                  
-        root /opt/static_files/;
+        server_name _;
 
-
-        location / {                                                                                                                                                    
-             try_files $uri @proxy_to_app;                                                                                                                              
+        location / {                                                      
+             try_files $uri @proxy_to_app;                                                             
         }                                                                                                                                                               
         
         location @proxy_to_app {                                                                                                                                        
@@ -37,19 +35,21 @@ server {
         add_header X-XSS-Protection "1; mode=block";
         add_header Content-Security-Policy "default-src https://*.${duckdns_domain} https://*.gstatic.com https://www.google.com/recaptcha/ https://*.jsdelivr.net https://*.jquery.com 'self'; style-src https://*.${duckdns_domain} https://*.jsdelivr.net https://*.googleapis.com 'self'; script-src https://*.jquery.com https://*.jsdelivr.net https://*.google.com/recaptcha/ https://*.gstatic.com/recaptcha/ 'self'; img-src 'self' https://*.${duckdns_domain} data: https://*.${duckdns_domain} 'self'; object-src 'none'";
 
-        server_name bob;                                                                                                                                                  
-
-       # include /config/nginx/ssl.conf;                                                                                                                                 
-        root /opt/static_files/;                                                                                                                                        
-
-#        location /static {                                                                                                                                             
-#            /opt/static_files/;                                                                                                                                        
-#       }                                                                                                                                                               
-#                                                                                                                                                                       
-                                                                                                                                                                        
-        location / {                                                                                                                                                    
-             try_files $uri @proxy_to_app;                                                                                                                              
-        }                                                                                                                                                               
+        include /config/nginx/ssl.conf;                                                                                                                                 
+        #root /opt/static_files/;                                                                                                                                        
+        location /static/
+        {
+            /opt/static_files/;                                                                   
+        }
+        
+        location /media/
+        {
+            /opt/media_files/;
+        }                                                                                                                                                                
+        location /
+        {                                                                    
+             try_files $uri @proxy_to_app;
+        }                                                                                       
         
         location @proxy_to_app {                                                                                                                                        
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;                                                                                                

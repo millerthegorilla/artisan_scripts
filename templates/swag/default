@@ -26,13 +26,17 @@ server {
         server_name _;                                                                                                                                                  
 
         include /config/nginx/ssl.conf;                                                                                                                                 
-        root /opt/static_files/;                                                                                                                                        
+        # root /opt/static_files/;                                                                                                                                        
 
-#        location /static {                                                                                                                                             
-#            /opt/static_files/;                                                                                                                                        
-#       }                                                                                                                                                               
-#                                                                                                                                                                       
-                                                                                                                                                                        
+        location /static/
+        {
+            alias /opt/static_files/;
+        }
+
+        location /media/
+        {
+            alias /opt/media_files;
+        }                                                                                                                                        
         location / {                                                                                                                                                    
              try_files $uri @proxy_to_app;                                                                                                                              
         }                                                                                                                                                               

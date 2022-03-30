@@ -24,19 +24,21 @@ server {
         add_header Content-Security-Policy "default-src https://*.${tl_domain} https://*.${duckdns_domain} https://*.gstatic.com https://www.google.com/recaptcha/ https://*.jsdelivr.net https://*.jquery.com 'self'; style-src https://*.${tl_domain} https://*.${duckdns_domain} https://*.cloudflare.com/ https://*.jsdelivr.net https://*.googleapis.com 'self'; script-src https://*.cloudflare.com/ https://*.jquery.com https://*.jsdelivr.net https://*.google.com/recaptcha/ https://*.gstatic.com/recaptcha/ 'self'; img-src 'self' https://*.${tl_domain} https://*.${duckdns_domain} data: https://*.${tl_domain} https://*.${duckdns_domain} 'self'; object-src 'none'";
 
         server_name _;                                                                                                                                                  
+        include /config/nginx/ssl.conf;                                          
 
-        include /config/nginx/ssl.conf;                                                                                                                                 
-        root /opt/static_files/;                                                                                                                                        
+        location /static/
+        {
+            /opt/static_files/;
+        }
 
-#        location /static {                                                                                                                                             
-#            /opt/static_files/;                                                                                                                                        
-#       }                                                                                                                                                               
-#                                                                                                                                                                       
-                                                                                                                                                                        
-        location / {                                                                                                                                                    
-             try_files $uri @proxy_to_app;                                                                                                                              
-        }                                                                                                                                                               
-        
+        location /media/ {
+            /opt/media_files/;
+        }
+
+        location / {
+            try_files $uri @proxy_to_app;
+        }
+                
         location @proxy_to_app {                                                                                                                                        
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;                                                                                                
             proxy_set_header X-Forwarded-Proto $scheme;                                                                                                                 
