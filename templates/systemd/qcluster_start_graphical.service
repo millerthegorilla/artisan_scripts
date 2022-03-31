@@ -9,7 +9,10 @@ After=container-${django_cont_name}.service
 
 [Service]
 Restart=on-failure
-TimeoutStopSec=70
+RestartSec=50
+StartLimitIntervalSec=0
+TimeoutStartSec=infinity
+TimeoutStopSec=300
 ExecStart=${terminal_cmd} /usr/bin/podman exec -e PYTHONPATH="/etc/opt/${project_name}/settings/:/opt/${project_name}/" -it ${django_cont_name} bash -c "source /home/artisan/django_venv/bin/activate; python -u /opt/${project_name}/manage.py qcluster"
 
 [Install]
