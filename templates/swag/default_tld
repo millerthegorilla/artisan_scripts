@@ -28,11 +28,11 @@ server {
 
         location /static/
         {
-            /opt/static_files/;
+            /opt/static_files/static/;
         }
 
         location /media/ {
-            /opt/media_files/;
+            /opt/media_files/media/;
         }
 
         location / {

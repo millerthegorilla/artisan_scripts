@@ -30,12 +30,12 @@ server {
 
         location /static/
         {
-            alias /opt/static_files/;
+            alias /opt/static_files/static/;
         }
 
         location /media/
         {
-            alias /opt/media_files;
+            alias /opt/media_files/media/;
         }                                                                                                                                        
         location / {
             try_files $uri @proxy_to_app;
