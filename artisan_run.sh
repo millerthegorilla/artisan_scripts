@@ -31,6 +31,7 @@ while (( "$#" )); do
       find .git -type f | grep -v /objects/ | xargs chmod 644
       chmod 0444 templates/maria/maria.sh
       find ./dockerfiles/django/media -type d | xargs chmod 770
+      find ./dockerfiles/django/media -type f | xargs chmod 440
       exit $?
       ;;
     uninstall)
