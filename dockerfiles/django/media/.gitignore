@@ -4,3 +4,5 @@
 !./default_avatars/*
 !./uploads
 !./uploads/*
+!./static_images
+!./static_images/*
