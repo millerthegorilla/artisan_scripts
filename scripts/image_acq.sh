@@ -20,10 +20,10 @@ then
     podman pull docker.io/library/mariadb:10.5 &
 fi
 
-podman image exists redis:6.2.2-buster
+podman image exists redis:7.0-rc
 if [[ ! $? -eq 0 ]]
 then
-    podman pull docker.io/library/redis:6.2.2-buster &
+    podman pull docker.io/library/redis:7.0-rc #6.2.2-buster &
 fi
 
 podman image exists docker.io/tiredofit/clamav:latest

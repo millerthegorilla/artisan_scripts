@@ -205,6 +205,10 @@ db_host=${dbh:-${db_host}}
 db_vol_name="db_vol"
 read -p "Host db volume name [ ${db_vol_name} ] : " dvn
 db_vol_name=${dvn:-${db_vol_name}}
+
+if [[ ${DEBUG} == "FALSE" ]]
+then
+
 read -p "Email address for letsencrypt certbot : " certbot_email
 
 ## DUCKDNS
@@ -225,8 +229,6 @@ else
 fi
 DUCKDNS_SUBDOMAIN="${duckdns_domain}"
 
-if [[ ${DEBUG} == "FALSE" ]]
-then
     swag_vol_name="cert_vol"
     read -p "Swag Volume Name [${swag_vol_name}] : " svn
     swag_vol_name=${svn:-${swag_vol_name}}
@@ -254,8 +256,8 @@ echo -e "# https://developers.google.com/recaptcha/intro "
 echo -e "#*****************************************************"
 read -p "Google Recaptcha public key : " recaptcha_public
 read -p "Google Recaptcha private key : " recaptcha_private
-recaptcha_public="${recaptcha_public}"
-recaptcha_private="${recaptcha_private}"
+
+read -p "Dropbox OAuth Token" : dropbox_oauth_token
 
 if [[ ${DEBUG} == "TRUE" ]]
 then

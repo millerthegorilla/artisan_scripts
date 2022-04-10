@@ -14,7 +14,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 ## TODO: clearsessions cron job
 
 from pathlib import Path
-import sys, os
+import sys, os, logging
 from django.urls import reverse_lazy
 
 ## TODO: clearsessions cron job
@@ -22,6 +22,8 @@ from django.utils import timezone
 
 from dotenv import load_dotenv
 load_dotenv()
+
+logger = logging.getLogger('django_artisan')
 
 DEBUG=False
 MYPY=False
@@ -81,7 +83,8 @@ MIDDLEWARE = [
     'django_users.middleware.ReauthenticateMiddleware',
 ]
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_CACHE_ALIAS = "default"
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
@@ -145,9 +148,10 @@ DATABASES = {
 CACHES = {
      "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://127.0.0.1:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
         }
     }
 }
@@ -248,6 +252,17 @@ STATICFILES_FINDERS = (
     'pipeline.finders.PipelineFinder',
 )
 
+default_stylesheet_extra_content = {
+    'media': 'all',
+    'charset': "UTF-8",
+    'title': None,
+}
+
+default_js_extra_content = {
+    'async': True,
+    'defer': False,
+}
+
 PIPELINE = {
    'PIPELINE_ENABLED': True,
     'JS_COMPRESSOR': 'pipeline.compressors.jsmin.JSMinCompressor',
@@ -259,18 +274,21 @@ PIPELINE = {
               'django_forum/css/styles.css'
             ),
             'output_filename': 'css/styles_min.css',
+            'extra_context': default_stylesheet_extra_content,
         },
         'registration_styles': {
             'source_filenames': (
               'django_users/css/balloons.css',
             ),
             'output_filename': 'css/blns_min.css',
+            'extra_context': default_stylesheet_extra_content,
         },
         'carousel_styles': {
             'source_filenames': (
                 'django_bs_carousel/css/styles.css',
             ),
             'output_filename': 'css/crsl_min.css',
+            'extra_context': default_stylesheet_extra_content,
         },
     },
     'JAVASCRIPT': {
@@ -279,24 +297,28 @@ PIPELINE = {
               'django_bs_carousel/js/carousel.js',
             ),
             'output_filename': 'django_bs_carousel/js/c_min.js',
+            'extra_context': default_js_extra_content,
         },
         'django_bs_image_loader': {
             'source_filenames': (
                 'django_bs_carousel/js/imageLoader.js',
             ),
             'output_filename': 'django_bs_carousel/js/il_min.js',
+            'extra_context': default_js_extra_content,
         },
         'django_forum': {
             'source_filenames': (
               'django_forum/js/*.js',
          ),
             'output_filename': 'js/df_min.js',
+            'extra_context': default_js_extra_content,
         },
         'django_artisan': {
             'source_filenames': (
                 'django_artisan/js/profileUpdate.js',
             ),
             'output_filename': 'js/da_min.js',
+            'extra_context': default_js_extra_content,
         }
     }
 }
@@ -306,9 +328,10 @@ LOGIN_REDIRECT_URL = reverse_lazy('django_artisan:post_list_view')
 LOGOUT_REDIRECT_URL = reverse_lazy('django_artisan:landing_page')
 LOGIN_URL = reverse_lazy('login')
 
-# DJANGO-EMAIL-VERIFICATION SETTINGS
+# django_email_verification
 def verified_callback(user):
     user.is_active = True
+    logger.info("registered user " + str(user) + "!")
 
 EMAIL_VERIFIED_CALLBACK = verified_callback
 EMAIL_ACTIVE_FIELD = 'is_active'
@@ -442,7 +465,9 @@ NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
                  registering as a user to be able to access the forum, \
                  and to be able present images of your work here, on this page.<br> \
                     Click the Ceramic Isles Logo to return to the landing page \
-                    which acts as a gallery for member's work.</p>"
+                    which acts as a gallery for member's work.<br> \
+                    On a diet???  This site has only two cookies and they are both full of essential goodness!<br> \
+                Problems??? contact - ceramicisles [at] gmail.com"
 
 ### The following are used by django_artisan and django_forum
 SITE_NAME = str(os.getenv("SITE_NAME"))
@@ -515,40 +540,40 @@ LOGGING = {
             'filters': ['skip_mtime_seen', 'skip_djangoq_schedule'],
         },
         'console': {
-            'level': 'ERROR',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'django',
         },
     },
     'loggers': {
-            'django_artisan': {
-                'handlers': ['file', 'console'],
-                'level': 'ERROR',
-                'propagate': True,
-           },
-           'safe_imagefield': {
-                'handlers': ['file', 'console'],
-                'level': 'ERROR',
-                'propagate': True,
-           },
+        'django_artisan': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
         },
-    }
+        'safe_imagefield': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'file': {
-#             'level': 'INFO',
-#             'class': 'logging.FileHandler',
-#             'filename': "/var/log/{}/django/debug.log".format(str(os.getenv("PROJECT_NAME"))),
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'INFO',
-#             'propagate': True,
-#        },
-#     },
-# }
+# I think sentry in dev mode is not secure...
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
+sentry_sdk.init(
+    dsn="https://0f35df857c1f4ea19b61fa76729dde9e@o803843.ingest.sentry.io/5802934",
+    integrations=[DjangoIntegration(), RedisIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
