@@ -257,7 +257,7 @@ echo -e "#*****************************************************"
 read -p "Google Recaptcha public key : " recaptcha_public
 read -p "Google Recaptcha private key : " recaptcha_private
 
-read -p "Dropbox OAuth Token" : dropbox_oauth_token
+read -p "Dropbox OAuth Token : " dropbox_oauth_token
 
 if [[ ${DEBUG} == "TRUE" ]]
 then

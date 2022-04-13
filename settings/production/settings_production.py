@@ -18,9 +18,11 @@ import sys, os, logging
 from django.urls import reverse_lazy
 
 ## TODO: clearsessions cron job
-from django.utils import timezone
-
 from dotenv import load_dotenv
+
+from django.utils import timezone
+from django.core.management.utils import get_random_secret_key
+
 load_dotenv()
 
 logger = logging.getLogger('django_artisan')
@@ -34,7 +36,7 @@ BASE_DIR = str(os.getenv("BASE_DIR"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = str(os.getenv("SECRET_KEY"))
+SECRET_KEY = get_random_secret_key() #str(os.getenv("SECRET_KEY"))
 
 ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS1"), os.getenv("ALLOWED_HOSTS2"), os.getenv("ALLOWED_HOSTS3")]
 
@@ -264,7 +266,7 @@ default_js_extra_content = {
 }
 
 PIPELINE = {
-   'PIPELINE_ENABLED': True,
+    'PIPELINE_ENABLED': True,
     'JS_COMPRESSOR': 'pipeline.compressors.jsmin.JSMinCompressor',
     'CSS_COMPRESSOR': 'pipeline.compressors.csshtmljsminify.CssHtmlJsMinifyCompressor',
     'STYLESHEETS': {
@@ -389,7 +391,7 @@ DELETION_TIMEOUT = {
 
 ## SESSION SETTINGS
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-ESSION_COOKIE_AGE = 129600 # 36 hours.  # defaults to two weeks
+#SESSION_COOKIE_AGE = 129600 # 36 hours.  # defaults to two weeks
 SESSION_COOKIE_SECURE = True    # set this to true when using https
 # SESSION_SAVE_EVERY_REQUEST = True  #updates timestamp to increase session_cookie_age
 
@@ -546,6 +548,11 @@ LOGGING = {
         },
     },
     'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django_artisan': {
             'handlers': ['file', 'console'],
             'level': 'INFO',

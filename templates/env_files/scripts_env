@@ -36,7 +36,7 @@ DUCKDNS_SUBDOMAIN=${duckdns_domain}
 
 ## REDIS CACHE
 REDIS_CONT_NAME="redis_cont"
-REDIS_IMAGE="docker.io/library/redis:6.2.2-buster"
+REDIS_IMAGE="docker.io/library/redis:7.0-rc"   # 6.2.2-buster"
 
 ## ELASTIC SEARCH
 ELASTIC_CONT_NAME="elastic_cont"
