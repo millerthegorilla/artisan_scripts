@@ -10,19 +10,17 @@ crispy-bootstrap5==0.6
     sqlparse==0.4.1
   django-crispy-forms==1.13.0
 css-html-js-minify==2.5.5
-django-artisan @ git+https://github.com/millerthegorilla/django_artisan.git@1efb30735dd001f91899256fadd057dfd5f41fc2
-  django-bs-carousel @ git+https://github.com/millerthegorilla/django-bs-carousel@70a58a15d5705802e57274718cbba9e4a2e513da
+django-artisan @ git+https://github.com/millerthegorilla/django_artisan
+  django-bs-carousel @ git+https://github.com/millerthegorilla/django-bs-carousel
     Django==3.2.9
       asgiref==3.3.3
       pytz==2021.1
       sqlparse==0.4.1
-  django-forum @ git+https://github.com/millerthegorilla/django_forum@dbb004f10422aa1ec9eef20c9db7fe2daca3dfdd
-    django-messages @ git+https://github.com/millerthegorilla/django_messages@a548dce7f13dfae9bdc0a0736c23f39b68042b3d
-      django-profile @ git+https://github.com/millerthegorilla/django_profile@9860022a8c442901c955c4e3c7500f338b958d16
-        django-users @ git+https://github.com/millerthegorilla/django_users@0b4657c3cff086c12c5f0a97010ed8cb4973f190
-    django-profile @ git+https://github.com/millerthegorilla/django_profile@9860022a8c442901c955c4e3c7500f338b958d16
-      django-users @ git+https://github.com/millerthegorilla/django_users@0b4657c3cff086c12c5f0a97010ed8cb4973f190
-    safe-imagefield @ git+https://github.com/millerthegorilla/safe_imagefield@1b14adaaed0537a8e6080a24d8df2981809ad7ce
+  django-forum @ git+https://github.com/millerthegorilla/django_forum
+    django-messages @ git+https://github.com/millerthegorilla/django_messages
+      django-profile @ git+https://github.com/millerthegorilla/django_profile
+        django-users @ git+https://github.com/millerthegorilla/django_users
+    safe-imagefield @ git+https://github.com/millerthegorilla/safe_imagefield
       clamd==1.0.2
       Django==3.2.9
         asgiref==3.3.3
