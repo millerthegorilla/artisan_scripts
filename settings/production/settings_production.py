@@ -111,6 +111,8 @@ TEMPLATES = [
                 'django_artisan.context_processors.category_visible',
                 'django_artisan.context_processors.location_visible',
                 'django_artisan.context_processors.max_images',
+                'django_artisan.context_processors.image_exts',
+                'django_artisan.context_processors.max_upload_size',
             ],
         },
     },
@@ -234,7 +236,7 @@ IMAGE_UPLOAD_PATH = '/uploads/users/'
 
 MAX_USER_IMAGES = 3
 ALLOWED_EXTENSIONS = ['jpg', 'png', 'webp']
-MAX_UPLOAD_SIZE = 2.5Mb
+MAX_UPLOAD_SIZE = "2.5Mb"
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o700
 FILE_UPLOAD_PERMISSIONS = 0o644
 
