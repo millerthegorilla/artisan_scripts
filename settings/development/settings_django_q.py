@@ -103,6 +103,7 @@ TEMPLATES = [
                 'django_artisan.context_processors.base_html',
                 'django_artisan.context_processors.category_visible',
                 'django_artisan.context_processors.location_visible',
+                'django_artisan.context_processors.max_images',
             ],
         },
     },
@@ -225,7 +226,12 @@ STATIC_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), STATIC_URL)
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(str(os.getenv("STATIC_BASE_ROOT")), MEDIA_URL)
 
-CONTENT_TYPES = ['image', 'video']
+CONTENT_TYPES = ['image']
+
+#  gallery
+MAX_USER_IMAGES = 3
+ALLOWED_EXTENSIONS = ['jpg', 'png', 'webp']
+MAX_UPLOAD_SIZE = 2621440
 # 2.5MB - 2621440
 # 5MB - 5242880
 # 10MB - 10485760
@@ -234,7 +240,6 @@ CONTENT_TYPES = ['image', 'video']
 # 100MB 104857600
 # 250MB - 214958080
 # 500MB - 429916160
-MAX_UPLOAD_SIZE = 10485760
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o700
 FILE_UPLOAD_PERMISSIONS = 0o644
 
@@ -315,7 +320,6 @@ LOGIN_URL = reverse_lazy('login')
 THUMBNAIL_SIZE = (120,120)
 # THUMBNAIL_DEBUG = True
 #THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.wand_engine.Engine'
-MAX_USER_IMAGES = 3
 
 # django_bs_carousel_lazy_load
 # the first two settings are used when uploading and imageby the management command makeusers

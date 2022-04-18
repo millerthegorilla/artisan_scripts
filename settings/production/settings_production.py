@@ -36,7 +36,7 @@ BASE_DIR = str(os.getenv("BASE_DIR"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_random_secret_key() #str(os.getenv("SECRET_KEY"))
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS1"), os.getenv("ALLOWED_HOSTS2"), os.getenv("ALLOWED_HOSTS3")]
 
@@ -110,6 +110,7 @@ TEMPLATES = [
                 'django_artisan.context_processors.base_html',
                 'django_artisan.context_processors.category_visible',
                 'django_artisan.context_processors.location_visible',
+                'django_artisan.context_processors.max_images',
             ],
         },
     },
@@ -225,18 +226,17 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(str(os.getenv("MEDIA_BASE_ROOT")), MEDIA_URL)
 
 # django artisan
-CONTENT_TYPES = ['image', 'video']
-# 2.5MB - 2621440
-# 5MB - 5242880
-# 10MB - 10485760
-# 20MB - 20971520
-# 50MB - 52428800
-# 100MB 104857600
-# 250MB - 214958080
-# 500MB - 429916160
-MAX_UPLOAD_SIZE = 10485760
-FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o770
-FILE_UPLOAD_PERMISSIONS = 0o640
+CONTENT_TYPES = ['image']
+
+#  gallery
+# django_forum
+IMAGE_UPLOAD_PATH = '/uploads/users/'
+
+MAX_USER_IMAGES = 3
+ALLOWED_EXTENSIONS = ['jpg', 'png', 'webp']
+MAX_UPLOAD_SIZE = 2.5Mb
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o700
+FILE_UPLOAD_PERMISSIONS = 0o644
 
 # make packages abstract
 ABSTRACTPROFILE = True
@@ -379,9 +379,6 @@ CAROUSEL_OFFSET = True
 CAROUSEL_IMG_PAUSE = 6500
 DJANGO_BS_CAROUSEL_IMAGE_MODEL = "django_artisan.UserProductImage"
 
-# django_forum
-IMAGE_UPLOAD_PATH = '/uploads/users/'
-
 # django messages
 # soft deletion
 DELETION_TIMEOUT = { 
@@ -399,7 +396,6 @@ SESSION_COOKIE_SECURE = True    # set this to true when using https
 THUMBNAIL_SIZE = (120,120)
 # THUMBNAIL_DEBUG = True
 #THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.wand_engine.Engine'
-MAX_USER_IMAGES = 3
 
 # django forum
 # the amount of time to wait before emails are sent to subscribed users.  This is in case someone
