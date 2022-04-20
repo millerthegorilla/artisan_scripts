@@ -194,7 +194,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'OPTIONS': {
             'min_length_digit': 1,
             'min_length_alpha': 1,
-            'min_length_special': 0,
+            'min_length_special': 1,
             'min_length_lower': 1,
             'min_length_upper': 1,
             #'special_characters': ""
@@ -461,9 +461,9 @@ ABOUT_US_SPIEL = "<span class='spiel-headline'>Ceramic Isles</span> <span class=
 ### NAVBAR
 NAVBAR_SPIEL = "Welcome to Ceramic Isles, a site where ceramic artists \
                 local to the Channel Islands are able to meet, chat, and show off their work. \
-                 If you are a ceramic artist local to one of the Channel Islands, consider \
+                 If you are a ceramic artist located in the Channel Islands, consider \
                  registering as a user to be able to access the forum, \
-                 and to be able present images of your work here, on this page.<br> \
+                 and to be able to present images of your work here, on this page, and on your personal page.<br> \
                     Click the Ceramic Isles Logo to return to the landing page \
                     which acts as a gallery for member's work.<br> \
                     On a diet???  This site has only two cookies and they are both full of essential goodness!<br> \
