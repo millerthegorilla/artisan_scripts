@@ -38,22 +38,38 @@ then
     PROJECT_NAME=${project_name:-${PROJECT_NAME}}
 fi
 
-while getopts "gn:" OPTION; do
+while getopts "gn" OPTION; do
     case $OPTION in
-    g)
-		if [[ ${DEBUG} == "TRUE" ]]
-		then
-			echo "this is a development setup - manage.py should reload automatically on file changes."
-		else
-			 runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -dit ${DJANGO_CONT_NAME} bash -c \"kill -HUP $(ps -C gunicorn -o %p |grep -v PID |sort | head -n1)\"\""
-		fi
-	;;
-	n)
-		if [[ ${DEBUG} == "TRUE" ]]
-		then
-			echo "this is a development setup - manage.py should reload automatically on file changes."
-		else
-			 runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -dit ${DJANGO_CONT_NAME} bash -c \"nginx -c /config/nginx/nginx.conf -s reload\""
-		fi
-
-####   need to reload nginx - try svscanctl inside swag container.
+	    g)
+			if [[ ${DEBUG} == "TRUE" ]]
+			then
+				echo "this is a development setup - manage.py should reload automatically on file changes."
+			else
+				 runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -dit ${DJANGO_CONT_NAME} bash -c \"kill -HUP $(ps -C gunicorn -o %p |grep -v PID |sort | head -n1)\"\""
+			fi
+			;;
+		n)
+			if [[ ${DEBUG} == "TRUE" ]]
+			then
+				echo "this is a development setup - manage.py should reload automatically on file changes."
+			else
+				 runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -dit ${DJANGO_CONT_NAME} bash -c \"nginx -c /config/nginx/nginx.conf -s reload\""
+			fi
+	    	exit $?
+	    	;;
+	    :)                                    # If expected argument omitted:
+		    if [[ ${DEBUG} == "TRUE" ]]
+				then
+					echo "this is a development setup - manage.py should reload automatically on file changes."
+				else
+				    runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -dit ${DJANGO_CONT_NAME} bash -c \"kill -HUP $(ps -C gunicorn -o %p |grep -v PID |sort | head -n1)\"\""
+					runuser --login ${USER_NAME} -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -dit ${DJANGO_CONT_NAME} bash -c \"nginx -c /config/nginx/nginx.conf -s reload\""
+				fi
+			fi
+			exit $?
+			;;
+	    *)                                    # If unknown (any other) option:
+	       exit 1                       # Exit abnormally.
+	       ;;
+	esac
+done
