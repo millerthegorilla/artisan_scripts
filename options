@@ -1,1 +1,2 @@
 TERMINAL_CMD="gnome-terminal --"
+SHELL_CMD="/bin/bash"

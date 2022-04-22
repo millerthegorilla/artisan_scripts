@@ -21,6 +21,7 @@ set -a
  elastic_cont_name=${ELASTIC_CONT_NAME}
  project_name=${PROJECT_NAME}
  terminal_cmd=${TERMINAL_CMD}
+ user_name=${USER_NAME}
 set +a
 
 if [[ ${DEBUG} == "TRUE" ]]
@@ -37,3 +38,5 @@ then
 else
     cat ${SCRIPTS_ROOT}/templates/systemd/qcluster_start_non_graphical.service | envsubst > ${SCRIPTS_ROOT}/systemd/qcluster_start.service 
 fi
+
+cat ${SCRIPTS_ROOT}/templates/systemd/django_key.service | envsubst > ${SCRIPTS_ROOT}/systemd/django_key.service 

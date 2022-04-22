@@ -20,9 +20,28 @@ then
 fi
 set +a
 
+function set_shell()
+{
+    if [[ ! -n "${USER_NAME}" ]]
+    then
+        read -p "Username? : " USER_NAME
+    fi
+    if [[ ${1} == 'on' ]]
+    then
+      usermod -s "/bin/bash" ${USER_NAME}
+    elif [[ ${1} == 'off' ]]
+    then
+      usermod -s $(which nologin)
+    else
+      echo -n "unrecognised option to set_shell"
+      exit 1
+    fi
+}
+
 while (( "$#" )); do
   case "$1" in
     install)
+      set_shell on
       find . -type d | xargs chmod 0555
       find . -type f | xargs chmod 0444
       find . -type f -name "*.sh" | xargs chmod 0550
@@ -32,9 +51,11 @@ while (( "$#" )); do
       chmod 0444 templates/maria/maria.sh
       find ./dockerfiles/django/media -type d | xargs chmod 770
       find ./dockerfiles/django/media -type f | xargs chmod 440
+      set_shell off
       exit $?
       ;;
     uninstall)
+      set_shell on
       SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
       OWNER_NAME=$(stat -c "%U" ${SCRIPT_DIR})
       find . | xargs chown ${OWNER_NAME}:${OWNER_NAME}
@@ -48,6 +69,7 @@ while (( "$#" )); do
       exit $?
       ;;
     create)
+      set_shell on
       labels=()
       iarray=()
       alllabels=('variables' 'directories' 'images' 'containers' 'systemd')
@@ -140,18 +162,25 @@ while (( "$#" )); do
             ;;
           esac
       done
+      set_shell off
       exit $? 
       ;;
     clean)
+      set_shell on
       ${SCRIPTS_ROOT}/scripts/cleanup.sh
+      set_shell off
       exit $?
       ;;
     replace)
+      set_shell on
       ${SCRIPTS_ROOT}/scripts/make_manage_wsgi.sh
+      set_shell off
       exit $?
       ;;    
-    reload) 
+    reload)
+      set_shell on  
       ${SCRIPTS_ROOT}/scripts/reload.sh
+      set_shell off
       exit $?
       ;;
     status)
@@ -161,11 +190,13 @@ while (( "$#" )); do
       else
           echo -e "User is unset!"
       fi
+      set_shell on
       if [[ -n ${POD_NAME} ]]
       then
           if [[ $(runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"; echo $?) -eq 0 ]]
           then         
               echo -e "pod ${POD_NAME} exists!  State is $(runuser --login ${USER_NAME} -c "podman pod inspect ${POD_NAME}" | grep -m1 State)"
+              set_shell off
               exit 0
           else
               echo -e "pod ${POD_NAME} doesn't exist - but there are settings files - you might want to clean up dot settings files manually, or run artisan_run clean"
@@ -177,6 +208,7 @@ while (( "$#" )); do
       exit 1
       ;;
     manage) ## TODO - if the below variables don't exist then save them.
+      set_shell on
       if [[ -z "${DJANGO_CONT_NAME}" ]]
       then
         read -p "Enter the name of the container running python/django : " DJANGO_CONT_NAME
@@ -188,7 +220,9 @@ while (( "$#" )); do
       shift;
       COMMANDS="$*"
       runuser --login ${USER_NAME} -c "podman exec -e COMMANDS=\"$*\" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}\""
-      exit $?
+      S=$?
+      set_shell off
+      exit $S
       ;;
     settings)
       if [[ -z "${PROJECT_NAME}" ]]
@@ -245,16 +279,22 @@ while (( "$#" )); do
       sed -i '/CURRENT_SETTINGS/d' ${SCRIPTS_ROOT}/.archive
       echo "CURRENT_SETTINGS="${file[${input}]} >> ${SCRIPTS_ROOT}/.archive
       cp ${SCRIPTS_ROOT}/settings/settings.py /etc/opt/${PROJECT_NAME}/settings
+      set_shell on
       runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan /etc/opt/${PROJECT_NAME}/settings/settings.py\""
-      exit $?
+      S=$?
+      set_shell off
+      exit $S
       ;;
     interact)
       if [[ -z ${USER_NAME} ]]
       then
           read -p "Enter username : " USER_NAME
       fi
+      set_shell on
       runuser --login ${USER_NAME} -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" cd; ${2}"
-      exit $?
+      S=$?
+      set_shell off
+      exit $S
       ;;
     # output)
     #   if [[ -z ${USER_NAME} ]]
@@ -273,8 +313,11 @@ while (( "$#" )); do
       then
           read -p "Enter username : " USER_NAME
       fi
-      su ${USER_NAME} -c "cd; podman ps --format=\"{{.Names}}\" | grep -oP '^((?!infra).)*$' | while read name; do podman exec -u root ${name} bash -c \"apt-get update; apt-get upgrade -y\"; done"
-      exit $?
+      set_shell on
+      runuser --login ${USER_NAME} -P -c "cd; podman ps --format=\"{{.Names}}\" | grep -oP '^((?!infra).)*$' | while read name; do podman exec -u root ${name} bash -c \"apt-get update; apt-get upgrade -y\"; done"
+      S=$?
+      set_shell off
+      exit $S
       ;;
     refresh)
       if [[ -z ${USER_NAME} ]]
@@ -285,8 +328,10 @@ while (( "$#" )); do
       then
           read -p "Enter username : " POD_NAME
       fi
-      su ${USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman image prune --all -f"
+      set_shell on
+      runuser --login ${USER_NAME} -P -c "cd; podman pod stop ${POD_NAME}; podman image prune --all -f"
       ${SCRIPTS_ROOT}/scripts/initial_provision.sh
+      set_shell off
       systemctl reboot
       ;;
     postgit)
@@ -302,15 +347,20 @@ while (( "$#" )); do
       then
           read -p "Enter django container name : " DJANGO_CONT_NAME
       fi
+      set_shell on
       ${SCRIPTS_ROOT}/scripts/make_manage_wsgi.sh
       runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /opt/${PROJECT_NAME}&& find /opt/${PROJECT_NAME} -type d -exec chmod 0550 {} + && find /opt/${PROJECT_NAME} -type f -exec chmod 0440 {} +\""
       runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + && find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0550 {} +\""
+      set_shell off
       ;;
     pip)
       shift;
       COMMANDS="$*"
+      set_shell on
       runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"runuser -s /bin/bash artisan -c 'source /home/artisan/django_venv/bin/activate && pip ${COMMANDS}'\""
-      exit $?
+      S=$?
+      set_shell off
+      exit $S
       ;;
     help|-h|-?|--help)
       echo -e "$ artisan_run command   - where command is one of clean,

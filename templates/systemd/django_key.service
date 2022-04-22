@@ -1,0 +1,18 @@
+
+[Unit]
+Description=regenerates django secret key
+Documentation=https://github.com/millerthegorilla/artisan_scripts
+Wants=network.target
+After=network-online.target
+BindsTo=pod-ceramic_isles_dev_pod.service
+After=pod-ceramic_isles_dev_pod.service
+Before=container-${django_cont_name}.service
+ConditionUser=${user_name}
+
+[Service]
+Type=oneshot
+TimeoutStopSec=70
+ExecStart=sed -i "s/SECRET_KEY=.*/SECRET_KEY=\'$(printf '%s\n' "$(chars='abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'; python -c "import secrets; print(''.join(secrets.choice('${chars}') for i in range(50)))")" | sed -e 's/[\/&]/\\&/g')\'/" /etc/opt/ceramic_isles_dev/settings/.env
+
+[Install]
+WantedBy=multi-user.target default.target
