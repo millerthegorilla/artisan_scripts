@@ -22,7 +22,7 @@ set +a
 
 function set_shell()
 {
-  if [[ -z ${DEBUG} || ${DEBUG} == "FALSE" ]]
+  if [[ -e ${DEBUG} && ${DEBUG} == "FALSE" ]]
   then
     if [[ ! -n "${USER_NAME}" ]]
     then
