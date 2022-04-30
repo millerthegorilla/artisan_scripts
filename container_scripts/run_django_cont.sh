@@ -16,6 +16,9 @@ source ${SCRIPTS_ROOT}/.proj
 cp ${SCRIPTS_ROOT}/settings/settings_env /etc/opt/${PROJECT_NAME}/settings/.env
 chown ${USER_NAME}:${USER_NAME} /etc/opt/${PROJECT_NAME}/settings/.env
 chmod 0400 /etc/opt/${PROJECT_NAME}/settings/.env
+cat ${SCRIPTS_ROOT}/templates/django/key | envsubst > /etc/opt/${PROJECT_NAME}/settings/key
+chown ${USER_NAME}:${USER_NAME} /etc/opt/${PROJECT_NAME}/settings/key
+chmod 0500 /etc/opt/${PROJECT_NAME}/settings/key
 
 rm ${SCRIPTS_ROOT}/settings/settings_env
 
