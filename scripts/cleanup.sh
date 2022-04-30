@@ -319,5 +319,4 @@ fi
 
 rm ${SCRIPTS_ROOT}/.proj
 
-echo -n "Finished Cleaning.  Pod :"
-runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"
+echo Pod : $(sudo runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"; if [[ $? -eq 0 ]]; then echo -e "still exists!"; else echo -e "does not exist!"; fi)

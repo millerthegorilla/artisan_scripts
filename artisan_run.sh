@@ -22,6 +22,8 @@ set +a
 
 function set_shell()
 {
+  if [[ ${DEBUG} == "FALSE" ]]
+  then
     if [[ ! -n "${USER_NAME}" ]]
     then
         read -p "Username? : " USER_NAME
@@ -36,7 +38,19 @@ function set_shell()
       echo -n "unrecognised option to set_shell"
       exit 1
     fi
+  fi
 }
+
+if [[ -z "${DEBUG}" ]]
+then
+  echo -e "\nIs this development ie debug? : "
+  select yn in "Yes" "No"; do
+      case $yn in
+          Yes ) DEBUG="TRUE"; break;;
+          No ) DEBUG="FALSE"; break;;
+      esac
+  done
+fi
 
 while (( "$#" )); do
   case "$1" in
@@ -167,7 +181,7 @@ while (( "$#" )); do
       ;;
     clean)
       set_shell on
-      ${SCRIPTS_ROOT}/scripts/cleanup.sh
+      ${SCRIPTS_ROOT}/scripts/cleanup.sh 
       set_shell off
       exit $?
       ;;
@@ -228,16 +242,6 @@ while (( "$#" )); do
       if [[ -z "${PROJECT_NAME}" ]]
       then
         read -p "Enter your artisan_scripts project name : " PROJECT_NAME
-      fi
-      if [[ -z "${DEBUG}" ]]
-      then
-        echo -e "\nIs this development ie debug? : "
-        select yn in "Yes" "No"; do
-            case $yn in
-                Yes ) DEBUG="TRUE"; break;;
-                No ) DEBUG="FALSE"; break;;
-            esac
-        done
       fi
       if [[ -n "${CURRENT_SETTINGS}" ]]
       then
