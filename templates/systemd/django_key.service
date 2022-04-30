@@ -11,8 +11,8 @@ ConditionUser=${user_name}
 
 [Service]
 Type=oneshot
-TimeoutStopSec=70
-ExecStart=sed -i "s/SECRET_KEY=.*/SECRET_KEY=\'$(printf '%s\n' "$(chars='abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'; python -c "import secrets; print(''.join(secrets.choice('${chars}') for i in range(50)))")" | sed -e 's/[\/&]/\\&/g')\'/" /etc/opt/ceramic_isles_dev/settings/.env
+TimeoutStopSec=20
+ExecStart=/etc/opt/${project_name}/settings/key
 
 [Install]
 WantedBy=multi-user.target default.target
