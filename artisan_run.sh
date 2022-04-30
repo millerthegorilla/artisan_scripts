@@ -22,7 +22,7 @@ set +a
 
 function set_shell()
 {
-  if [[ ${DEBUG} == "FALSE" ]]
+  if [[ -z ${DEBUG} || ${DEBUG} == "FALSE" ]]
   then
     if [[ ! -n "${USER_NAME}" ]]
     then
@@ -41,16 +41,19 @@ function set_shell()
   fi
 }
 
-if [[ -z "${DEBUG}" ]]
-then
-  echo -e "\nIs this development ie debug? : "
-  select yn in "Yes" "No"; do
-      case $yn in
-          Yes ) DEBUG="TRUE"; break;;
-          No ) DEBUG="FALSE"; break;;
-      esac
-  done
-fi
+function debug_check()
+{
+  if [[ -z "${DEBUG}" ]]
+  then
+    echo -e "\nIs this development ie debug? : "
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) DEBUG="TRUE"; break;;
+            No ) DEBUG="FALSE"; break;;
+        esac
+    done
+  fi
+}
 
 while (( "$#" )); do
   case "$1" in
@@ -247,6 +250,9 @@ while (( "$#" )); do
       then
           echo -e "\nCurrent Settings is ${CURRENT_SETTINGS}"
       fi
+      
+      debug_check()
+
       if [[ ${DEBUG} == "TRUE" ]]   ## TODO function 
       then   # TODO function for below
           echo "Please select the settings file from the list"
