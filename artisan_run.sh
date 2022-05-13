@@ -313,8 +313,8 @@ while (( "$#" )); do
       exit $?
       ;;
     appsrc)
-      read -p "File with github addresses : " GITFILE
-      read -p "Directory to clone into : " GITDIR
+      read -p "File with github addresses : " -e GITFILE
+      read -p "Directory to clone into : " -e GITDIR
       LINES=$(cat ${GITFILE})
       pushd ${GITDIR}
       for line in $LINES
