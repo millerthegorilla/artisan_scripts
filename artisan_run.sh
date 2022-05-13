@@ -316,12 +316,10 @@ while (( "$#" )); do
       read -p "File with github addresses : " -e GITFILE
       read -p "Directory to clone into : " -e GITDIR
       LINES=$(cat ${GITFILE})
-      pushd ${GITDIR}
       for line in $LINES
       do
-        git clone ${line}
+        runuser --login ${USER_NAME} -P -c "git -C ${GITDIR} clone ${line}"
       done
-      popd
       exit $?
       ;;
     help|-h|-?|--help)
