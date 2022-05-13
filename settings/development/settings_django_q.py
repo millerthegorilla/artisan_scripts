@@ -104,6 +104,8 @@ TEMPLATES = [
                 'django_artisan.context_processors.category_visible',
                 'django_artisan.context_processors.location_visible',
                 'django_artisan.context_processors.max_images',
+                'django_artisan.context_processors.image_exts',
+                'django_artisan.context_processors.max_upload_size',
             ],
         },
     },
