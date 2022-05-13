@@ -312,11 +312,26 @@ while (( "$#" )); do
       runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"runuser -s /bin/bash artisan -c 'source /home/artisan/django_venv/bin/activate && pip ${COMMANDS}'\""
       exit $?
       ;;
+    appsrc)
+      read -p "File with github addresses : " GITFILE
+      read -p "Directory to clone into : " GITDIR
+      LINES=$(cat ${GITFILE})
+      pushd ${GITDIR}
+      for line in $LINES
+      do
+        git clone ${line}
+      done
+      popd
+      exit $?
+      ;;
     help|-h|-?|--help)
       echo -e "$ artisan_run command   - where command is one of clean,
 create [ variables, directories, images, containers, systemd ],
 install, interact, manage, pip, postgit, refresh, replace, reload, status,
 settings, update or help.
+
+appsrc - clones app src directories from a repository, ie github, by cloning
+         each address in a file of addresses one at a time.
 
 clean - cleans the project, deleting the containers and pod, and deleting 
         settings files etc.
