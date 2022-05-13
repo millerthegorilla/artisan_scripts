@@ -313,6 +313,10 @@ while (( "$#" )); do
       exit $?
       ;;
     appsrc)
+      if [[ -z ${USER_NAME} ]]
+      then
+          read -p "Enter username : " USER_NAME
+      fi
       read -p "File with github addresses : " -e GITFILE
       read -p "Directory to clone into : " -e GITDIR
       LINES=$(cat ${GITFILE})
