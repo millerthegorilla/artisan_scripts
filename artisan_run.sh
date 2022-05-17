@@ -53,7 +53,7 @@ function install_check()
   echo -e "Scripts are ${INSTALLED}";
 }
 
-
+install_check
 while (( "$#" )); do
   case "$1" in
     install)
@@ -189,7 +189,7 @@ while (( "$#" )); do
       exit $?
       ;;
     status)
-      install_check
+      #install_check
       if [[ -n "${USER_NAME}" ]]
       then
           echo -e "User is ${USER_NAME}"
