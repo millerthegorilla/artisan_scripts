@@ -29,12 +29,15 @@ function install_check()
     do
       if [[ ${line} != ".git" && ${line:0:26} != "./dockerfiles/django/media" && "0555" -ne $(stat -c '%a' ${line}) ]];
       then
+        echo 1
         INSTALLED="not installed!";
       elif [[ ${line} == ".git" && "0755" -ne $(stat -c '%a' ${line}) ]];
       then
+        echo 2
         INSTALLED="not installed!";
       elif [[ ${line:0:26} == "./dockerfiles/django/media" && "0770" -ne $(stat -c '%a' ${line}) ]];
       then
+        echo 3
         INSTALLED="not installed!";
       fi
     done
@@ -42,9 +45,11 @@ function install_check()
     do
       if [[ ${line} != "./templates/maria/maria.sh" && "0550" -ne $(stat -c '%a' ${line}) ]];
       then
+        echo 4
         INSTALLED="not installed!"
       elif [[ ${line} == "./templates/maria/maria.sh" && "0444" -ne $(stat -c '%a' ${line}) ]];
       then
+        echo 5
         INSTALLED="not installed!"
       fi
     done
