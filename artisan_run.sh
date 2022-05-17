@@ -53,7 +53,7 @@ function install_check()
   echo -e "Scripts are ${INSTALLED}";
 }
 
-if [[ "install" != *${#} ]];
+if [[ "install" != *$# ]];
 then
   install_check
 fi
