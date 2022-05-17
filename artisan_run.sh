@@ -188,6 +188,7 @@ while (( "$#" )); do
       exit $?
       ;;
     status)
+      install_check()
       if [[ -n "${USER_NAME}" ]]
       then
           echo -e "User is ${USER_NAME}"
