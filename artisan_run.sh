@@ -53,9 +53,10 @@ function install_check()
   echo -e "Scripts are ${INSTALLED}";
 }
 
-if [[ ! " ${#[*]} " =~ " install " ]]; then
-  install_check
+if [[ ! "$1" == "install" | "$1" == "uninstall" ]]; then
+        echo "yup";
 fi
+
 
 while (( "$#" )); do
   case "$1" in
@@ -83,6 +84,7 @@ while (( "$#" )); do
       find .git/objects -type f | xargs chmod 664
       find .git -type f | grep -v /objects/ | xargs chmod 644
       chmod 0775 ./artisan_run.sh
+      install_check
       exit $?
       ;;
     create)
