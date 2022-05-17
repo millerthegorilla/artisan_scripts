@@ -22,7 +22,7 @@ set +a
 
 function install_check()
 {
-  INSTALLED="installed"
+  INSTALLED="installed."
   while [[ installed == "installed." ]];
   do
     for line in $(find . -type d);
