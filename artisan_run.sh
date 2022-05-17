@@ -53,7 +53,11 @@ function install_check()
   echo -e "Scripts are ${INSTALLED}";
 }
 
-install_check
+if [[ "install" != *${#} ]];
+then
+  install_check
+fi
+
 while (( "$#" )); do
   case "$1" in
     install)
