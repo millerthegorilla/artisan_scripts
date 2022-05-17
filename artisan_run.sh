@@ -23,45 +23,86 @@ set +a
 function install_check()
 {
   INSTALLED="installed."
-  while [[ ${INSTALLED} == "installed." ]];
-  do
+ # should have used a case statement.... doh.
     for line in $(find . -type d);
     do
-      if [[ ${line} != ".git" && ${line:0:26} != "./dockerfiles/django/media" && "0555" -ne $(stat -c '%a' ${line}) ]];
+      if [[ ${line:0:6} != "./.git" && ${line:0:26} != "./dockerfiles/django/media" && "555" -ne $(stat -c '%a' ${line}) ]];
       then
-        echo 1
+        echo 1 $line
         INSTALLED="not installed!";
-      elif [[ ${line} == ".git" && "0755" -ne $(stat -c '%a' ${line}) ]];
+  break;
+      elif [[ ${line:0:6} == "./.git" && "755" -ne $(stat -c '%a' ${line}) ]];
       then
-        echo 2
+        echo 2 $line
         INSTALLED="not installed!";
-      elif [[ ${line:0:26} == "./dockerfiles/django/media" && "0770" -ne $(stat -c '%a' ${line}) ]];
+  break;
+      elif [[ ${line:0:26} == "./dockerfiles/django/media" && "770" -ne $(stat -c '%a' ${line}) ]];
       then
-        echo 3
+        echo 3 $line
         INSTALLED="not installed!";
+  break;
       fi
     done
-    for line in $(find -type f -name "*.sh")
-    do
-      if [[ ${line} != "./templates/maria/maria.sh" && "0550" -ne $(stat -c '%a' ${line}) ]];
-      then
-        echo 4
-        INSTALLED="not installed!"
-      elif [[ ${line} == "./templates/maria/maria.sh" && "0444" -ne $(stat -c '%a' ${line}) ]];
-      then
-        echo 5
-        INSTALLED="not installed!"
-      fi
-    done
-  done
-  ## can't be arsed to finish this, should be using ansible instead of my lousy scripts.
+    if [[ $INSTALLED == "installed." ]];
+    then
+      for line in $(find -type f -name "*.sh")
+      do
+        if [[ ${line} != "./templates/maria/maria.sh" && "550" -ne $(stat -c '%a' ${line}) ]];
+        then
+          echo 4 $line
+          INSTALLED="not installed!"
+      break;
+        elif [[ ${line} == "./templates/maria/maria.sh" && "444" -ne $(stat -c '%a' ${line}) ]];
+        then
+          echo 5 $line
+          INSTALLED="not installed!"
+    break;
+        fi
+      done
+    fi
+    if [[ $INSTALLED == "installed." ]];
+    then
+      for line in $(find ./dockerfiles/django/media -type d)
+      do
+        if [[  "770" -ne $(stat -c '%a' ${line}) ]];
+        then
+          echo 6 $line
+    INSTALLED="not installed!";
+    break;
+        fi
+      done
+    fi
+    if [[ $INSTALLED == "installed." ]];
+    then
+      for line in $(find ./dockerfiles/django/media -type f)
+      do
+        if [[  "440" -ne $(stat -c '%a' ${line}) ]];
+        then
+          echo 7 $line
+          INSTALLED="not installed!";
+    break;
+        fi
+      done
+    fi;
+    if [[ $INSTALLED == "installed." ]];
+    then
+      for line in $(find ./dockerfiles/django/media -type f) 
+      do
+        if [[  "440" -ne $(stat -c '%a' ${line}) ]];
+        then
+          echo 7 $line
+          INSTALLED="not installed!";
+    break;
+        fi
+     done
+   fi
+
   echo -e "Scripts are ${INSTALLED}";
 }
 
-if [[ ! "$1" == "install" | "$1" == "uninstall" ]]; then
+if [[ ! "$1" == "install" || "$1" == "uninstall" ]]; then
         echo "yup";
 fi
-
 
 while (( "$#" )); do
   case "$1" in
