@@ -23,27 +23,27 @@ set +a
 function install_check()
 {
   INSTALLED="installed."
-  while [[ installed == "installed." ]];
+  while [[ ${INSTALLED} == "installed." ]];
   do
     for line in $(find . -type d);
-    do 
-      if [[ line != ".git" && ${line:0:26} != "./dockerfiles/django/media" && "0555" -ne $(stat -c '%a' line) ]];
-      then 
-        INSTALLED="not installed!";
-      elif [[ line == ".git" && "0755" -ne $(stat -c '%a' line) ]];
+    do
+      if [[ ${line} != ".git" && ${line:0:26} != "./dockerfiles/django/media" && "0555" -ne $(stat -c '%a' ${line}) ]];
       then
         INSTALLED="not installed!";
-      elif [[ ${line:0:26} == "./dockerfiles/django/media" && "0770" -ne $(stat -c '%a' line) ]];
+      elif [[ ${line} == ".git" && "0755" -ne $(stat -c '%a' ${line}) ]];
+      then
+        INSTALLED="not installed!";
+      elif [[ ${line:0:26} == "./dockerfiles/django/media" && "0770" -ne $(stat -c '%a' ${line}) ]];
       then
         INSTALLED="not installed!";
       fi
     done
     for line in $(find -type f -name "*.sh")
     do
-      if [[ line != "./templates/maria/maria.sh" && "0550" -ne $(stat -c '%a' line) ]];
+      if [[ ${line} != "./templates/maria/maria.sh" && "0550" -ne $(stat -c '%a' ${line}) ]];
       then
         INSTALLED="not installed!"
-      elif [[ line == "./templates/maria/maria.sh" && "0444" -ne $(stat -c '%a' line) ]];
+      elif [[ ${line} == "./templates/maria/maria.sh" && "0444" -ne $(stat -c '%a' ${line}) ]];
       then
         INSTALLED="not installed!"
       fi
@@ -52,6 +52,7 @@ function install_check()
   ## can't be arsed to finish this, should be using ansible instead of my lousy scripts.
   echo -e "Scripts are ${INSTALLED}";
 }
+
 
 while (( "$#" )); do
   case "$1" in
@@ -188,7 +189,7 @@ while (( "$#" )); do
       exit $?
       ;;
     status)
-      install_check()
+      install_check
       if [[ -n "${USER_NAME}" ]]
       then
           echo -e "User is ${USER_NAME}"
