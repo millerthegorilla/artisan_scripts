@@ -53,8 +53,7 @@ function install_check()
   echo -e "Scripts are ${INSTALLED}";
 }
 
-if [[ "install" != *"$#" ]];
-then
+if [[ ! " ${#[*]} " =~ " install " ]]; then
   install_check
 fi
 
@@ -70,6 +69,7 @@ while (( "$#" )); do
       chmod 0444 templates/maria/maria.sh
       find ./dockerfiles/django/media -type d | xargs chmod 770
       find ./dockerfiles/django/media -type f | xargs chmod 440
+      install_check
       exit $?
       ;;
     uninstall)
