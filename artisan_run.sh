@@ -100,8 +100,8 @@ function install_check()
   echo -e "Scripts are ${INSTALLED}";
 }
 
-if [[ ! "$1" == "install" || ! "$1" == "uninstall" ]]; then
-    install_check
+if [[ "$1" != "install" && "$1" != "uninstall" ]]; then
+    echo "yup"
 fi
 
 while (( "$#" )); do
