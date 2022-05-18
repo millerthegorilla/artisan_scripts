@@ -28,17 +28,17 @@ function install_check()
     do
       if [[ ${line:0:6} != "./.git" && ${line:0:26} != "./dockerfiles/django/media" && "555" -ne $(stat -c '%a' ${line}) ]];
       then
-        echo 1 $line
+        ERROR=": ERR1 $line"
         INSTALLED="not installed!";
   break;
       elif [[ ${line:0:6} == "./.git" && "755" -ne $(stat -c '%a' ${line}) ]];
       then
-        echo 2 $line
+        ERROR=": ERR2 $line"
         INSTALLED="not installed!";
   break;
       elif [[ ${line:0:26} == "./dockerfiles/django/media" && "770" -ne $(stat -c '%a' ${line}) ]];
       then
-        echo 3 $line
+        ERROR=": ERR3 $line"
         INSTALLED="not installed!";
   break;
       fi
@@ -49,14 +49,14 @@ function install_check()
       do
         if [[ ${line} != "./templates/maria/maria.sh" && "550" -ne $(stat -c '%a' ${line}) ]];
         then
-          echo 4 $line
+          ERROR=": ERR4 $line"
           INSTALLED="not installed!"
       break;
         elif [[ ${line} == "./templates/maria/maria.sh" && "444" -ne $(stat -c '%a' ${line}) ]];
         then
-          echo 5 $line
+          ERROR=": ERR5 $line"
           INSTALLED="not installed!"
-    break;
+          break;
         fi
       done
     fi
@@ -66,9 +66,9 @@ function install_check()
       do
         if [[  "770" -ne $(stat -c '%a' ${line}) ]];
         then
-          echo 6 $line
-    INSTALLED="not installed!";
-    break;
+          ERROR=": ERR6 $line"
+          INSTALLED="not installed!";
+          break;
         fi
       done
     fi
@@ -78,9 +78,9 @@ function install_check()
       do
         if [[  "440" -ne $(stat -c '%a' ${line}) ]];
         then
-          echo 7 $line
+          ERROR=": ERR7 $line"
           INSTALLED="not installed!";
-    break;
+          break;
         fi
       done
     fi;
@@ -90,14 +90,14 @@ function install_check()
       do
         if [[  "440" -ne $(stat -c '%a' ${line}) ]];
         then
-          echo 7 $line
+          ERROR=": ERR8 $line"
           INSTALLED="not installed!";
-    break;
+          break;
         fi
      done
    fi
 
-  echo -e "Scripts are ${INSTALLED}";
+  echo -e "Scripts are ${INSTALLED} $ERROR";
 }
 
 if [[ "$1" != "install" && "$1" != "uninstall" ]]; then
