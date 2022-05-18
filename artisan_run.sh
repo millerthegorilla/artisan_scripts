@@ -101,7 +101,7 @@ function install_check()
 }
 
 if [[ "$1" != "install" && "$1" != "uninstall" ]]; then
-    echo "yup"
+    install_check;
 fi
 
 while (( "$#" )); do
