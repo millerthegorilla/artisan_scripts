@@ -7,6 +7,14 @@ then
    exit 1
 fi
 
+echo -e "\nThe following questions are to fill out the env files that are called upon by the scripts when executing, and by the settings file during production.  The settings .env file is called from the settings file using os.getenv, after the env file is loaded into the environment by the python program dotenv.  This .env file is located in the settings folder, along with settings.py.  You can edit either of those files to edit your site.   Press enter to accept default value[] where listed...\n\n"
+
+echo -e "#******************************************************************"
+echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
+echo -e "#**** and have a password protected system user account       *****"
+echo -e "#**** with a home directory ready                             *****"
+echo -e "#******************************************************************"
+
 read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
 USER_NAME=${USER_NAME:-"artisan_sysd"}
 if [[ $(id ${USER_NAME} > /dev/null 2>&1; echo $?) -ne 0 ]]
@@ -20,13 +28,8 @@ then
 #     fi
 fi
 
-echo -e "\nThe following questions are to fill out the env files that are called upon by the scripts when executing, and by the settings file during production.  The settings .env file is called from the settings file using os.getenv, after the env file is loaded into the environment by the python program dotenv.  This .env file is located in the settings folder, along with settings.py.  You can edit either of those files to edit your site.   Press enter to accept default value[] where listed...\n\n"
-
-echo -e "#******************************************************************"
-echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
-echo -e "#**** and have a password protected system user account       *****"
-echo -e "#**** with a home directory ready                             *****"
-echo -e "#******************************************************************"
+read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " USER_DIR
+USER_DIR=${USER_DIR:-/home/${USER_NAME}}
 
 isValidVarName() {
     echo "$1" | grep -q '^[_[:alpha:]][_[:alpha:][:digit:]]*$' && return || return 1
@@ -41,7 +44,7 @@ do
    fi
 done
 
-cd /
+pushd /
 until [[ -d "${CODE_PATH}" && ! -L "${CODE_PATH}" ]] 
 do
     read -p 'Absolute path to code (the folder where manage.py resides) : ' -e CODE_PATH
@@ -53,12 +56,14 @@ do
     then
         echo -e "Code path must not be a symbolic link"
     fi
+    if [[ ! -d "${CODE_PATH}/media" ]]
+    then
+        echo -e "There is no media dir in that location. Are you sure?  I will progress anyway.  If it is incorrect, simply stop the script and restart."
+    fi
 done
-echo -e "code path is ${CODE_PATH}"
-cd ${SCRIPTS_ROOT}
 
-read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " USER_DIR
-USER_DIR=${USER_DIR:-/home/${USER_NAME}}
+echo -e "code path is ${CODE_PATH}"
+popd
 
 PROJECT_NAME=${project_name}
 
@@ -158,6 +163,8 @@ pod_name=${pname:-${pod_name}}
 # base dir is used in settings_env for base_dir in settings.py
 read -p "Container base code directory [/opt/${project_name}/] : " bdir
 base_dir=${bdir:-/opt/${project_name}/}
+
+## STATIC BASE ROOT AND MEDIA BASE ROOT
 # static base root is in the container
 if [[ ${DEBUG} == "TRUE" ]]
 then
@@ -184,7 +191,7 @@ read -p "Swag Host log dir (must be different to Host Log Dir) [${USER_DIR}/${pr
 swag_host_log_dir=${shld:-${USER_DIR}/${project_name}/swag_logs}
 # host static dir mounts on to static base root from django and swag conts.
 
-## HOST STATIC & MEDIA
+## HOST STATIC & MEDIA FOR VOLUME MOUNTS
 host_static_dir=/etc/opt/${project_name}/static_files/
 host_media_dir=/etc/opt/${project_name}/media_files/
 
