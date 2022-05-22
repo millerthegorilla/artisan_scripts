@@ -93,7 +93,7 @@ fi
 dockerfile_app_names=""
 if [[ ${DEBUG} == "TRUE" ]]
 then
-    echo -e 'mount app source code directories'
+    echo -e 'mount app source code directories? - note that repository name must be indentical to the contained app name.'
     select yn in "Yes" "No"; do
         case $yn in
             Yes ) MOUNT_SRC_CODE="TRUE"; break;;
