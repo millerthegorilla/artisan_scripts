@@ -44,7 +44,7 @@ do
    fi
 done
 
-pushd /
+pushd / &> /dev/null
 until [[ -d "${CODE_PATH}" && ! -L "${CODE_PATH}" ]] 
 do
     read -p 'Absolute path to code (the folder where manage.py resides) : ' -e CODE_PATH
@@ -63,7 +63,7 @@ do
 done
 
 echo -e "code path is ${CODE_PATH}"
-popd
+popd &> /dev/null
 
 PROJECT_NAME=${project_name}
 
