@@ -317,7 +317,7 @@ fi
 rm ${SCRIPTS_ROOT}/.proj
 
 runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"
-if [[ $? == 0 ]]
+if [[ $? != 0 ]]
 then
     echo -n "Finished Cleaning."
 else
