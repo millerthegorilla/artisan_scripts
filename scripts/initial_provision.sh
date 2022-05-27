@@ -88,6 +88,7 @@ function build_maria()
    fi
    cp ${SCRIPTS_ROOT}/dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
    cp ${SCRIPTS_ROOT}/dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
+   chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
    read -p "DEBUG STOP"
    runuser --login ${USER_NAME} -c "podman build --tag='maria:artisan_${1}' -f='dockerfile_maria'"
    echo -e "DBNAME=${DB_NAME}" > ${SCRIPTS_ROOT}/.images/maria
