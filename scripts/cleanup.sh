@@ -312,12 +312,14 @@ then
     USER_NAME=${USER_NAME} SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_cleanup.sh
     cd ${SCRIPTS_ROOT}   
     rm -rf ${SCRIPTS_ROOT}/systemd 
-    mkdir ${SCRIPTS_ROOT}/systemd
-    cp ${SCRIPTS_ROOT}/templates/systemd/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore
-    #chown ${USER_NAME}:${USER_NAME} ${SCRIPTS_ROOT}/systemd/.gitignore
 fi
 
 rm ${SCRIPTS_ROOT}/.proj
 
-echo -n "Finished Cleaning.  Pod :"
 runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"
+if [[ $? == 0 ]]
+then
+    echo -n "Finished Cleaning."
+else
+    echo -n "Finished Cleaning but **pod still exists**"
+fi

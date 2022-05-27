@@ -12,7 +12,11 @@ source ${SCRIPTS_ROOT}/.env
 source ${SCRIPTS_ROOT}/.proj
 
 runuser --login "${USER_NAME}" -c "mkdir ~/systemd; cd ~/systemd && podman generate systemd --new --name --files ${POD_NAME}"
+
+mkdir ${SCRIPTS_ROOT}/systemd
+cp ${SCRIPTS_ROOT}/templates/systemd/systemd_git_ignore ${SCRIPTS_ROOT}/systemd/.gitignore
 cp ${USER_DIR}/systemd/* ${SCRIPTS_ROOT}/systemd/
+chown -R ${USER}:${USER} ${SCRIPTS_ROOT}/systemd
 rm -rf ${USER_DIR}/systemd
 
 ## TEMPLATES
