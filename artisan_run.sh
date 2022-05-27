@@ -30,28 +30,28 @@ function install_check()
       then
         ERROR=": ERR1 $line"
         INSTALLED="not installed!";
-  break;
+        break;
       elif [[ ${line:0:6} == "./.git" && "755" -ne $(stat -c '%a' ${line}) ]];
       then
         ERROR=": ERR2 $line"
         INSTALLED="not installed!";
-  break;
+        break;
       elif [[ ${line:0:26} == "./dockerfiles/django/media" && "770" -ne $(stat -c '%a' ${line}) ]];
       then
         ERROR=": ERR3 $line"
         INSTALLED="not installed!";
-  break;
+        break;
       fi
     done
     if [[ $INSTALLED == "installed." ]];
     then
       for line in $(find -type f -name "*.sh")
       do
-        if [[ ${line} != "./templates/maria/maria.sh" && "550" -ne $(stat -c '%a' ${line}) ]];
+        if [[ ${line} != "./templates/maria/maria.sh" && "440" -ne $(stat -c '%a' ${line}) ]];
         then
           ERROR=": ERR4 $line"
           INSTALLED="not installed!"
-      break;
+          break;
         elif [[ ${line} == "./templates/maria/maria.sh" && "444" -ne $(stat -c '%a' ${line}) ]];
         then
           ERROR=": ERR5 $line"
@@ -113,7 +113,8 @@ while (( "$#" )); do
       find .git -type d | xargs chmod 755
       find .git/objects -type f | xargs chmod 444
       find .git -type f | grep -v /objects/ | xargs chmod 644
-      chmod 0444 templates/maria/maria.sh
+      chmod 0440 templates/maria/maria_prod.sh
+      chmod 0440 templates/maria/maria_dev.sh
       find ./dockerfiles/django/media -type d | xargs chmod 770
       find ./dockerfiles/django/media -type f | xargs chmod 440
       install_check
