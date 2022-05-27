@@ -350,7 +350,7 @@ then
  else
     cat ${SCRIPTS_ROOT}/templates/maria/maria_prod.sh | envsubst '$db_user:$db_host:$db_name' > ${SCRIPTS_ROOT}/dockerfiles/maria.sh
 fi
-exit
+
 if [[ ${DEBUG} == "FALSE" ]]
 then
     set -a
