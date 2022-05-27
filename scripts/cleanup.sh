@@ -311,7 +311,7 @@ if [[ ${SYSD} == "TRUE" ]]
 then
     USER_NAME=${USER_NAME} SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_cleanup.sh
     cd ${SCRIPTS_ROOT}   
-    rm -rf ${SCRIPTS_ROOT}/systemd 
+    rm -rf ${SCRIPTS_ROOT}/systemd
 fi
 
 rm ${SCRIPTS_ROOT}/.proj
