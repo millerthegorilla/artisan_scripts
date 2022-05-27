@@ -47,12 +47,12 @@ function install_check()
     then
       for line in $(find -type f -name "*.sh")
       do
-        if [[ ${line} != "./templates/maria/maria.sh" && "440" -ne $(stat -c '%a' ${line}) ]];
+        if [[ ${line:0:-8} != "./templates/maria/" && "550" -ne $(stat -c '%a' ${line}) ]];
         then
           ERROR=": ERR4 $line"
           INSTALLED="not installed!"
           break;
-        elif [[ ${line} == "./templates/maria/maria.sh" && "444" -ne $(stat -c '%a' ${line}) ]];
+        elif [[ ${line:0:-8} == "./templates/maria/" && "444" -ne $(stat -c '%a' ${line}) ]];
         then
           ERROR=": ERR5 $line"
           INSTALLED="not installed!"
