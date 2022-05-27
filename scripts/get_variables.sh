@@ -344,7 +344,7 @@ chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/manage.py
 cat ${SCRIPTS_ROOT}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
 chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/${django_project_name}/wsgi.py
 cat ${SCRIPTS_ROOT}/templates/gunicorn/init | envsubst > ${SCRIPTS_ROOT}/dockerfiles/django/init
-if [[ ${DEBUG} == "True" ]]
+if [[ ${DEBUG} == "TRUE" ]]
 then
     cat ${SCRIPTS_ROOT}/templates/maria/maria_dev.sh | envsubst '$db_user:$db_host:$db_name' > ${SCRIPTS_ROOT}/dockerfiles/maria.sh
  else
