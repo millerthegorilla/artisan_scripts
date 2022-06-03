@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django_forum',
     'django_bs_carousel',
     'django_artisan',
-    'django_restic',
     'django_email_verification',
     'django.contrib.admin',
     'django.contrib.auth',
