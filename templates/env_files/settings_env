@@ -3,6 +3,7 @@
 ## This file is renamed .env and is placed in the settings folder where django's settings.py resides
 ## There is no variable substitution so any bash $variables are for illustrative purposes only.
 ###
+
 PROJECT_NAME=${project_name}
 # this is asked for several times also during scripts running
 DJANGO_PROJECT_NAME=${django_project_name}

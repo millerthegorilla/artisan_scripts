@@ -134,6 +134,9 @@ DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
 DBBACKUP_STORAGE_OPTIONS = {
     'oauth2_access_token': os.getenv("DROPBOX_OAUTH_TOKEN"),
 }
+DBBACKUP_CLEANUP_KEEP = 10
+DBBACKUP_CLEANUP_KEEP_MEDIA = 5
+
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
