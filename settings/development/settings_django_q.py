@@ -370,7 +370,7 @@ SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 ## SESSION SETTINGS
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-ESSION_COOKIE_AGE = 129600 # 36 hours.  # defaults to two weeks
+SESSION_COOKIE_AGE = 129600 # 36 hours.  # defaults to two weeks
 SESSION_COOKIE_SECURE = True    # set this to true when using https
 # SESSION_SAVE_EVERY_REQUEST = True  #updates timestamp to increase session_cookie_age
 
