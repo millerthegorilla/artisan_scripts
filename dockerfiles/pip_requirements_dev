@@ -1,5 +1,5 @@
 # hope this comment allows the first entry to be installed
-asgiref==3.3.3
+asgiref==3.4.1
 bleach==3.3.0
 certifi==2020.12.5
 clamd==1.0.2
