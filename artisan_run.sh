@@ -425,7 +425,7 @@ while (( "$#" )); do
         exit 1;
       fi
       read -p "Database root password? : " ROOT_PWD
-      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant all on *.* to \"${DB_USER}\"@\"127.0.0.1\"' | mysql -uroot -p${ROOT_PWD}\""
+      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant all on *.* to ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
       exit $?
       ;;
     tests_off)
@@ -435,12 +435,12 @@ while (( "$#" )); do
         exit 1;
       fi
       read -p "Database root password? : " ROOT_PWD
-      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'revoke all privileges on *.* from \"${DB_USER}\"@\"127.0.0.1\"' | mysql -uroot -p${ROOT_PWD}\""
+      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'revoke all privileges from ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
       if [[ ${DEBUG} == "TRUE" ]]
       then
-        runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, DROP, LOCK on ${DB_NAME}.* to \"${DB_USER}\"@\"127.0.0.1\"' | mysql -uroot -p${ROOT_PWD}\""
+        runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, DROP, LOCK on ${DB_NAME}.* to ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
       else
-        runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE on ${DB_NAME}.* to \"${DB_USER}\"@\"127.0.0.1\"' | mysql -uroot -p${ROOT_PWD}\""
+        runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE on ${DB_NAME}.* to ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
       fi
       exit $?
       ;;
