@@ -414,6 +414,32 @@ while (( "$#" )); do
       done
       exit $?
       ;;
+    tests_on)
+      if [[ -z ${MARIA_CONT_NAME} ]]
+      then
+        echo "No database container is found!";
+        exit 1;
+      fi
+      read -p "Database root password? : " ROOT_PWD
+      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant all on *.* to ${DB_USER}' | mysql -uroot -p${ROOT_PWD}\""
+      exit $?
+      ;;
+    tests_off)
+      if [[ -z ${MARIA_CONT_NAME} ]]
+      then
+        echo "No database container is found!";
+        exit 1;
+      fi
+      read -p "Database root password? : " ROOT_PWD
+      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'revoke all privileges on *.* from ${DB_USER}' | mysql -uroot -p${ROOT_PWD}\""
+      if [[ ${DEBUG} == "TRUE" ]]
+      then
+        runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, DROP, LOCK on ${DB_NAME}.* to ${DB_USER}' | mysql -uroot -p${ROOT_PWD}\""
+      else
+        runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE on ${DB_NAME}.* to ${DB_USER}' | mysql -uroot -p${ROOT_PWD}\""
+      fi
+      exit $?
+      ;;
     help|-h|-?|--help)
       echo -e "$ artisan_run command   - where command is one of clean,
 create [ variables, directories, images, containers, systemd ],
@@ -421,7 +447,7 @@ install, interact, manage, pip, postgit, refresh, replace, reload, status,
 settings, update or help.
 
 appsrc - clones app src directories from a repository, ie github, by cloning
-         each address in a file of addresses one at a time.
+         each address in a file of addresses one at a time into a specified directory.
 
 clean - cleans the project, deleting the containers and pod, and deleting 
         settings files etc.
