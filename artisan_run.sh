@@ -435,10 +435,10 @@ while (( "$#" )); do
         exit 1;
       fi
       read -p "Database root password? : " ROOT_PWD
-      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'revoke all privileges from ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
+      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'revoke all privileges, grant option from ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
       if [[ ${DEBUG} == "TRUE" ]]
       then
-        runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, DROP, LOCK on ${DB_NAME}.* to ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
+        runuser --login ${USER_NAME} -P -c "podman exec -it mariadb_cont bash -c \"echo 'GRANT CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, DROP, LOCK ON ceramic_isles_dev_db.* TO ceramic_isles_dev_db_user@127.0.0.1 IDENTIFIED BY \"HI0yS5SDkhNa_tvFcppLvbUVb62OEK2X\";' | mysql -uroot -pwj4BDek7vcP6fu5\""
       else
         runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE on ${DB_NAME}.* to ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
       fi
