@@ -438,7 +438,7 @@ while (( "$#" )); do
       runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'revoke all privileges, grant option from ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
       if [[ ${DEBUG} == "TRUE" ]]
       then
-        runuser --login ${USER_NAME} -P -c "podman exec -it mariadb_cont bash -c \"echo 'GRANT CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, DROP, LOCK TABLES ON ${DB_NAME}.* TO ${DB_USER}@${DB_HOST} IDENTIFIED BY \"${DB_PASSWORD}\";' | mysql -uroot -p'${ROOT_PWD}'\""
+        runuser --login dev -P -c "podman exec -it mariadb_cont bash -c \"echo 'GRANT DROP, CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, LOCK TABLES ON ${DB_NAME}.* TO ${DB_USER}@${DB_HOST} IDENTIFIED BY \\\"${DB_PASSWORD}\\\";' | mysql -uroot -p${ROOT_PWD}\""
       else
         runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE on ${DB_NAME}.* to ${DB_USER}@${DB_HOST}' | mysql -uroot -p${ROOT_PWD}\""
       fi
