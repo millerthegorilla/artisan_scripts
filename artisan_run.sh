@@ -425,7 +425,7 @@ while (( "$#" )); do
         exit 1;
       fi
       read -p "Database root password? : " ROOT_PWD
-      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant all on *.* to ${DB_USER}' | mysql -uroot -p${ROOT_PWD}\""
+      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'grant all on *.* to \"${DB_USER}\"@\"127.0.0.1\"' | mysql -uroot -p${ROOT_PWD}\""
       exit $?
       ;;
     tests_off)
