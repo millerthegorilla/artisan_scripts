@@ -18,6 +18,10 @@ if [[ -e ${SCRIPTS_ROOT}/.archive ]]
 then
     source ${SCRIPTS_ROOT}/.archive
 fi
+if [[ -e ${SCRIPTS_ROOT}/.env ]]
+then
+    source ${SCRIPTS_ROOT}/.env
+fi
 set +a
 
 function install_check()
