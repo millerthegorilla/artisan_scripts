@@ -496,6 +496,11 @@ status - reports the current status of the project.
 settings - replaces the settings file with one you choose from the 
            dev/production directory.
 
+tests_on - changes database permissions sufficient to allow tests to be run
+
+tests_off - changes database permissions back to minimal set, depending on
+            whether project is debug or production.
+
 update - runs apt-get update in all the containers.  Note that when you create a
          project you can specify that the containers are updated where possible,
          which will be done automatically by podman.
