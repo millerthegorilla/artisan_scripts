@@ -9,16 +9,17 @@ fi
 source ${SCRIPTS_ROOT}/options
 
 echo -e "Enter absolute filepath of project variables or press enter to accept default.\n \
-         If the default does not exist, then you can enter the variables manually...\n"
+         If the default does not exist, then you can enter the variables manually..."
 read -p ": " -e PROJECT_FILE
 
 if ![[ -n ${PROJECT_FILE} && -f ${PROJECT_FILE} ]];
 then
     cp ${PROJECT_FILE} ./.proj
-elif [[ -n ${DEFAULT_PROJECT_FILE} && -f ${DEFAULT_PROJECT_FILE} ]]; then
+elif [[ -n ${DEFAULT_PROJECT_FILE} && -f ${DEFAULT_PROJECT_FILE} ]];
+then
     cp ${DEFAULT_PROJECT_FILE} ./.proj
 else
-    get_variables_and_make_project_file()
+    get_variables_and_make_project_file
 fi
 
 function get_variables_and_make_project_file()
