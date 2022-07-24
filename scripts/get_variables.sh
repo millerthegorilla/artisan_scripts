@@ -1,5 +1,4 @@
 #!/bin/bash
-set -a
 
 if [[ $EUID -ne 0 ]]
 then
@@ -7,7 +6,7 @@ then
    exit 1
 fi
 
-source .options
+source ${SCRIPTS_ROOT}/.options
 
 read -p "Enter absolute filepath of project variables or press enter to accept default.\
          If the default does not exist, then you can enter the variables manually..." -e PROJECT_FILE
@@ -23,10 +22,16 @@ fi
 
 function get_variables_and_make_project_file()
 {
+    set -a
+        CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts"
+    set +a
+    
     source ${CONTAINER_SCRIPTS_ROOT}/.questions.sh
-
-    for container in ls ${CONTAINER_SCRIPTS_ROOT}
-        source container/variables/questions.sh    
+    
+    for container in $(ls -d ${CONTAINER_SCRIPTS_ROOT}/containers/*)
+    do
+        source ${container}/variables/questions.sh
+    done
 
     # dockerfile_app_names=""
     # if [[ ${DEBUG} == "TRUE" ]]
