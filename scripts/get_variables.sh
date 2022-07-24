@@ -14,7 +14,7 @@ function get_variables_and_make_project_file()
         CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts"
     set +a
     
-    source ${CONTAINER_SCRIPTS_ROOT}/.questions.sh
+    source ${CONTAINER_SCRIPTS_ROOT}/questions.sh
     
     for container in $(ls -d ${CONTAINER_SCRIPTS_ROOT}/containers/*)
     do
