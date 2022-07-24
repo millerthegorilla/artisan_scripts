@@ -1,2 +1,3 @@
 TERMINAL_CMD="gnome-terminal --"
 DEFAULT_PROJECT_FILE=
+LOCAL_SETTINGS_FILE="./settings.sh"

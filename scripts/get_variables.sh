@@ -12,6 +12,7 @@ function get_variables_and_make_project_file()
 {
     set -a
         CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts"
+        LOCAL_SETTINGS_FILE=${LOCAL_SETTINGS_FILE}
     set +a
     
     source ${CONTAINER_SCRIPTS_ROOT}/questions.sh
