@@ -1,0 +1,11 @@
+todo
+
+make sure that all the variables are added to .proj as uppercase, and check that no files downstream in process rely on lowercase vars set in get_variables.
+
+change and check variables in template_files.sh exist 
+
+when external project settings file either custom or default is used that no variables are unset.
+
+remove set -a etc from get_variables and make sure that all files that need vars source .proj
+
+change all container run scripts to only source their variables from the local settings file, and perhaps the super_settings file.

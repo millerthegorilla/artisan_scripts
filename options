@@ -1,1 +1,2 @@
 TERMINAL_CMD="gnome-terminal --"
+DEFAULT_PROJECT_FILE=

@@ -2,23 +2,22 @@
 ###
 ## This file is renamed .env and is copied in to scripts folder
 ## There will be no variable substitution, so please complete it 
-## thoroughly.  Bash variables like $HOME are for illustrative
-## purposes only.
+## thoroughly. 
 ###
 
 ## SHARED
-PROJECT_NAME=${project_name}
-HOST_LOG_DIR=${host_log_dir}
-UPDATES=${updates}
+PROJECT_NAME=${PROJECT_NAME}
+HOST_LOG_DIR=${HOST_LOG_DIR}
+UPDATES=${AUTO_UPDATES}
 
 ## POD SETTINGS
-POD_NAME=${pod_name}
+POD_NAME=${POD_NAME}
 PORT1_DESCRIPTION=0.0.0.0:443:443
 PORT2_DESCRIPTION=0.0.0.0:80:80
 
 ## DJANGO
 DJANGO_CONT_NAME="django_cont"
-DJANGO_IMAGE=${django_image}
+DJANGO_IMAGE=${DJANGO_IMAGE}
 DJANGO_CONT_LOG_DIR="/var/log/${PROJECT_NAME}/"
 DJANGO_HOST_STATIC_VOL="${DJANGO_HOST_STATIC_VOL}"
 DJANGO_HOST_MEDIA_VOL="${DJANGO_HOST_MEDIA_VOL}"
@@ -32,12 +31,12 @@ CLAM_IMAGE="docker.io/tiredofit/clamav:latest"
 ## DUCKDNS/SWAG
 DUCKDNS_CONT_NAME="duckdns_cont"
 DUCKDNS_IMAGE="docker.io/linuxserver/duckdns:latest"
-DUCKDNS_SUBDOMAIN=${duckdns_domain}
+DUCKDNS_SUBDOMAIN=${DUCKDNS_DOMAIN}
 
 ## REDIS CACHE
 REDIS_CONT_NAME="redis_cont"
 REDIS_IMAGE="docker.io/library/redis:7.0-rc"   # 6.2.2-buster"
-
+ 
 ## ELASTIC SEARCH
 ELASTIC_CONT_NAME="elastic_cont"
 ELASTIC_IMAGE="docker.io/library/elasticsearch:7.11.2"
@@ -45,20 +44,20 @@ ELASTIC_IMAGE="docker.io/library/elasticsearch:7.11.2"
 ## MARIADB
 MARIA_CONT_NAME="mariadb_cont"
 MARIA_IMAGE="maria:artisan"
-DB_NAME="${db_name}"
-DB_USER="${db_user}"
-DB_PASSWORD="${db_password}"
-DB_HOST="${db_host}"
-DB_VOL_NAME="${db_vol_name}"
+DB_NAME="${DB_NAME}"
+DB_USER="${DB_USER}"
+DB_PASSWORD="${DB_PASSWORD}"
+DB_HOST="${DB_HOST}"
+DB_VOL_NAME="${DB_VOL_NAME}"
 
 ## SWAG
 SWAG_CONT_NAME="swag_cont"
 SWAG_IMAGE="swag:artisan"
-SWAG_HOST_VOL_STATIC="${host_static_dir}"
-SWAG_HOST_VOL_MEDIA="${host_media_dir}"
-SWAG_HOST_LOG_DIR="${swag_host_log_dir}"
+SWAG_HOST_VOL_STATIC="${HOST_STATIC_DIR}"
+SWAG_HOST_VOL_MEDIA="${HOST_MEDIA_DIR}"
+SWAG_HOST_LOG_DIR="${SWAG_HOST_LOG_DIR}"
 SWAG_CONT_VOL_STATIC="/opt/static_files/"
 SWAG_CONT_VOL_MEDIA="/opt/media_files/"
 SWAG_CONT_LOG_DIR="/config/log/"
-TLDOMAIN="${tldomain}"
-SWAG_VOL_NAME="${swag_vol_name}"
+TLDOMAIN="${TLDOMAIN}"
+SWAG_VOL_NAME="${SWAG_VOL_NAME}"

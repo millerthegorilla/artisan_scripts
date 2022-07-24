@@ -10,43 +10,43 @@ DJANGO_PROJECT_NAME=${django_project_name}
 # this is the root urlconf in settings.py
 BASE_DIR=${base_dir}
 # this is the dir where the django_artisan code resides, ie /opt/${PROJECT_NAME}
-SECRET_KEY=${secret_key}
+SECRET_KEY=${DJANGO_SECRET_KEY}
 # DJANGO secret key
 ALLOWED_HOSTS1=127.0.0.1
 # localhost 
-ALLOWED_HOSTS2=${duckdns_domain}
+ALLOWED_HOSTS2=${DUCKDNS_DOMAIN}
 # yoursubdomain.duckdns.org
-ALLOWED_HOSTS3=${tl_domain}
+ALLOWED_HOSTS3=${TL_DOMAIN}
 # your top level domain, if you have one
 DB_ENGINE=django.db.backends.mysql
-DB_NAME=${db_name}
+DB_NAME=${DB_NAME}
 # django db name
-DB_USER=${db_user}
+DB_USER=${DB_USER}
 # django db user
-DB_PASSWORD=${db_password}
+DB_PASSWORD=${DB_PASSWORD}
 # django db password
-DB_HOST=${db_host}
+DB_HOST=${DB_HOST}
  # because containers are in a pod, 127.0.0.1 is used to communicate
 DB_PORT=3306
 MEMCACHED_ADDRESS=127.0.0.1:11211
-STATIC_BASE_ROOT=${static_base_root}
-MEDIA_BASE_ROOT=${media_base_root}
+STATIC_BASE_ROOT=${STATIC_BASE_ROOT}
+MEDIA_BASE_ROOT=${MEDIA_BASE_ROOT}
 # this is the directory that contains links to the static and media files ie /etc/opt/${PROJECT_NAME}/static_files/
-EMAIL_APP_ADDRESS=${email_app_address}
+EMAIL_APP_ADDRESS=${EMAIL_APP_ADDRESS}
 #most likely something@gmail.com
-EMAIL_APP_KEY=${email_app_key}
+EMAIL_APP_KEY=${EMAIL_APP_KEY}
 #gmail app password https://support.google.com/accounts/answer/185833?hl=en
-EMAIL_FROM_ADDRESS=${email_from_address}
-DUCKDNS_DOMAIN=${duckdns_domain}
+EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+DUCKDNS_DOMAIN=${DUCKDNS_DOMAIN}
 # yoursubdomain.duckdns.org
-CUSTOM_SALT=${custom_salt}
+CUSTOM_SALT=${CUSTOM_SALT}
 # a custom salt value for email token generation
-RECAPTCHA_PUBLIC_KEY=${recaptcha_public}
+RECAPTCHA_PUBLIC_KEY=${RECAPTCHA_PUBLIC_KEY}
 # google recaptcha pub key  https://developers.google.com/recaptcha/intro
-RECAPTCHA_PRIVATE_KEY=${recaptcha_private}
+RECAPTCHA_PRIVATE_KEY=${RECAPTCHA_PRIVATE_KEY}
 # google recaptcha priv key
 CLAMAV_ADDRESS=tcp://127.0.0.1:3310
 ELASTIC_SEARCH_ADDRESS=localhost:9200
-SITE_NAME=${site_name}                                        
-# as used on header of web page eg "Ceramic Isles"
-DROPBOX_OAUTH_TOKEN=${dropbox_oauth_token}
+SITE_NAME=${SITE_NAME}
+# SITE_NAME as used on header of web page eg "Ceramic Isles"
+DROPBOX_OAUTH_TOKEN=${DROPBOX_OAUTH_TOKEN}
