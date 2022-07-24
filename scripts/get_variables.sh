@@ -8,8 +8,9 @@ fi
 
 source ${SCRIPTS_ROOT}/options
 
-read -p "Enter absolute filepath of project variables or press enter to accept default.\n \
-         If the default does not exist, then you can enter the variables manually...\n" -e PROJECT_FILE
+echo -e "Enter absolute filepath of project variables or press enter to accept default.\n \
+         If the default does not exist, then you can enter the variables manually...\n"
+read -p ": " -e PROJECT_FILE
 
 if ![[ -n ${PROJECT_FILE} && -f ${PROJECT_FILE} ]];
 then
