@@ -6,10 +6,10 @@ then
    exit 1
 fi
 
-source ${SCRIPTS_ROOT}/.options
+source ${SCRIPTS_ROOT}/options
 
-read -p "Enter absolute filepath of project variables or press enter to accept default.\
-         If the default does not exist, then you can enter the variables manually..." -e PROJECT_FILE
+read -p "Enter absolute filepath of project variables or press enter to accept default.\n \
+         If the default does not exist, then you can enter the variables manually...\n" -e PROJECT_FILE
 
 if ![[ -n ${PROJECT_FILE} && -f ${PROJECT_FILE} ]];
 then
