@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# debug
+echo DEBUG 1 setup.sh ${CONTAINER_SCRIPTS_ROOT}
 # assume rootlevel 'general' questions have been asked and answered and import them for use
 source ${CONTAINER_SCRIPTS_ROOT}/settings.sh
 
