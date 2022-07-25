@@ -114,7 +114,6 @@ fi
 while (( "$#" )); do
   case "$1" in
     install)
-      echo ${USER}
       find . -type d | xargs chmod 0555
       find . -type f | xargs chmod 0444
       find . -type f -name "*.sh" | xargs chmod 0550
@@ -125,8 +124,9 @@ while (( "$#" )); do
       chmod 0440 templates/maria/maria_dev.sh
       find ./dockerfiles/django/media -type d | xargs chmod 770
       find ./dockerfiles/django/media -type f | xargs chmod 440
-      find . -type d | xargs chown ${USER}:${USER}
-      find . -type f | xargs chown ${USER}:${USER}
+      USER_N=$(whoami)
+      find . -type d | xargs chown ${USER_N}:${USER_N}
+      find . -type f | xargs chown ${USER_N}:${USER_N}
       install_check
       exit $?
       ;;
