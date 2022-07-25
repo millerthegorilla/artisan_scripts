@@ -14,6 +14,25 @@ echo -e "#**** and have a password protected system user account       *****"
 echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
 
+echo -e debug 1 root questions.sh pwd  $(pwd)
+echo -e debug 2 root questions.sh ls settings.sh $(ls -al ${LOCAL_SETTINGS_FILE})
+
+# PROJECT_NAME
+isValidVarName() {
+    echo "$1" | grep -q '^[_[:alpha:]][_[:alpha:][:digit:]]*$' && return || return 1
+}
+
+until isValidVarName "${PROJECT_NAME}"
+do
+   read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' PROJECT_NAME
+   if ! isValidVarName "${PROJECT_NAME}"
+   then
+       echo -e "That is not a valid variable name.  Your project name must conform to bash directory name standards"
+   fi
+done
+
+echo "PROJECT_NAME=${PROJECT_NAME}" >> ${LOCAL_SETTINGS_FILE}
+
 # USER_NAME
 read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
 USER_NAME=${USER_NAME:-"artisan_sysd"}
@@ -32,22 +51,6 @@ USER_DIR=${USER_DIR:-/home/${USER_NAME}}
 popd &> /dev/null
 
 echo "USER_DIR=${USER_DIR}" >> ${LOCAL_SETTINGS_FILE}
-
-# PROJECT_NAME
-isValidVarName() {
-    echo "$1" | grep -q '^[_[:alpha:]][_[:alpha:][:digit:]]*$' && return || return 1
-}
-
-until isValidVarName "${PROJECT_NAME}"
-do
-   read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' PROJECT_NAME
-   if ! isValidVarName "${PROJECT_NAME}"
-   then
-       echo -e "That is not a valid variable name.  Your project name must conform to bash directory name standards"
-   fi
-done
-
-echo "PROJECT_NAME=${PROJECT_NAME}" >> ${LOCAL_SETTINGS_FILE}
 
 # CODE_PATH
 pushd / &> /dev/null

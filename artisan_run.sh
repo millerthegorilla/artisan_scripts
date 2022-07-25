@@ -124,6 +124,8 @@ while (( "$#" )); do
       chmod 0440 templates/maria/maria_dev.sh
       find ./dockerfiles/django/media -type d | xargs chmod 770
       find ./dockerfiles/django/media -type f | xargs chmod 440
+      find . -type d | xargs chown ${USER}:${USER}
+      find . -type f | xargs chown ${USER}:${USER}
       install_check
       exit $?
       ;;
