@@ -114,6 +114,7 @@ fi
 while (( "$#" )); do
   case "$1" in
     install)
+      echo ${USER}
       find . -type d | xargs chmod 0555
       find . -type f | xargs chmod 0444
       find . -type f -name "*.sh" | xargs chmod 0550
