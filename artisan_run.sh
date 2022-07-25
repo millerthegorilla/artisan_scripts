@@ -128,6 +128,7 @@ while (( "$#" )); do
       find ./dockerfiles/django/media -type f | xargs chmod 440
       find . -type d | xargs chown ${SUDO_USER}:${SUDO_USER}
       find . -type f | xargs chown ${SUDO_USER}:${SUDO_USER}
+      chmod 0755 ./artisan_run.sh
       install_check
       exit $?
       ;;
