@@ -135,7 +135,7 @@ while (( "$#" )); do
       find . | xargs chown ${OWNER_NAME}:${OWNER_NAME}
       find . -type d | xargs chmod 0775
       find . -type f | xargs chmod 0664
-      find . -type f -name "*.sh" | xargs chmod 0755
+      find ./scripts -type f -name "*.sh" | xargs chmod 0755
       find .git -type d | xargs chmod 755
       find .git/objects -type f | xargs chmod 664
       find .git -type f | grep -v /objects/ | xargs chmod 644
