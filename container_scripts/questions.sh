@@ -1,5 +1,9 @@
 #!/bin/bash
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh $(pwd)
+
+LOCAL_SETTINGS_FILE=$(local_settings ${LOCAL_SETTINGS_FILE})
+
 echo -e "\nThe following questions are to fill out the env files that are called \
 upon by the scripts when executing, and by the settings file during production. \n
 The settings .env file is called from the settings file using os.getenv, after \
@@ -14,8 +18,7 @@ echo -e "#**** and have a password protected system user account       *****"
 echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
 
-echo -e debug 1 root questions.sh pwd  $(pwd)
-echo -e debug 2 root questions.sh ls settings.sh $(ls -al ${LOCAL_SETTINGS_FILE})
+echo -e debug 1 root questions.sh local_settings = ${LOCAL_SETTINGS_FILE}
 
 # PROJECT_NAME
 isValidVarName() {
