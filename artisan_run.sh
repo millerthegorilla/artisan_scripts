@@ -124,10 +124,9 @@ while (( "$#" )); do
       chmod 0440 templates/maria/maria_dev.sh
       find ./dockerfiles/django/media -type d | xargs chmod 770
       find ./dockerfiles/django/media -type f | xargs chmod 440
-      USER_N=$(whoami)
+      USER_N=$(id -un)
+      echo ${SUDO_USER}
       echo ${USER_N}
-      echo ${logname}
-      echo ${USER}
       find . -type d | xargs chown ${USER_N}:${USER_N}
       find . -type f | xargs chown ${USER_N}:${USER_N}
       install_check
