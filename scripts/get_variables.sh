@@ -6,6 +6,8 @@ then
    exit 1
 fi
 
+echo debug 1 get_variables CONT_SCRIPT_ROOT = ${CONTAINER_SCRIPTS_ROOT}
+
 function get_variables_and_make_project_file()
 {
     source ${CONTAINER_SCRIPTS_ROOT}/questions.sh
