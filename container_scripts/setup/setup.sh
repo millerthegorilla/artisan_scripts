@@ -6,6 +6,8 @@ echo DEBUG 1 setup.sh ${CONTAINER_SCRIPTS_ROOT}
 echo DEBUG 2 setup.sh ${LOCAL_SETTINGS_FILE}
 cat localsettingsfile contents ${LOCAL_SETTINGS_FILE}
 
+source ${PROJECT_SETTINGS}
+
 # assume rootlevel 'general' questions have been asked and answered and import them for use
 source ${CONTAINER_SCRIPTS_ROOT}/settings.sh
 
