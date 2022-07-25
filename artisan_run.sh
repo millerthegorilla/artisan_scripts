@@ -54,7 +54,9 @@ function install_check()
     then
       for line in $(find -type f -name "*.sh")
       do
-        if [[ ${line:0:18} != "./templates/maria/" && "550" -ne $(stat -c '%a' ${line}) ]];
+        if [[ ${line:0:18} != "./templates/maria/" \
+             && ${line:0:20} != "./container_scripts/" \
+             && "550" -ne $(stat -c '%a' ${line}) ]];
         then
           ERROR=": ERR4 $line"
           INSTALLED="not installed!"
