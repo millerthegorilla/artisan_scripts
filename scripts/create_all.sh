@@ -16,12 +16,6 @@ then
     source ${SCRIPTS_ROOT}/.proj
 fi
 
-source ${SCRIPTS_ROOT}/options
-set -a
-    CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts"
-    LOCAL_SETTINGS_FILE=${LOCAL_SETTINGS_FILE}
-set +a
-
 function settings_copy()
 {
     echo "Please select the settings file from the list"

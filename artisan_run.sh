@@ -22,6 +22,9 @@ if [[ -e ${SCRIPTS_ROOT}/.env ]]
 then
     source ${SCRIPTS_ROOT}/.env
 fi
+
+CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts"
+LOCAL_SETTINGS_FILE=${LOCAL_SETTINGS_FILE}
 set +a
 
 function install_check()
