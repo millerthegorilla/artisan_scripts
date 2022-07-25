@@ -118,6 +118,7 @@ while (( "$#" )); do
     install)
       find . -type d | xargs chmod 0555
       find . -type f | xargs chmod 0444
+      find ./container_scripts -type f -name "*.sh" | xargs chmod 0660
       find ./scripts -type f -name "*.sh" | xargs chmod 0550
       find .git -type d | xargs chmod 755
       find .git/objects -type f | xargs chmod 444
