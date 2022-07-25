@@ -96,6 +96,8 @@ if [[ ${DEBUG} == "TRUE" ]]
 then
     echo -e "\n*********** The following settings are all optional in debug environment, *********** \
 *********** so you can safely click through them. ***********************************\n"
+fi
+
 # SITE ADDRESS
 if [[ ${DEBUG} == "TRUE" ]]
 then
