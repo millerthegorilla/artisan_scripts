@@ -52,7 +52,8 @@ function get_variables_and_make_project_file()
 }
 
 echo -e "Enter absolute filepath of project settings or press enter to accept default.\n \
-         If the default does not exist, then you can enter the variables manually..."
+If the default does not exist, then you can enter the variables manually..."
+
 read -p ": " -e PROJECT_FILE
 
 if [[ -n ${PROJECT_FILE} && -f ${PROJECT_FILE} ]];

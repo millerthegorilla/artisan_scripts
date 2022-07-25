@@ -1,12 +1,12 @@
 #!/bin/bash
 
-echo -e "\nThe following questions are to fill out the env files that are called \n
-          upon by the scripts when executing, and by the settings file during production. \n
-          The settings .env file is called from the settings file using os.getenv, after \n
-          the env file is loaded into the environment by the python program dotenv. \n
-          This .env file is located in the settings folder, along with settings.py.  \n
-          You can edit either of those files to edit your site.\n
-          Press enter to accept default value[] where listed...\n\n"
+echo -e "\nThe following questions are to fill out the env files that are called \
+upon by the scripts when executing, and by the settings file during production. \
+The settings .env file is called from the settings file using os.getenv, after \
+the env file is loaded into the environment by the python program dotenv. \
+This .env file is located in the settings folder, along with settings.py.  \
+You can edit either of those files to edit your site.\
+Press enter to accept default value [..] where listed...\n\n"
 
 echo -e "#******************************************************************"
 echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
@@ -94,8 +94,8 @@ echo "DEBUG=${DEBUG}" >> ${LOCAL_SETTINGS_FILE}
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-    echo -e "\n*********** The following settings are all optional in debug environment, *********** \n
-               *********** so you can safely click through them. ***********************************\n"
+    echo -e "\n*********** The following settings are all optional in debug environment, *********** \
+*********** so you can safely click through them. ***********************************\n"
 # SITE ADDRESS
 if [[ ${DEBUG} == "TRUE" ]]
 then
