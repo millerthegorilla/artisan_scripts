@@ -26,8 +26,10 @@ fi
 echo "USER_NAME=${USER_NAME}" >> ${LOCAL_SETTINGS_FILE} 
 
 # USER_DIR
-read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " USER_DIR
+pushd / &> /dev/null
+read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " -e USER_DIR
 USER_DIR=${USER_DIR:-/home/${USER_NAME}}
+popd &> /dev/null
 
 echo "USER_DIR=${USER_DIR}" >> ${LOCAL_SETTINGS_FILE}
 
@@ -90,6 +92,10 @@ fi
 
 echo "DEBUG=${DEBUG}" >> ${LOCAL_SETTINGS_FILE}
 
+if [[ ${DEBUG} == "TRUE" ]]
+then
+    echo -e "\n*********** The following settings are all optional in debug environment, *********** \n
+               *********** so you can safely click through them. ***********************************\n"
 # SITE ADDRESS
 if [[ ${DEBUG} == "TRUE" ]]
 then
