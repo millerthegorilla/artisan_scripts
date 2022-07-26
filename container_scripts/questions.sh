@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOCAL_SETTINGS_FILE=${1}
+L_S_FILE=${1}
 
 echo -e "\nThe following questions are to fill out the env files that are called \
 upon by the scripts when executing, and by the settings file during production. \n
@@ -31,7 +31,7 @@ do
    fi
 done
 
-echo "PROJECT_NAME=${PROJECT_NAME}" >> ${LOCAL_SETTINGS_FILE}
+echo "PROJECT_NAME=${PROJECT_NAME}" >> ${L_S_FILE}
 
 # USER_NAME
 read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
@@ -42,7 +42,7 @@ then
     exit 1
 fi
 
-echo "USER_NAME=${USER_NAME}" >> ${LOCAL_SETTINGS_FILE} 
+echo "USER_NAME=${USER_NAME}" >> ${L_S_FILE} 
 
 # USER_DIR
 pushd / &> /dev/null
@@ -50,7 +50,7 @@ read -p "Absolute path to User home dir [ /home/${USER_NAME} ] : " -e USER_DIR
 USER_DIR=${USER_DIR:-/home/${USER_NAME}}
 popd &> /dev/null
 
-echo "USER_DIR=${USER_DIR}" >> ${LOCAL_SETTINGS_FILE}
+echo "USER_DIR=${USER_DIR}" >> ${L_S_FILE}
 
 # CODE_PATH
 pushd / &> /dev/null
@@ -72,14 +72,14 @@ do
 done
 popd &> /dev/null
 
-echo "CODE_PATH=${CODE_PATH}" >> ${LOCAL_SETTINGS_FILE}
+echo "CODE_PATH=${CODE_PATH}" >> ${L_S_FILE}
 
 # DJANGO_PROJECT_NAME
 PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
 read -p "Enter the name of the django project ie the folder in which wsgi.py resides [${PN}] : " DJANGO_PROJECT_NAME
 DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME:-${PN}}
 
-echo "DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME}" >>  ${LOCAL_SETTINGS_FILE}
+echo "DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME}" >>  ${L_S_FILE}
 
 # DEBUG
 if [[ -z "${DEBUG}" ]]
@@ -93,7 +93,7 @@ then
     done
 fi
 
-echo "DEBUG=${DEBUG}" >> ${LOCAL_SETTINGS_FILE}
+echo "DEBUG=${DEBUG}" >> ${L_S_FILE}
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
@@ -109,7 +109,7 @@ else
     read -p "Enter the site address including protocol ie https://mydomain.com" SITE_ADDRESS
 fi
 
-echo "SITE_ADDRESS=${SITE_ADDRESS}" >> ${LOCAL_SETTINGS_FILE}
+echo "SITE_ADDRESS=${SITE_ADDRESS}" >> ${L_S_FILE}
 
 
 ## DJANGO_EMAIL_VERIFICATION AND EMAIL MODERATORS ETC
@@ -120,12 +120,12 @@ echo -e "#********************************************"
 # EMAIL_APP_ADDRESS
 read -p "Your app email server address : " EMAIL_APP_ADDRESS
 
-echo "EMAIL_APP_ADDRESS=${EMAIL_APP_ADDRESS}" >> ${LOCAL_SETTINGS_FILE}
+echo "EMAIL_APP_ADDRESS=${EMAIL_APP_ADDRESS}" >> ${L_S_FILE}
 
 # EMAIL_APP_KEY
 read -p "Your app email server address secret password : " EMAIL_APP_KEY
 
-echo "EMAIL_APP_KEY=${EMAIL_APP_KEY}" >> ${LOCAL_SETTINGS_FILE}
+echo "EMAIL_APP_KEY=${EMAIL_APP_KEY}" >> ${L_S_FILE}
 
 # EMAIL_FROM_ADDRESS
 if [[ ! -z "$EXTRA_DOMAINS" ]]
@@ -138,12 +138,12 @@ fi
 read -p "Your app email from address ie [ ${return_mail} ] : " EMAIL_FROM_ADDRESS 
 EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS:-${return_mail}}
 
-echo "EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}" >> ${LOCAL_SETTINGS_FILE}
+echo "EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}" >> ${L_S_FILE}
 
 # CUSTOM_SALT
 CUSTOM_SALT=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
 
-echo "CUSTOM_SALT=${CUSTOM_SALT}" >> ${LOCAL_SETTINGS_FILE}
+echo "CUSTOM_SALT=${CUSTOM_SALT}" >> ${L_S_FILE}
 
 ## GOOGLE RECPATCHA SETTINGS
 echo -e "#************* Google recaptcha settings ***************"
@@ -153,17 +153,17 @@ echo -e "#*****************************************************"
 # RECAPTCHA_PUBLIC
 read -p "Google Recaptcha public key : " RECAPTCHA_PUBLIC
 
-echo "RECAPTCHA_PUBLIC=${RECAPTCHA_PUBLIC}" >> ${LOCAL_SETTINGS_FILE}
+echo "RECAPTCHA_PUBLIC=${RECAPTCHA_PUBLIC}" >> ${L_S_FILE}
 
 # RECAPTCHA_PRIVATE
 read -p "Google Recaptcha private key : "  RECAPTCHA_PRIVATE
 
-echo "RECAPTCHA_PRIVATE=${RECAPTCHA_PRIVATE}" >> ${LOCAL_SETTINGS_FILE}
+echo "RECAPTCHA_PRIVATE=${RECAPTCHA_PRIVATE}" >> ${L_S_FILE}
 
 # DROPBOX_OAUTH_TOKEN
 read -p "Dropbox OAuth Token : " DROPBOX_OAUTH_TOKEN
 
-echo "DROPBOX_OAUTH_TOKEN=${DROPBOX_OAUTH_TOKEN}" >> ${LOCAL_SETTINGS_FILE}
+echo "DROPBOX_OAUTH_TOKEN=${DROPBOX_OAUTH_TOKEN}" >> ${L_S_FILE}
 
 # DUCKDNSTOKEN
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/make_secret.sh
@@ -183,4 +183,4 @@ select yn in "Yes" "No"; do
     esac
 done
 
-echo "AUTO_UPDATES=${AUTO_UPDATES}" >> ${LOCAL_SETTINGS_FILE}
+echo "AUTO_UPDATES=${AUTO_UPDATES}" >> ${L_S_FILE}
