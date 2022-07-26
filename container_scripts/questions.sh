@@ -1,8 +1,8 @@
 #!/bin/bash
 
-source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh ${BASH_SOURCE}
+LOCAL_SETTINGS_FILE=$(source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh ${BASH_SOURCE} ${LOCAL_SETTINGS_FILE})
 
-LOCAL_SETTINGS_FILE=$(local_settings ${LOCAL_SETTINGS_FILE})
+#LOCAL_SETTINGS_FILE=$(local_settings ${LOCAL_SETTINGS_FILE})
 
 echo -e "\nThe following questions are to fill out the env files that are called \
 upon by the scripts when executing, and by the settings file during production. \n

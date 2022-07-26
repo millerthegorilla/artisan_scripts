@@ -1,4 +1,7 @@
 #!/bin/bash
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh ${BASH_SOURCE}
+
+LOCAL_SETTINGS_FILE=$(local_settings ${LOCAL_SETTINGS_FILE})
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 

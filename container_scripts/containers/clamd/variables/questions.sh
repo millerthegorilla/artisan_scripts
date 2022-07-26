@@ -1,10 +1,10 @@
 #!/bin/bash
 
-source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
-
-source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh $(dirname ${BASH_SOURCE})
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh ${BASH_SOURCE}
 
 LOCAL_SETTINGS_FILE=$(local_settings ${LOCAL_SETTINGS_FILE})
+
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 
 # CLAM_CONT_NAME
 CLAM_CONT_NAME="clamav_cont"
