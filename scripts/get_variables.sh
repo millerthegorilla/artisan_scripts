@@ -23,7 +23,7 @@ function get_variables_and_make_project_file()
     # root questions including questions shared by containers
     echo debug 1 local_settings_file is ${LOCAL_SETTINGS_FILE}
     local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${CONTAINER_SCRIPTS_ROOT}/questions.sh"  | tail -n 1 )
-    echo debug 1 in get_variables 25 local_settings_file is $local_settings_file
+    echo debug 2 LOCAL_SETTINGS_FILE = ${LOCAL_SETTINGS_FILE}
     source ${CONTAINER_SCRIPTS_ROOT}/questions.sh  ${local_settings_file}
     cat ${local_settings_file} > ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
     unset local_settings_file
@@ -31,7 +31,7 @@ function get_variables_and_make_project_file()
     # container specific questions
     for container in $(ls -d ${CONTAINER_SCRIPTS_ROOT}/containers/*)
     do
-        echo debug 2 local_settings_file is ${LOCAL_SETTINGS_FILE}
+        echo debug 3 local_settings_file is ${LOCAL_SETTINGS_FILE}
         local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh")
         source ${container}/variables/questions.sh ${local_settings_file}
         cat ${local_settings_file} >> ${SCRIPTS_ROOT}/.PROJECT_SETTINGS

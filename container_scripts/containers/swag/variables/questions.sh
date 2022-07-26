@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOCAL_SETTINGS_FILE=${1}
+L_S_FILE=${1}
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 
@@ -16,19 +16,19 @@ swag_vol_name="cert_vol"
 read -p "Swag Volume Name [${swag_vol_name}] : " SWAG_VOL_NAME
 SWAG_VOL_NAME=${SWAG_VOL_NAME:-${swag_vol_name}}
 
-echo "SWAG_VOL_NAME=${SWAG_VOL_NAME}" >> ${LOCAL_SETTINGS_FILE}
+echo "SWAG_VOL_NAME=${SWAG_VOL_NAME}" >> ${L_S_FILE}
 
 # CERTBOT_EMAIL
 read -p "Email address for letsencrypt certbot : " certbot_email
 
-echo "CERTBOT_EMAIL=${certbot_email}" >> ${LOCAL_SETTINGS_FILE}
+echo "CERTBOT_EMAIL=${certbot_email}" >> ${L_S_FILE}
 
 # SWAG_HOST_LOG_DIR
 swhld = "${USER_DIR}/${PROJECT_NAME}/swag_logs"
 read -p "Swag Host log dir (must be different to Host Log Dir) [ ${swhld} ] : " SWAG_HOST_LOG_DIR
 SWAG_HOST_LOG_DIR=${SWAG_HOST_LOG_DIR:-${swhld}}
 
-echo "SWAG_HOST_LOG_DIR=${SWAG_HOST_LOG_DIR}" >> ${LOCAL_SETTINGS_FILE}
+echo "SWAG_HOST_LOG_DIR=${SWAG_HOST_LOG_DIR}" >> ${L_S_FILE}
 
 # EXTRA_DOMAINS
 echo -e "\nDo you have a top level domain pointing at your duckdns domain ? : "
@@ -46,31 +46,31 @@ else
     EXTRA_DOMAINS="NONE"
 fi
 
-echo "EXTRA_DOMAINS=${EXTRA_DOMAINS}" >> ${LOCAL_SETTINGS_FILE}
+echo "EXTRA_DOMAINS=${EXTRA_DOMAINS}" >> ${L_S_FILE}
 
 # SWAG_CONT_NAME
 
 SWAG_CONT_NAME="redis_cont"
 
-echo "SWAG_CONT_NAME=${SWAG_CONT_NAME}" >> ${LOCAL_SETTINGS_FILE}
+echo "SWAG_CONT_NAME=${SWAG_CONT_NAME}" >> ${L_S_FILE}
 
 # SWAG_IMAGE
 
 SWAG_IMAGE=$(get_tag $BASH_SOURCE)
 
-echo "SWAG_IMAGE=${SWAG_IMAGE}" >> ${LOCAL_SETTINGS_FILE}
+echo "SWAG_IMAGE=${SWAG_IMAGE}" >> ${L_S_FILE}
 
 # SWAG_CONT_VOL_STATIC
 SWAG_CONT_VOL_STATIC="/opt/static_files/"
 
-echo "SWAG_CONT_VOL_STATIC=${SWAG_CONT_VOL_STATIC}" >> ${LOCAL_SETTINGS_FILE}
+echo "SWAG_CONT_VOL_STATIC=${SWAG_CONT_VOL_STATIC}" >> ${L_S_FILE}
 
 # SWAG_CONT_VOL_MEDIA
 SWAG_CONT_VOL_MEDIA="/opt/media_files/"
 
-echo "SWAG_CONT_VOL_MEDIA=${SWAG_CONT_VOL_MEDIA}" >> ${LOCAL_SETTINGS_FILE}
+echo "SWAG_CONT_VOL_MEDIA=${SWAG_CONT_VOL_MEDIA}" >> ${L_S_FILE}
 
 # SWAG_CONT_LOG_DIR
 SWAG_CONT_LOG_DIR="/config/log/"
 
-echo "SWAG_CONT_LOG_DIR=${SWAG_CONT_LOG_DIR}" >> ${LOCAL_SETTINGS_FILE}
+echo "SWAG_CONT_LOG_DIR=${SWAG_CONT_LOG_DIR}" >> ${L_S_FILE}
