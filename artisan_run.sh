@@ -124,7 +124,7 @@ while (( "$#" )); do
       find ./container_scripts -type f -name "*.sh" | xargs chmod 0660
       find ./container_scripts -type d | xargs chmod 0775
       find ./scripts -type f -name "*.sh" | xargs chmod 0550
-      find .git -type d | xargs chmod 755
+      find .git -type d | xargs chmod 0550
       find .git/objects -type f | xargs chmod 444
       find .git -type f | grep -v /objects/ | xargs chmod 644
       chmod 0440 templates/maria/maria_prod.sh
@@ -142,8 +142,8 @@ while (( "$#" )); do
       OWNER_NAME=$(stat -c "%U" ${SCRIPT_DIR})
       find . | xargs chown ${OWNER_NAME}:${OWNER_NAME}
       find . -type d | xargs chmod 0775
-      find . -type f | xargs chmod 0664
-      find ./scripts -type f -name "*.sh" | xargs chmod 0755
+      find . -type f | xargs chmod 0660
+      find ./scripts -type f -name "*.sh" | xargs chmod 0660
       find .git -type d | xargs chmod 755
       find .git/objects -type f | xargs chmod 664
       find .git -type f | grep -v /objects/ | xargs chmod 644

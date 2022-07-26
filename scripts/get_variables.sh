@@ -30,7 +30,7 @@ function get_variables_and_make_project_file()
     do
         local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh")
         source ${container}/variables/questions.sh ${local_settings_file}
-        cat ${local_settings_file} > ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
+        cat ${local_settings_file} >> ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
     done
 
     echo -e "Do you want to save your settings as a settings file? : "
