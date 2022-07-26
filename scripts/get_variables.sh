@@ -29,7 +29,7 @@ function get_variables_and_make_project_file()
     # container specific questions
     for container in $(ls -d ${CONTAINER_SCRIPTS_ROOT}/containers/*)
     do
-        local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh")
+        local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh" | tail -n 1)
         echo debug 1 local_settings_file = ${local_settings_file}
         source ${container}/variables/questions.sh ${local_settings_file}
         cat ${local_settings_file} >> ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
