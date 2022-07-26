@@ -5,6 +5,6 @@ function local_settings()
 	if [[ ${1} == /* ]]; then
 	   echo ${1}
 	else
-	  echo $(realpath ${0})/${1}
+	  echo $(dirname $(realpath ${0}))/${1}
 	fi
 }
