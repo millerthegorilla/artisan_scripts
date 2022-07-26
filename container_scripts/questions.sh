@@ -183,4 +183,4 @@ select yn in "Yes" "No"; do
     esac
 done
 
-echo "AUTO_UPDATES=${AUTO_UPDATES}" >> ${L_S_FILE}
+echo "AUTO_UPDATES=\"${AUTO_UPDATES}\"" >> ${L_S_FILE}
