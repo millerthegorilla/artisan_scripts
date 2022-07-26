@@ -2,7 +2,6 @@
 
 function check_settings_empty()
 {
-	echo debug 1 local_settings.sh ${1} ${2}
 	if [[ -f ${1} ]]
 	then
 		if grep -q '[^[:space:]]' ${1};
