@@ -18,9 +18,6 @@ echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
 
 
-echo -e debug 1 root questions.sh bash_source = ${BASH_SOURCE}
-echo -e debug 2 root questions.sh local_settings = ${LOCAL_SETTINGS_FILE}
-
 # PROJECT_NAME
 isValidVarName() {
     echo "$1" | grep -q '^[_[:alpha:]][_[:alpha:][:digit:]]*$' && return || return 1
@@ -186,7 +183,5 @@ select yn in "Yes" "No"; do
         No ) AUTO_UPDATES=""; break;;
     esac
 done
-
-echo debug 3 auto_updates is ${AUTO_UPDATES}
 
 echo "AUTO_UPDATES=${AUTO_UPDATES}" >> ${LOCAL_SETTINGS_FILE}
