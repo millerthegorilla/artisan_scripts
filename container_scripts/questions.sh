@@ -1,6 +1,7 @@
 #!/bin/bash
 
 LOCAL_SETTINGS_FILE=${1}
+echo ${LOCAL_SETTINGS_FILE}
 
 echo -e "\nThe following questions are to fill out the env files that are called \
 upon by the scripts when executing, and by the settings file during production. \n
