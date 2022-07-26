@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo debug 1 clamd questions.sh local_settings_file = ${LOCAL_SETTINGS_FILE}
+
 LOCAL_SETTINGS_FILE=$(source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh ${BASH_SOURCE} ${LOCAL_SETTINGS_FILE})
 
 # CLAM_CONT_NAME
