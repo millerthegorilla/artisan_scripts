@@ -33,7 +33,10 @@ function install_check()
  # should have used a case statement.... doh.
     for line in $(find . -type d);
     do
-      if [[ ${line:0:6} != "./.git" && ${line:0:26} != "./dockerfiles/django/media" && "555" -ne $(stat -c '%a' ${line}) ]];
+      if [[ ${line:0:6} != "./.git" \
+             && ${line:0:26} != "./dockerfiles/django/media" \
+             && ${line:0:19} != "./container_scripts" \
+             && "555" -ne $(stat -c '%a' ${line}) ]];
       then
         ERROR=": ERR1 $line"
         INSTALLED="not installed!";
@@ -119,7 +122,7 @@ while (( "$#" )); do
       find . -type d | xargs chmod 0555
       find . -type f | xargs chmod 0444
       find ./container_scripts -type f -name "*.sh" | xargs chmod 0660
-      find ./container_scripts -type d | xargs chmod 775
+      find ./container_scripts -type d | xargs chmod 0775
       find ./scripts -type f -name "*.sh" | xargs chmod 0550
       find .git -type d | xargs chmod 755
       find .git/objects -type f | xargs chmod 444
