@@ -1,10 +1,14 @@
 #!/bin/bash
 
-echo -e "\nThe following questions are to fill out the env files that are called \
-upon by the scripts when executing, and by the settings file used by django during \
-production. \
-The .env file is located in the settings folder, along with settings.py.  \
-You can edit either of those files to edit your site.\
+LOCAL_SETTINGS_FILE=${1}
+echo ${LOCAL_SETTINGS_FILE}
+
+echo "\nThe following questions are to fill out the env files that are called \
+upon by the scripts when executing, and by the settings file during production. \n
+The settings .env file is called from the settings file using os.getenv, after \
+the env file is loaded into the environment by the python program dotenv. \n
+This .env file is located in the settings folder, along with settings.py.  \n
+You can edit either of those files to edit your site.\n
 Press enter to accept default value [..] where listed...\n\n"
 
 echo -e "#******************************************************************"
@@ -12,6 +16,26 @@ echo -e "#**** you must have downloaded django_artisan to a local dir  *****"
 echo -e "#**** and have a password protected system user account       *****"
 echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
+
+
+echo -e debug 1 root questions.sh bash_source = ${BASH_SOURCE}
+echo -e debug 2 root questions.sh local_settings = ${LOCAL_SETTINGS_FILE}
+
+# PROJECT_NAME
+isValidVarName() {
+    echo "$1" | grep -q '^[_[:alpha:]][_[:alpha:][:digit:]]*$' && return || return 1
+}
+
+until isValidVarName "${PROJECT_NAME}"
+do
+   read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' PROJECT_NAME
+   if ! isValidVarName "${PROJECT_NAME}"
+   then
+       echo -e "That is not a valid variable name.  Your project name must conform to bash directory name standards"
+   fi
+done
+
+echo "PROJECT_NAME=${PROJECT_NAME}" >> ${LOCAL_SETTINGS_FILE}
 
 # USER_NAME
 read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
@@ -31,22 +55,6 @@ USER_DIR=${USER_DIR:-/home/${USER_NAME}}
 popd &> /dev/null
 
 echo "USER_DIR=${USER_DIR}" >> ${LOCAL_SETTINGS_FILE}
-
-# PROJECT_NAME
-isValidVarName() {
-    echo "$1" | grep -q '^[_[:alpha:]][_[:alpha:][:digit:]]*$' && return || return 1
-}
-
-until isValidVarName "${PROJECT_NAME}"
-do
-   read -p 'Artisan scripts project name - this is used as a directory name, so must be conformant to bash requirements : ' PROJECT_NAME
-   if ! isValidVarName "${PROJECT_NAME}"
-   then
-       echo -e "That is not a valid variable name.  Your project name must conform to bash directory name standards"
-   fi
-done
-
-echo "PROJECT_NAME=${PROJECT_NAME}" >> ${LOCAL_SETTINGS_FILE}
 
 # CODE_PATH
 pushd / &> /dev/null
@@ -95,6 +103,8 @@ if [[ ${DEBUG} == "TRUE" ]]
 then
     echo -e "\n*********** The following settings are all optional in debug environment, *********** \
 *********** so you can safely click through them. ***********************************\n"
+fi
+
 # SITE ADDRESS
 if [[ ${DEBUG} == "TRUE" ]]
 then
@@ -176,5 +186,7 @@ select yn in "Yes" "No"; do
         No ) AUTO_UPDATES=""; break;;
     esac
 done
+
+echo debug 3 auto_updates is ${AUTO_UPDATES}
 
 echo "AUTO_UPDATES=${AUTO_UPDATES}" >> ${LOCAL_SETTINGS_FILE}

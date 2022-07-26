@@ -33,12 +33,15 @@ function install_check()
  # should have used a case statement.... doh.
     for line in $(find . -type d);
     do
-      if [[ ${line:0:6} != "./.git" && ${line:0:26} != "./dockerfiles/django/media" && "555" -ne $(stat -c '%a' ${line}) ]];
+      if [[ ${line:0:6} != "./.git" \
+             && ${line:0:26} != "./dockerfiles/django/media" \
+             && ${line:0:19} != "./container_scripts" \
+             && "555" -ne $(stat -c '%a' ${line}) ]];
       then
         ERROR=": ERR1 $line"
         INSTALLED="not installed!";
         break;
-      elif [[ ${line:0:6} == "./.git" && "755" -ne $(stat -c '%a' ${line}) ]];
+      elif [[ ${line:0:6} == "./.git" && "550" -ne $(stat -c '%a' ${line}) ]];
       then
         ERROR=": ERR2 $line"
         INSTALLED="not installed!";
@@ -54,7 +57,9 @@ function install_check()
     then
       for line in $(find -type f -name "*.sh")
       do
-        if [[ ${line:0:18} != "./templates/maria/" && "550" -ne $(stat -c '%a' ${line}) ]];
+        if [[ ${line:0:18} != "./templates/maria/" \
+             && ${line:0:20} != "./container_scripts/" \
+             && "550" -ne $(stat -c '%a' ${line}) ]];
         then
           ERROR=": ERR4 $line"
           INSTALLED="not installed!"
@@ -116,14 +121,19 @@ while (( "$#" )); do
     install)
       find . -type d | xargs chmod 0555
       find . -type f | xargs chmod 0444
-      find . -type f -name "*.sh" | xargs chmod 0550
-      find .git -type d | xargs chmod 755
+      find ./container_scripts -type f -name "*.sh" | xargs chmod 0660
+      find ./container_scripts -type d | xargs chmod 0775
+      find ./scripts -type f -name "*.sh" | xargs chmod 0550
+      find .git -type d | xargs chmod 0550
       find .git/objects -type f | xargs chmod 444
       find .git -type f | grep -v /objects/ | xargs chmod 644
       chmod 0440 templates/maria/maria_prod.sh
       chmod 0440 templates/maria/maria_dev.sh
       find ./dockerfiles/django/media -type d | xargs chmod 770
       find ./dockerfiles/django/media -type f | xargs chmod 440
+      find . -type d | xargs chown ${SUDO_USER}:${SUDO_USER}
+      find . -type f | xargs chown ${SUDO_USER}:${SUDO_USER}
+      chmod 0550 ./artisan_run.sh
       install_check
       exit $?
       ;;
@@ -132,8 +142,8 @@ while (( "$#" )); do
       OWNER_NAME=$(stat -c "%U" ${SCRIPT_DIR})
       find . | xargs chown ${OWNER_NAME}:${OWNER_NAME}
       find . -type d | xargs chmod 0775
-      find . -type f | xargs chmod 0664
-      find . -type f -name "*.sh" | xargs chmod 0755
+      find . -type f | xargs chmod 0660
+      find ./scripts -type f -name "*.sh" | xargs chmod 0660
       find .git -type d | xargs chmod 755
       find .git/objects -type f | xargs chmod 664
       find .git -type f | grep -v /objects/ | xargs chmod 644

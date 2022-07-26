@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "./source.sh"
+
 function build_maria()
 {
    if [[ -e ${SCRIPTS_ROOT}/.images/maria ]]
@@ -9,7 +11,7 @@ function build_maria()
    cp ${SCRIPTS_ROOT}/dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
    cp ${SCRIPTS_ROOT}/dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
    chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
-   runuser --login ${USER_NAME} -c "podman build --tag='maria:artisan_${1}' -f='dockerfile_maria'"
+   runuser --login ${USER_NAME} -c "podman build --tag='${CUSTOM_TAG}${1}' -f='dockerfile_maria'"
    echo -e "DBNAME=${DB_NAME}" > ${SCRIPTS_ROOT}/.images/maria
    echo -e "DBUSER=${DB_USER}" >> ${SCRIPTS_ROOT}/.images/maria 
    echo -e "DBHOST=${DB_HOST}" >> ${SCRIPTS_ROOT}/.images/maria 
@@ -18,12 +20,12 @@ function build_maria()
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-    postfix="dev"
+    postfix="_dev"
 else
-    postfix="prod"
+    postfix="_prod"
 fi
 
-runuser --login ${USER_NAME} -c "podman image exists maria:artisan_${postfix}"
+runuser --login ${USER_NAME} -c "podman image exists ${CUSTOM_TAG}{postfix}"
 
 if [[ $? -eq 0 ]]
 then

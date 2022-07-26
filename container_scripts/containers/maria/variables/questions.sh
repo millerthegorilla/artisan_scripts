@@ -1,6 +1,10 @@
 #!/bin/bash
 
+LOCAL_SETTINGS_FILE=${1}
+
 source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 
 # DB_NAME
 db_name=${project_name}_db
@@ -43,3 +47,13 @@ make_secret MARIADB_ROOT_PASSWORD
 # TODO check if DB_PASSWORD exists before deleting it.
 runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
 echo -n $DB_PASSWORD | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
+
+# MARIA_CONT_NAME
+MARIA_CONT_NAME="maria_cont"
+
+echo "MARIA_CONT_NAME=${MARIA_CONT_NAME}" >> ${LOCAL_SETTINGS_FILE}
+
+# MARIA_IMAGE
+MARIA_IMAGE=$(get_tag $BASH_SOURCE)
+
+echo "MARIA_IMAGE=${MARIA_IMAGE}" >> ${LOCAL_SETTINGS_FILE}
