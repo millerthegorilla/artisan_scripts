@@ -3,7 +3,7 @@
 # to obtain root level question answers. 
 
 # assume rootlevel 'general' questions have been asked and answered and import them for use
-if ! [[ $(basename${1}) == "containers" ]]
+if ! [[ $(basename ${1}) == "containers" ]]
 then	
     source ${CONTAINER_SCRIPTS_ROOT}/settings.sh
 fi
