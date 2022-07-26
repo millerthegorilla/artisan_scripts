@@ -2,11 +2,28 @@
 
 EXT=${1}
 
+function check_settings()
+{
+	if [[ -f ${1} ]]
+	then
+		if grep -q '[^[:space:]]' ${1};
+		then
+			echo -n "settings file contains data - moving it before creating new one"
+			mv ${1} ${SCRIPTS_ROOT}/settings_files/settings.old.$(date +%d-%m-%y_%T)
+		else
+			rm ${1}
+		fi
+	fi
+	touch ${1}
+}
+
 function local_settings()
 {   # check if absolute or relative path
 	if [[ ${1} == /* ]]; then
-	   echo ${1}
+	   LOCALS=${1}
 	else
-	  echo $(realpath ${EXT})/${1}
+	   LOCALS=$(realpath ${EXT})/${1}
 	fi
+	check_settings ${LOCALS}
+	echo ${LOCALS}
 }
