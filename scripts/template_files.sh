@@ -1,8 +1,8 @@
 #!/bin/bash
 
-source .proj
+source ${PROJECT_SETTINGS}
 
-cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst '$dockerfile_app_names' > ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
+cat ${SCRIPTS_ROOT}/templates/dockerfiles/dockerfile_django_dev | envsubst '$DOCKERFILE_APP_NAMES' > ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
 cat ${SCRIPTS_ROOT}/templates/env_files/scripts_env | envsubst > ${SCRIPTS_ROOT}/.env
 cat ${SCRIPTS_ROOT}/templates/env_files/settings_env | envsubst > ${SCRIPTS_ROOT}/settings/settings_env
 cat ${SCRIPTS_ROOT}/templates/settings/archive | envsubst > ${SCRIPTS_ROOT}/.archive
