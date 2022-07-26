@@ -21,7 +21,8 @@ function get_variables_and_make_project_file()
     fi
 
     # root questions including questions shared by containers
-    local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${CONTAINER_SCRIPTS_ROOT}/questions.sh"  | tee /dev/tty | tail -n 1)
+    local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${CONTAINER_SCRIPTS_ROOT}/questions.sh"  | tee /dev/tty | tail -n 1 > /dev/null 2>&1)
+    echo $local_settings_file
     source ${CONTAINER_SCRIPTS_ROOT}/questions.sh  ${local_settings_file}
     cat ${local_settings_file} > ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
 
