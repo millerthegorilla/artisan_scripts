@@ -10,4 +10,4 @@ fi
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh ${1}
 
-echo local_settings ${2}
+echo $(local_settings ${2})
