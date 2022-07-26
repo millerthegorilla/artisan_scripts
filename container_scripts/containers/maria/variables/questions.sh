@@ -7,14 +7,14 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 
 # DB_NAME
-db_name=${project_name}_db
+db_name=${PROJECT_NAME}_db
 read -p "Your django database name [${db_name}] : " DB_NAME
 DB_NAME=${DB_NAME:-${db_name}}
 
 echo "DB_NAME=${DB_NAME}" >> ${L_S_FILE}
 
 # DB_USER
-db_user=${db_name}_user
+db_user=${DB_NAME}_user
 read -p "Your django database username [${db_user}]: " DB_USER
 DB_USER=${DB_USER:-${db_user}}
 
