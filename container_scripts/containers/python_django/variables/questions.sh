@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+LOCAL_SETTINGS_FILE=$(source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh ${BASH_SOURCE} ${LOCAL_SETTINGS_FILE})
 
 # XDESK
 if [[ $(type Xorg > /dev/null 2>&1 | echo $?) -eq 0 ]]
@@ -92,3 +92,14 @@ echo "HOST_MEDIA_DIR=${HOST_MEDIA_DIR}" >> ${LOCAL_SETTINGS_FILE}
 DJANGO_SECRET_KEY=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
 
 echo "DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}"
+
+# DJANGO_CONT_NAME
+
+DJANGO_CONT_NAME="redis_cont"
+
+echo "DJANGO_CONT_NAME=${DJANGO_CONT_NAME}" >> ${LOCAL_SETTINGS_FILE}
+
+# DJANGO_IMAGE
+DJANGO_IMAGE=$(get_tag)
+
+echo "DJANGO_IMAGE=${DJANGO_IMAGE}" >> ${LOCAL_SETTINGS_FILE}
