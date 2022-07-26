@@ -1,6 +1,8 @@
 #!/bin/bash
 
-LOCAL_SETTINGS_FILE=$(source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh ${BASH_SOURCE} ${LOCAL_SETTINGS_FILE})
+LOCAL_SETTINGS_FILE=${1}
+
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 

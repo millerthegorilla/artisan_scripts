@@ -11,6 +11,6 @@ fi
 
 # get and return correct local_settings file - either an absolute file path
 # or an absolute file path with a relative path appended
-source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh ${1}
+# source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh
 
-echo $(local_settings ${2})
+# echo $(local_settings ${2} ${1})
