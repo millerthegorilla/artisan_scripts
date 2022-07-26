@@ -1,6 +1,7 @@
 #!/bin/bash
 
-EXT=${1}
+EXT=$(dirname ${1})
+path=$(basename "$(dirname "$(readlink -f ${1})")")/$(basename "$(readlink -f ${1})")
 
 function check_settings()
 {
@@ -9,7 +10,7 @@ function check_settings()
 		if grep -q '[^[:space:]]' ${1};
 		then
 			echo -n "settings file contains data - moving it before creating new one"
-			mv ${1} ${SCRIPTS_ROOT}/settings_files/settings.old.$(date +%d-%m-%y_%T)
+			mv ${1} ${SCRIPTS_ROOT}/settings_files/settings.old.${path}.$(date +%d-%m-%y_%T)
 		else
 			rm ${1}
 		fi
