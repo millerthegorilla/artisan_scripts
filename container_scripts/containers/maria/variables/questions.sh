@@ -2,6 +2,8 @@
 
 LOCAL_SETTINGS_FILE=$(source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh ${BASH_SOURCE} ${LOCAL_SETTINGS_FILE})
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
+
 # DB_NAME
 db_name=${project_name}_db
 read -p "Your django database name [${db_name}] : " DB_NAME
@@ -50,6 +52,6 @@ MARIA_CONT_NAME="maria_cont"
 echo "MARIA_CONT_NAME=${MARIA_CONT_NAME}" >> ${LOCAL_SETTINGS_FILE}
 
 # MARIA_IMAGE
-MARIA_IMAGE=$(get_tag)
+MARIA_IMAGE=$(get_tag $BASH_SOURCE)
 
 echo "MARIA_IMAGE=${MARIA_IMAGE}" >> ${LOCAL_SETTINGS_FILE}

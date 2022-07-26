@@ -2,6 +2,8 @@
 
 LOCAL_SETTINGS_FILE=$(source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh ${BASH_SOURCE} ${LOCAL_SETTINGS_FILE})
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
+
 # XDESK
 if [[ $(type Xorg > /dev/null 2>&1 | echo $?) -eq 0 ]]
 then
@@ -100,6 +102,6 @@ DJANGO_CONT_NAME="redis_cont"
 echo "DJANGO_CONT_NAME=${DJANGO_CONT_NAME}" >> ${LOCAL_SETTINGS_FILE}
 
 # DJANGO_IMAGE
-DJANGO_IMAGE=$(get_tag)
+DJANGO_IMAGE=$(get_tag $BASH_SOURCE)
 
 echo "DJANGO_IMAGE=${DJANGO_IMAGE}" >> ${LOCAL_SETTINGS_FILE}

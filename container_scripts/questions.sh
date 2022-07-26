@@ -188,4 +188,6 @@ select yn in "Yes" "No"; do
     esac
 done
 
+echo debug 3 auto_updates is ${AUTO_UPDATES}
+
 echo "AUTO_UPDATES=${AUTO_UPDATES}" >> ${LOCAL_SETTINGS_FILE}

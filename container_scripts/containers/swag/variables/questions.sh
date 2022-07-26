@@ -2,6 +2,8 @@
 
 LOCAL_SETTINGS_FILE=$(source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh ${BASH_SOURCE} ${LOCAL_SETTINGS_FILE})
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
+
 if [[ ${DEBUG} == "TRUE" ]]
 then
 	exit 0
@@ -52,7 +54,7 @@ echo "SWAG_CONT_NAME=${SWAG_CONT_NAME}" >> ${LOCAL_SETTINGS_FILE}
 
 # SWAG_IMAGE
 
-SWAG_IMAGE=$(get_tag)
+SWAG_IMAGE=$(get_tag $BASH_SOURCE)
 
 echo "SWAG_IMAGE=${SWAG_IMAGE}" >> ${LOCAL_SETTINGS_FILE}
 
