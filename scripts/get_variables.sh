@@ -6,6 +6,8 @@ then
    exit 1
 fi
 
+echo -e "hello !"
+
 function get_variables_and_make_project_file()
 {
     source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh
