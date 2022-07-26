@@ -44,7 +44,7 @@ echo "MOUNT_GIT=${MOUNT_GIT}" >> ${L_S_FILE}
 # BASE_DIR
 # base dir is used in settings_env for base_dir in settings.py
 bn="/opt/${PROJECT_NAME}/"
-read -p "Container base code directory [${bn}] : " BASE_DIR
+read -p "Path to codebase inside container [${bn}] : " BASE_DIR
 BASE_DIR=${BASE_DIR:-${bn}}
 
 echo "BASE_DIR=${BASE_DIR}" >> ${L_S_FILE}
@@ -66,9 +66,9 @@ echo "STATIC_BASE_ROOT=${STATIC_BASE_ROOT}" >> ${L_S_FILE}
 # MEDIA_BASE_ROOT
 if [[ ${DEBUG} == "TRUE" ]]
 then
-    MBR="/opt/${project_name}/"
+    MBR="/opt/${PROJECT_NAME}/"
 else
-    MBR="/etc/opt/${project_name}/media_files/"
+    MBR="/etc/opt/${PROJECT_NAME}/media_files/"
 fi
 read -p "Media base root [${MBR}] : " MEDIA_BASE_ROOT
 MEDIA_BASE_ROOT=${MEDIA_BASE_ROOT:-${MBR}}
@@ -92,13 +92,12 @@ HOST_MEDIA_DIR=/etc/opt/${PROJECT_NAME}/media_files/
 
 echo "HOST_MEDIA_DIR=${HOST_MEDIA_DIR}" >> ${L_S_FILE}
 
-## SECRET KEYGEN
-DJANGO_SECRET_KEY=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
+## DJANGO_SECRET_KEYGEN
+DJANGO_SECRET_KEY=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)
 
 echo "DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}"
 
 # DJANGO_CONT_NAME
-
 DJANGO_CONT_NAME="redis_cont"
 
 echo "DJANGO_CONT_NAME=${DJANGO_CONT_NAME}" >> ${L_S_FILE}
