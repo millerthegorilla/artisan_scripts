@@ -1,9 +1,8 @@
 #!/bin/bash
 
 LOCAL_SETTINGS_FILE=${1}
-echo ${LOCAL_SETTINGS_FILE}
 
-echo "\nThe following questions are to fill out the env files that are called \
+echo -e "\nThe following questions are to fill out the env files that are called \
 upon by the scripts when executing, and by the settings file during production. \n
 The settings .env file is called from the settings file using os.getenv, after \
 the env file is loaded into the environment by the python program dotenv. \n
