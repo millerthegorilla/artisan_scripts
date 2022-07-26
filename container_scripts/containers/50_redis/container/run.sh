@@ -6,9 +6,6 @@ then
    exit 1
 fi
 
-echo -e "run_redis_cont.sh"
-
-source ${SCRIPTS_ROOT}/.env
-source ${SCRIPTS_ROOT}/.proj
+source ${PROJECT_SETTINGS}
 
 runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} ${AUTO_UPDATES} --name ${REDIS_CONT_NAME} ${REDIS_IMAGE}"

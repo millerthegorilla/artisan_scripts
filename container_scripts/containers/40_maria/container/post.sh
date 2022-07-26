@@ -1,24 +1,4 @@
-#!/bin/bash
-
-if [[ $EUID -ne 0 ]]
-then
-   echo "This script must be run as root" 
-   exit 1
-fi
-
-echo -e "run_maria_cont.sh"
-
-source ${SCRIPTS_ROOT}/.env
-source ${SCRIPTS_ROOT}/.proj
-
-if [[ ${DEBUG} == "TRUE" ]]
-then
-    postfix="dev"
-else
-    postfix="prod"
-fi
-
-runuser --login ${USER_NAME} -P -c "podman run -dit --secret=MARIADB_ROOT_PASSWORD,type=env --secret=DB_PASSWORD,type=env --name \"${MARIA_CONT_NAME}\" -v ${DB_VOL_NAME}:/var/lib/mysql:Z --pod \"${POD_NAME}\" ${MARIA_IMAGE}_${postfix}"
+source ${PROJECT_SETTINGS}
 
 echo -n "Waiting for mariadb restart..."
 until ! runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'ls /tmp/.finished'" > /dev/null 2>&1

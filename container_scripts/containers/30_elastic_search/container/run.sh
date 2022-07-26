@@ -6,9 +6,6 @@ then
    exit 1
 fi
 
-echo -e "run_elastic_search_cont.sh"
-
-source ${SCRIPTS_ROOT}/.env
-source ${SCRIPTS_ROOT}/.proj
+source ${PROJECT_SETTINGS}
 
 runuser --login ${USER_NAME} -P -c "podman run -dit --name=${ELASTIC_CONT_NAME} --pod=$POD_NAME ${AUTO_UPDATES} -e discovery.type=\"single-node\" -e ES_JAVA_OPTS=\"-Xms512m -Xmx512m\" ${ELASTIC_IMAGE}"

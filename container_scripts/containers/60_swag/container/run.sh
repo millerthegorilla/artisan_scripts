@@ -6,25 +6,12 @@ then
    exit 1
 fi
 
-echo -e "$(basename ${0})"
+source ${PROJECT_SETTINGS}
 
-source ${SCRIPTS_ROOT}/.env
-source ${SCRIPTS_ROOT}/.proj
-
-if [[ -n "${SWAG_HOST_LOG_DIR}" && ! -f ${SWAG_HOST_LOG_DIR} ]]
+if [[ "${DEBUG}" == "FALSE" ]]
 then
-    mkdir -p ${SWAG_HOST_LOG_DIR}
-    chown ${USER_NAME}:${USER_NAME} ${SWAG_HOST_LOG_DIR}
+    exit 0
 fi
-
-echo -e "\n\nIs the project 'pre-production'?  If it is then the swag container can be created with a 'staging' flag, that will see certificate requests sent to the lets encrypt staging api.  Doing this will prevent any rate-limits set by lets encrypt.  Note though, that to place the site into production, you will need to recreate the swag container with this staging flag set to false.\nhttps://letsencrypt.org/docs/staging-environment/\n"
-echo -e "Set staging to True?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) staging=True; break;;
-        No ) staging=False; break;;
-    esac
-done
 
 if [[ ${TLDOMAIN} == "TRUE" ]]
 then
@@ -32,6 +19,3 @@ then
 else
 	runuser --login ${USER_NAME} -P -c "podman run -dit --pod=${POD_NAME}  --secret=DUCKDNS_TOKEN,type=env,target=DUCKDNS_TOKEN --name=${SWAG_CONT_NAME} --cap-add=NET_ADMIN -e PUID=1000 -e PGID=1000 -e TZ=\"Europe/London\" -e URL=${DUCKDNS_DOMAIN} -e EMAIL=${CERTBOT_EMAIL} -e VALIDATION=duckdns -e STAGING=$staging -v ${SWAG_HOST_VOL_STATIC}:${SWAG_CONT_VOL_STATIC}:Z -v ${DJANGO_HOST_MEDIA_VOL}:${SWAG_CONT_VOL_MEDIA} -v ${SWAG_HOST_LOG_DIR}:${SWAG_CONT_LOG_DIR}:Z -v ${SWAG_VOL_NAME}:/config/:Z ${SWAG_IMAGE}"
 fi
-    
-runuser --login ${USER_NAME} -P -c "podman exec -it ${SWAG_CONT_NAME} bash -c \"chown abc -R ${SWAG_CONT_VOL_STATIC}\""
-

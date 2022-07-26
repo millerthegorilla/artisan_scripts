@@ -6,10 +6,12 @@ then
    exit 1
 fi
 
-echo -e "run_duckdns_cont.sh"
+source ${PROJECT_SETTINGS}
 
-source ${SCRIPTS_ROOT}/.env
-source ${SCRIPTS_ROOT}/.proj
+if [[ "${DEBUG}" == "FALSE" ]]
+then
+    exit 0
+fi
 
 if [[ -n ${DUCKDNS_DOMAIN} && -n ${DUCKDNS_CONT_NAME} && -n ${DUCKDNS_IMAGE} ]]
 then
@@ -17,4 +19,3 @@ then
 else
 	echo -e "DUCKDNS VARIABLES ARE NOT SET"
 fi
-

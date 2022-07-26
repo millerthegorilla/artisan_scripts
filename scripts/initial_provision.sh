@@ -10,9 +10,9 @@ source ${PROJECT_SETTINGS}
 
 ./image_acq.sh
 
-for custom_image in $(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "custom.sh")
+for custom_image in $(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "custom.sh" | sort)
 do
-   ./custom_image
+   /bin/bash "${SCRIPTS_ROOT}/${custom_image}"
 done
 # cp ${SCRIPTS_ROOT}/scripts/image_acq.sh /home/${USER_NAME}/image_acq.sh
 # cp ${SCRIPTS_ROOT}/.proj /home/${USER_NAME}/.proj
