@@ -43,7 +43,9 @@ make_secret MARIADB_ROOT_PASSWORD
 
 # DB_PASSWORD
 # TODO check if DB_PASSWORD exists before deleting it.
-DB_PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};)
+PASSWORD_LENGTH=32
+
+DB_PASSWORD=$(< /dev/random tr -dc _A-Z-a-z-0-9 | head -c${PASSWORD_LENGTH};)
 echo debug 1 maria variables DB_PASSWORD = ${DB_PASSWORD}
 if [[ $(runuser --login ${USER_NAME} -c "podman secret inspect DB_PASSWORD &>/dev/null"; echo $?) == 0 ]]
 then
