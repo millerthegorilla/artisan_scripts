@@ -165,12 +165,12 @@ read -p "Dropbox OAuth Token : " DROPBOX_OAUTH_TOKEN
 
 echo "DROPBOX_OAUTH_TOKEN=${DROPBOX_OAUTH_TOKEN}" >> ${L_S_FILE}
 
-# DUCKDNSTOKEN
+# DUCKDNS_TOKEN
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/make_secret.sh
 
 if [[ ${DEBUG} == "FALSE" ]]
 then 
-    make_secret DUCKDNSTOKEN
+    make_secret DUCKDNS_TOKEN
 fi
 
 # AUTO_UPDATES

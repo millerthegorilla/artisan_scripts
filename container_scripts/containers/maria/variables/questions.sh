@@ -5,6 +5,7 @@ L_S_FILE=${1}
 source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/make_secret.sh
 
 # DB_NAME
 db_name=${PROJECT_NAME}_db
@@ -20,8 +21,6 @@ DB_USER=${DB_USER:-${db_user}}
 
 echo "SDB_USER=${DB_USER}" >> ${L_S_FILE}
 
-# DB_PASSWORD
-DB_PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
 
 echo "DB_PASSWORD=${DB_PASSWORD}" >> ${L_S_FILE}
 
@@ -40,13 +39,17 @@ DB_VOL=${DB_VOL:-${db_vol_name}}
 echo "DB_VOL=${DB_VOL}" >> ${L_S_FILE}
 
 # MARIADB_ROOT_PASSWORD
-source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/make_secret.sh
-
 make_secret MARIADB_ROOT_PASSWORD
 
+# DB_PASSWORD
 # TODO check if DB_PASSWORD exists before deleting it.
-runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
-echo -n $DB_PASSWORD | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
+DB_PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
+echo debug 1 maria variables DB_PASSWORD = ${DB_PASSWORD}
+if [[ $(runuser --login ${USER_NAME} -c "podman secret inspect DB_PASSWORD &>/dev/null"; echo $?) == 0 ]]
+then
+    runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
+fi
+echo -n ${DB_PASSWORD} | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
 
 # MARIA_CONT_NAME
 MARIA_CONT_NAME="maria_cont"
