@@ -2,7 +2,7 @@
 
 function check_settings_empty()
 {
-	echo debug 1 local_settings.sh {1} {2}
+	echo debug 1 local_settings.sh ${1} ${2}
 	if [[ -f ${1} ]]
 	then
 		if grep -q '[^[:space:]]' ${1};
@@ -19,12 +19,12 @@ function check_settings_empty()
 function local_settings()
 {   # check if absolute or relative path
 	if [[ ${1} == /* ]]; then
-	   LOCALS=${1}
+	   local_settings=${1}
 	else
-	   LOCALS=$(realpath $(dirname ${2}))/${1}
+	   local_settings=$(realpath $(dirname ${2}))/${1}
 	fi
 	path=$(basename "$(dirname "$(readlink -f ${1})")")/$(basename "$(readlink -f ${1})")
 	path=${path//\//_}
-	check_settings_empty ${LOCALS} ${path}
-	echo ${LOCALS}
+	check_settings_empty ${local_settings} ${path}
+	echo ${local_settings}
 }
