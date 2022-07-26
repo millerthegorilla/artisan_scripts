@@ -41,7 +41,7 @@ function install_check()
         ERROR=": ERR1 $line"
         INSTALLED="not installed!";
         break;
-      elif [[ ${line:0:6} == "./.git" && "755" -ne $(stat -c '%a' ${line}) ]];
+      elif [[ ${line:0:6} == "./.git" && "550" -ne $(stat -c '%a' ${line}) ]];
       then
         ERROR=": ERR2 $line"
         INSTALLED="not installed!";
