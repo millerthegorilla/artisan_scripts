@@ -6,8 +6,6 @@ then
    exit 1
 fi
 
-echo -e "hello !"
-
 function get_variables_and_make_project_file()
 {
     source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh
@@ -49,7 +47,7 @@ function get_variables_and_make_project_file()
         cp ${SCRIPTS_ROOT}/.PROJECT_SETTINGS ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS.PROJECT_NAME.$(date +%d-%m-%y_%T)
     fi
 
-    echo ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
+    PROJECT_SETTINGS=${SCRIPTS_ROOT}/.PROJECT_SETTINGS
 }
 
 echo -e "Enter absolute filepath of project settings or press enter to accept default.\n \
@@ -64,7 +62,7 @@ elif [[ -n ${DEFAULT_PROJECT_FILE} && -f ${DEFAULT_PROJECT_FILE} ]];
 then
     PROJECT_SETTINGS=${DEFAULT_PROJECT_FILE}
 else
-    PROJECT_SETTINGS=$(get_variables_and_make_project_file)
+    get_variables_and_make_project_file
 fi
 
 -a
