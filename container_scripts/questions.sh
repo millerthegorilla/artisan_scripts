@@ -18,7 +18,9 @@ echo -e "#**** and have a password protected system user account       *****"
 echo -e "#**** with a home directory ready                             *****"
 echo -e "#******************************************************************"
 
-echo -e debug 1 root questions.sh local_settings = ${LOCAL_SETTINGS_FILE}
+
+echo -e debug 1 root questions.sh bash_source = ${BASH_SOURCE}
+echo -e debug 2 root questions.sh local_settings = ${LOCAL_SETTINGS_FILE}
 
 # PROJECT_NAME
 isValidVarName() {
