@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh $(0)
 
 LOCAL_SETTINGS_FILE=$(local_settings ${LOCAL_SETTINGS_FILE})
 
