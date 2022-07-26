@@ -1,10 +1,9 @@
 #!/bin/bash
 
 echo -e "\nThe following questions are to fill out the env files that are called \
-upon by the scripts when executing, and by the settings file during production. \
-The settings .env file is called from the settings file using os.getenv, after \
-the env file is loaded into the environment by the python program dotenv. \
-This .env file is located in the settings folder, along with settings.py.  \
+upon by the scripts when executing, and by the settings file used by django during \
+production. \
+The .env file is located in the settings folder, along with settings.py.  \
 You can edit either of those files to edit your site.\
 Press enter to accept default value [..] where listed...\n\n"
 
