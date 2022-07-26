@@ -18,17 +18,18 @@ echo $(local_settings ${2})
 function get_tag()
 {
 	source ../image/source.sh
-	if [[ -n "${CUSTOM_TAG}" ]]
+	if [[ -n "${CUSTOM_TAG}" ]];
 	then
 		tag=${CUSTOM_TAG}
-	elif [[ -n "${TAG}" ]]
+	elif [[ -n "${TAG}" ]];
+	then
 		tag=${TAG}
 	else
 		echo -e "IMAGE TAG IS NOT SET!"
 		exit 1
 	fi
 
-	if [[ ${DEBUG} == "TRUE" ]]
+	if [[ ${DEBUG} == "TRUE" ]];
 	then
 		echo "${tag}_debug"
 	else
