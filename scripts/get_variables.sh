@@ -22,11 +22,10 @@ function get_variables_and_make_project_file()
 
     function get_variables()
     {
-        echo debug get_variables ls -d $(ls -d ${1})
         for container in $(ls -d ${1})
         do
             local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh" | tail -n 1)
-            source ${container}/variables/questions.sh ${local_settings_file}
+            bash ${container}/variables/questions.sh ${local_settings_file}
             cat ${local_settings_file} >> ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
             unset local_settings_file
         done
