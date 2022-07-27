@@ -31,8 +31,8 @@ function get_variables_and_make_project_file()
         done
     }
 
-    get_variables '${CONTAINER_SCRIPTS_ROOT}/containers/*'
-    get_variables '${CONTAINER_SCRIPTS_ROOT}/pods/*'
+    get_variables "${CONTAINER_SCRIPTS_ROOT}/containers/*"
+    get_variables "${CONTAINER_SCRIPTS_ROOT}/pods/*"
 
     echo -e "Do you want to save your settings as a settings file? : "
     select yn in "Yes" "No"; do
