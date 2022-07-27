@@ -1,2 +1,0 @@
-dockerfile_django is completed by env_subst and then copied to this directory where it is used by the script initial_provision.sh to build the custom python image.
-When podman build is building that custom python image, it install the pip packages from pip_requirements into the custom image, so if there is anything else you want to add in, it would go in to the file pip_requirements.

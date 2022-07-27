@@ -197,7 +197,7 @@ while (( "$#" )); do
           case "${i^^}" in
             'VARIABLES')
                 echo -e "\nOkay, lets find out more about you...\n"
-                ${SCRIPTS_ROOT}/scripts/get_variables.sh
+                ${SCRIPTS_ROOT}/scripts/get_variables.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -257,6 +257,10 @@ while (( "$#" )); do
       ;;
     clean)
       ${SCRIPTS_ROOT}/scripts/cleanup.sh
+      exit $?
+      ;;
+    clean_save_settings)
+      ${SCRIPTS_ROOT}/scripts/clean_save_settings.sh
       exit $?
       ;;
     replace)
