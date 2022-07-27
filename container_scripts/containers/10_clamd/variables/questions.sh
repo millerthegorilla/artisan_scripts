@@ -2,6 +2,7 @@
 
 L_S_FILE=${1}
 
+source ${CONTAINER_SCRIPTS_ROOT}/containers/00_shared/variables/settings.sh
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 
 # CLAM_CONT_NAME
