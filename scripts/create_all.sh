@@ -34,7 +34,18 @@ else
     settings_copy "production"
 fi
 
-for runfile in $(find {CONTAINER_SCRIPTS_ROOT}/containers -type f -name "run.sh" | sort)
+
+function run_files()
+{
+    for file in $(find {CONTAINER_SCRIPTS_ROOT}/containers -type f -name "${1}.sh" | sort)
+    do
+        /bin/bash ${SCRIPTS_ROOT}/${file}
+    done
+}
+
+all_files={"pre", "run", "post"}
+
+for file in ${all_files[@]}
 do
-    /bin/bash ${SCRIPTS_ROOT}/${runfile}
+    run_files ${file}
 done
