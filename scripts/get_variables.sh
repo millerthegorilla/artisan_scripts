@@ -20,21 +20,25 @@ function get_variables_and_make_project_file()
         fi
     fi
 
-    # root questions including questions shared by containers
-    local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${CONTAINER_SCRIPTS_ROOT}/questions.sh"  | tail -n 1 )
-    source ${CONTAINER_SCRIPTS_ROOT}/questions.sh  ${local_settings_file}
-    cat ${local_settings_file} > ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
-    unset local_settings_file
+    # # root questions including questions shared by containers
+    # local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${CONTAINER_SCRIPTS_ROOT}/questions.sh"  | tail -n 1 )
+    # source ${CONTAINER_SCRIPTS_ROOT}/questions.sh  ${local_settings_file}
+    # cat ${local_settings_file} > ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
+    # unset local_settings_file
 
-    # container specific questions
-    for container in $(ls -d ${CONTAINER_SCRIPTS_ROOT}/containers/*)
-    do
-        local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh" | tail -n 1)
-        echo debug 1 local_settings_file = ${local_settings_file}
-        source ${container}/variables/questions.sh ${local_settings_file}
-        cat ${local_settings_file} >> ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
-        unset local_settings_file
-    done
+    function get_variables()
+    {
+        for container in $(ls -d ${1})
+        do
+            local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh" | tail -n 1)
+            source ${container}/variables/questions.sh ${local_settings_file}
+            cat ${local_settings_file} >> ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
+            unset local_settings_file
+        done
+    }
+
+    get_variables '${CONTAINER_SCRIPTS_ROOT}/containers/*'
+    get_variables '${CONTAINER_SCRIPTS_ROOT}/pods/*'
 
     echo -e "Do you want to save your settings as a settings file? : "
     select yn in "Yes" "No"; do
@@ -46,7 +50,7 @@ function get_variables_and_make_project_file()
 
     if [[ SAVE_SETTINGS == "TRUE" ]]
     then
-        cp ${SCRIPTS_ROOT}/.PROJECT_SETTINGS ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS.PROJECT_NAME.$(date +%d-%m-%y_%T)
+        cp ${SCRIPTS_ROOT}/.PROJECT_SETTINGS ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS.${PROJECT_NAME}.$(date +%d-%m-%y_%T)
     fi
 
     PROJECT_SETTINGS=${SCRIPTS_ROOT}/.PROJECT_SETTINGS

@@ -6,7 +6,7 @@
 # unless we are the rootlevel general questions
 if ! [[ $(basename ${1}) == "containers" ]]
 then	
-    source ${CONTAINER_SCRIPTS_ROOT}/settings.sh
+    source ${CONTAINER_SCRIPTS_ROOT}/general/variables/settings.sh
 fi
 
 # get and return correct local_settings file - either an absolute file path

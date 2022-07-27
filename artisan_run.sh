@@ -154,7 +154,7 @@ while (( "$#" )); do
     create)
       labels=()
       iarray=()
-      alllabels=('variables' 'directories' 'images' 'containers' 'systemd')
+      alllabels=('variables' 'directories' 'network' 'images' 'containers' 'systemd')
       parray=( "${@:2}" )
       if [[ ${#parray} -gt 0 ]]
       then
@@ -166,9 +166,10 @@ while (( "$#" )); do
               declare -A vars
               vars['variables']=0
               vars['directories']=1
-              vars['images']=2
-              vars['containers']=3
-              vars['systemd']=4
+              vars['network']=2
+              vars['images']=3
+              vars['containers']=4
+              vars['systemd']=5
               i=0
               for j in "${parray[@]}"
               do
@@ -203,8 +204,16 @@ while (( "$#" )); do
                 fi
             ;;
             'DIRECTORIES')
-                echo -e "\nNow I will create the directtories, and I will open ports below 1024 on this machine.\n"
+                echo -e "\nNow I will create necessary directtories.\n"
                 ${SCRIPTS_ROOT}/scripts/create_directories.sh
+                if [[ $? -ne 0 ]]
+                then
+                  exit $?
+                fi
+            ;;
+            'NETWORK')
+                echo -e "\nNow for general network settings.\n"
+                ${SCRIPTS_ROOT}/scripts/create_network.sh
                 if [[ $? -ne 0 ]]
                 then
                   exit $?

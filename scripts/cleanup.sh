@@ -5,128 +5,66 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-if [[ -f ".archive" ]]; then
-   set +a
-   source .archive
-   set -a
-fi
+# if [[ -f ".archive" ]]; then
+#    set +a
+#    source .archive
+#    set -a
+# fi
 
-if [[ -f ".proj" ]]; then
-   set +a
-   source .proj
-   set -a
-fi
+# if [[ -f ".proj" ]]; then
+#    set +a
+#    source .proj
+#    set -a
+# fi
 
-if [[ ! -n "DEBUG" ]]
-then
-    echo -e "Is the project debug (choose a number) : "
+# if [[ ! -n "DEBUG" ]]
+# then
+#     echo -e "Is the project debug (choose a number) : "
 
-    select yn in "Yes" "No"; do
-        case $yn in
-            Yes ) DEBUG="TRUE";;
-            No ) DEBUG="FALSE";;
-        esac
-    done
-fi
+#     select yn in "Yes" "No"; do
+#         case $yn in
+#             Yes ) DEBUG="TRUE";;
+#             No ) DEBUG="FALSE";;
+#         esac
+#     done
+# fi
 
-if [[ ! -n "$CODE_PATH" ]]
-then
-    until [[ -n "${CODE_PATH}" ]]
-    do
-        read -p "enter path to code (where manage.py resides) : " -e CODE_PATH
-        if [[ -z "${CODE_PATH}" ]]
-        then
-            echo -e "the path to the code must be set to continue.  Try again or ctrl/c to quit."
-        fi
-    done 
-fi
+# if [[ ! -n "$CODE_PATH" ]]
+# then
+#     until [[ -n "${CODE_PATH}" ]]
+#     do
+#         read -p "enter path to code (where manage.py resides) : " -e CODE_PATH
+#         if [[ -z "${CODE_PATH}" ]]
+#         then
+#             echo -e "the path to the code must be set to continue.  Try again or ctrl/c to quit."
+#         fi
+#     done 
+# fi
 
-if [[ -z "$USER_NAME" ]]
-then
-    until [[ -n "${USER_NAME}" ]]
-    do
-        read -p "Enter the name of your standard/service user : " USER_NAME
-        if [[ -z "${USER_NAME}" ]]
-        then
-            echo -e "the name of your user must be set to continue.  Try again or ctrl/c to quit."
-        fi
-    done
-fi
+# if [[ -z "$USER_NAME" ]]
+# then
+#     until [[ -n "${USER_NAME}" ]]
+#     do
+#         read -p "Enter the name of your standard/service user : " USER_NAME
+#         if [[ -z "${USER_NAME}" ]]
+#         then
+#             echo -e "the name of your user must be set to continue.  Try again or ctrl/c to quit."
+#         fi
+#     done
+# fi
 
-if [[ -z ${POD_NAME} ]]
-then
-    read -p "Enter pod name: " POD_NAME
-fi
-if [[ -z ${PROJECT_NAME} ]]
-then
-    read -p "Enter project name: " PROJECT_NAME
-fi
+# if [[ -z ${POD_NAME} ]]
+# then
+#     read -p "Enter pod name: " POD_NAME
+# fi
+# if [[ -z ${PROJECT_NAME} ]]
+# then
+#     read -p "Enter project name: " PROJECT_NAME
+# fi
 
-runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"
-retval=$?
 
-if [[ ! $retval -eq 0 ]]
-then
-	echo no such pod!
-else
-        #chown swag_logs to be able to delete them
-        # if [[ -z "${SWAG_CONT_NAME}" ]]
-        # then
-	       #  SN=swag_cont
-        # else
-        #     SN=${SWAG_CONT_NAME}
-        # fi
-        # runuser --login ${USER_NAME} -c "podman container exists ${SN}"
-        # retval=$?
-        # if  [[ retval -eq 0 ]]
-        # then
-        #     runuser --login ${USER_NAME} -c "podman exec -it ${SN} bash -c 'chown -R root:root /config/log'"
-        # fi
-    echo -e "\nshutting down and removing the pod..."
-	runuser --login ${USER_NAME} -c "podman pod stop ${POD_NAME}"
-	runuser --login ${USER_NAME} -c "podman pod rm ${POD_NAME}"
-fi
 
-# prune any miscellaneous images that may have been left over during builds.
-runuser --login ${USER_NAME} -c "podman image prune -f"
 
-echo -e "remove code (choose a number)?"
-
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) code_remove=1; break;;
-        No ) code_remove=0; break;;
-    esac
-done
-
-if [[ code_remove -eq 1 ]]
-then
-    echo -e "**** WARNING ****\n"
-    echo -e "This will irretrievably remove your django code.\n"
-    echo -e "Make sure you have run git commit!\n"
-    echo -e "Are you certain you want to remove code??"
-
-    select yn in "Yes" "No"; do
-        case $yn in
-            Yes ) code_remove=1; break;;
-            No ) code_remove=0; break;;
-        esac
-    done
-    if [[ code_remove -eq 1 ]]
-    then
-	   rm -rf ${CODE_PATH}
-       unset CODE_PATH
-    fi
-fi
-
-rm ${SCRIPTS_ROOT}/dockerfiles/maria.sh
-rm ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
-echo code path is ${CODE_PATH}
-
-if [ -n ${CODE_PATH} ];
-then
-    find ${CODE_PATH} -type l -delete
-fi
 
 echo -e "remove all podman images (choose a number)?"
 select yn in "Yes" "No"; do
@@ -138,25 +76,14 @@ done
 
 if [[ imgs_remove -eq 1 ]]
 then
-	runuser --login ${USER_NAME} -c "podman rmi python:latest swag:1.14.0 duckdns:latest redis:6.2.2-buster elasticsearch:7.11.2 docker-clamav:latest mariadb:latest"
+    IMAGES=$(grep -whorP "(TAG)+=\K.*" container_scripts/containers/ | sed s'/\n/ /')
+	runuser --login ${USER_NAME} -c "podman rmi ${IMAGES}"
 fi
 
-echo -e "save settings/.env to ./settings_env_old (choose a number)?"
 
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) save_sets=1; break;;
-        No ) save_sets=0; break;;
-    esac
-done
 
-if [[ save_sets -eq 1 ]]
-then
-    cp /etc/opt/${PROJECT_NAME}/settings/.env ./settings_env_old
-fi
 
-runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL_NAME}"
-runuser --login ${USER_NAME} -c "podman volume rm ${SWAG_VOL_NAME}"
+
 runuser --login ${USER_NAME} -c "podman volume prune -f"
 
 rm .env
