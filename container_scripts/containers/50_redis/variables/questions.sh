@@ -2,8 +2,6 @@
 
 L_S_FILE=${1}
 
-source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
-
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 
 # REDIS_CONT_NAME

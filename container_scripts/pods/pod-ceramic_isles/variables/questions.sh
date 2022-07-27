@@ -2,8 +2,6 @@
 
 L_S_FILE=${1}
 
-source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
-
 # # POD_NAME
 # if [[ ${DEBUG} == "TRUE" && $(id -u ${USER_NAME}) -lt 1000 ]]
 # then
