@@ -9,16 +9,6 @@ fi
 function get_variables_and_make_project_file()
 {
     source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh
-    
-    if [[ -f ${SCRIPTS_ROOT/.PROJECT_SETTINGS} ]]
-    then
-        if grep -q '[^[:space:]]' ${SCRIPTS_ROOT}/.PROJECT_SETTINGS;
-        then
-            echo "local .PROJECT_SETTINGS exists and is not empty"
-            echo "Moving it to PROJECT_SETTINGS_OLD"
-            mv ${SCRIPTS_ROOT}/.PROJECT_SETTINGS ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS_OLD.$(date +%d-%m-%y_%T)
-        fi
-    fi
 
     function get_variables()
     {
@@ -26,7 +16,7 @@ function get_variables_and_make_project_file()
         do
             local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh" | tail -n 1)
             bash ${container}/variables/questions.sh ${local_settings_file}
-            cat ${local_settings_file} >> ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
+            cat ${local_settings_file} >> ${PROJECT_SETTINGS}
             unset local_settings_file
         done
     }
@@ -44,11 +34,32 @@ function get_variables_and_make_project_file()
 
     if [[ SAVE_SETTINGS == "TRUE" ]]
     then
-        cp ${SCRIPTS_ROOT}/.PROJECT_SETTINGS ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS.${PROJECT_NAME}.$(date +%d-%m-%y_%T)
+        cp ${PROJECT_SETTINGS} ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS.${PROJECT_NAME}.$(date +%d-%m-%y_%T)
     fi
-
-    PROJECT_SETTINGS=${SCRIPTS_ROOT}/.PROJECT_SETTINGS
 }
+
+function make_project_settings()
+{
+    touch ${PROJECT_SETTINGS}
+    chown root:root ${PROJECT_SETTINGS}
+    chmod 0600 ${PROJECT_SETTINGS}
+}
+
+function check_for_project_settings()
+{
+    if [[ -f ${PROJECT_SETTINGS} ]]
+    then
+        if grep -q '[^[:space:]]' ${PROJECT_SETTINGS};
+        then
+            echo "local .PROJECT_SETTINGS exists and is not empty"
+            echo "Moving it to PROJECT_SETTINGS_OLD"
+            mv ${PROJECT_SETTINGS} ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS_OLD.$(date +%d-%m-%y_%T)
+            make_project_settings
+        fi
+    fi
+}
+
+check_for_project_settings
 
 echo -e "Enter absolute filepath of project settings or press enter to accept default.\n \
 If the default does not exist, then you can enter the variables manually..."
@@ -57,14 +68,15 @@ read -p ": " -e PROJECT_FILE
 
 if [[ -n ${PROJECT_FILE} && -f ${PROJECT_FILE} ]];
 then
-    PROJECT_SETTINGS=${PROJECT_FILE}
+    project_settings=${PROJECT_FILE}
 elif [[ -n ${DEFAULT_PROJECT_FILE} && -f ${DEFAULT_PROJECT_FILE} ]];
 then
-    PROJECT_SETTINGS=${DEFAULT_PROJECT_FILE}
+    project_settings=${DEFAULT_PROJECT_FILE}
 else
     get_variables_and_make_project_file
 fi
 
--a
-PROJECT_SETTINGS=${PROJECT_SETTINGS}
-+a
+if [[ "${project_settings}" != "${SCRIPTS_ROOT}/.PROJECT_SETTINGS" ]]
+then
+    cp ${project_settings} ${PROJECT_SETTINGS}
+fi

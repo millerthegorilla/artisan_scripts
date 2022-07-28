@@ -14,17 +14,14 @@ if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
     source ${SCRIPTS_ROOT}/options
 fi
-if [[ -e ${SCRIPTS_ROOT}/.archive ]]
+if [[ -e ${SCRIPTS_ROOT}/.PROJECT_SETTINGS ]]
 then
-    source ${SCRIPTS_ROOT}/.archive
-fi
-if [[ -e ${SCRIPTS_ROOT}/.env ]]
-then
-    source ${SCRIPTS_ROOT}/.env
+    source ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
 fi
 
 CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts"
 LOCAL_SETTINGS_FILE=${LOCAL_SETTINGS_FILE}
+PROJECT_SETTINGS=${PROJECT_SETTINGS}
 set +a
 
 function install_check()
@@ -205,7 +202,7 @@ while (( "$#" )); do
             ;;
             'DIRECTORIES')
                 echo -e "\nNow I will create necessary directtories.\n"
-                ${SCRIPTS_ROOT}/scripts/create_directories.sh
+                ${SCRIPTS_ROOT}/scripts/create_directories.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -213,7 +210,7 @@ while (( "$#" )); do
             ;;
             'NETWORK')
                 echo -e "\nNow for general network settings.\n"
-                ${SCRIPTS_ROOT}/scripts/create_network.sh
+                ${SCRIPTS_ROOT}/scripts/create_network.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -221,7 +218,7 @@ while (( "$#" )); do
             ;;
             'IMAGES')
                 echo -e "\nI will now download and provision container images, if they are not already present.\n"
-                ${SCRIPTS_ROOT}/scripts/initial_provision.sh
+                ${SCRIPTS_ROOT}/scripts/initial_provision.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -229,7 +226,7 @@ while (( "$#" )); do
             ;;
             'CONTAINERS')
                 echo -e "\n and now I will create the containers...\n"
-                ${SCRIPTS_ROOT}/scripts/create_all.sh
+                ${SCRIPTS_ROOT}/scripts/create_all.sh -r
             ;;
             'SYSTEMD')
                 echo -e "\n fancy some systemd?...\n"
@@ -242,9 +239,9 @@ while (( "$#" )); do
                 done
                 if [[ ${SYSD} == "TRUE" ]]
                 then
-                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh
-                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh
-                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh -r
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh -r 
+                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh -r
                 fi
             ;;
             *)
