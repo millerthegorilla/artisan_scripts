@@ -11,9 +11,7 @@ PARAMS=""
 SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
-  set -a
     source ${SCRIPTS_ROOT}/options
-  set +a
 fi
 
 function install_check()
@@ -189,7 +187,7 @@ while (( "$#" )); do
           case "${i^^}" in
             'VARIABLES')
                 echo -e "\nOkay, lets find out more about you...\n"
-                ${SCRIPTS_ROOT}/scripts/get_variables.sh -r
+                SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/get_variables.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?

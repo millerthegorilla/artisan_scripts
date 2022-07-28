@@ -5,6 +5,10 @@ then
    echo "This script must be run as root" 
    exit 1
 fi
+if [[ -e ${SCRIPTS_ROOT}/options ]]
+then
+    source ${SCRIPTS_ROOT}/options
+fi
 
 function get_variables_and_make_project_file()
 {
