@@ -15,12 +15,10 @@ then
     do
       if echo ${LINE} | grep -e "^#" >/dev/null 2>&1
       then
-          export ${LINE}
+          export "${LINE}"
       fi
     done < ${SCRIPTS_ROOT}/options
 fi
-
-echo ${CONTAINER_SCRIPTS_ROOT}
 
 function install_check()
 {
