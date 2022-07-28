@@ -17,7 +17,7 @@ then
       then
           export ${LINE}
       fi
-    done
+    done < ${SCRIPTS_ROOT}/options
 fi
 
 function install_check()
