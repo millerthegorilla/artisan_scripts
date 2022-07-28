@@ -8,11 +8,16 @@ fi
 
 PARAMS=""
 
-
 export SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
-    export $(grep -v '^#' ${SCRIPTS_ROOT}/options | xargs)
+    while read LINE
+    do
+      if echo ${LINE} | grep -e "^#" >/dev/null 2>&1
+      then
+          export ${LINE}
+      fi
+    done
 fi
 
 function install_check()
