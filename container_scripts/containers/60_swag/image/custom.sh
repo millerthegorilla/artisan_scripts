@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ${PROJECT_SETTINGS}
-source ./source.sh
+source "$(dirname ${BASH_SOURCE})/source.sh"
 
 function build_swag()
 {
@@ -21,7 +21,7 @@ function build_swag()
 
 if [[ ${DEBUG} == "FALSE" ]]
 then
-    runuser --login ${USER_NAME} -c "podman image exists swag:artisan"
+    runuser --login ${USER_NAME} -c "podman image exists ${CUSTOM_TAG}"
     if [[ $? -eq 0 ]]
     then
         if [[ -e ${SCRIPTS_ROOT}/.images/swag ]]
