@@ -24,6 +24,7 @@ function install_check()
     do
       if [[ ${line:0:6} != "./.git" \
              && ${line:0:26} != "./dockerfiles/django/media" \
+             && ${line:0:16} != "./settings_files"
              && ${line:0:19} != "./container_scripts" \
              && "555" -ne $(stat -c '%a' ${line}) ]];
       then
