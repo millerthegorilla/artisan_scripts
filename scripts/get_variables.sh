@@ -5,10 +5,6 @@ then
    echo "This script must be run as root" 
    exit 1
 fi
-if [[ -e ${SCRIPTS_ROOT}/options ]]
-then
-    source ${SCRIPTS_ROOT}/options
-fi
 
 function get_variables_and_make_project_file()
 {
@@ -84,8 +80,3 @@ if [[ "${project_settings}" != "${SCRIPTS_ROOT}/.PROJECT_SETTINGS" ]]
 then
     cat ${project_settings} >> ${PROJECT_SETTINGS}
 fi
-
-echo CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts" >> ${PROJECT_SETTINGS}
-echo LOCAL_SETTINGS_FILE=${LOCAL_SETTINGS_FILE} >> ${PROJECT_SETTINGS}
-echo PROJECT_SETTINGS=${PROJECT_SETTINGS} >> ${PROJECT_SETTINGS}
-echo RUN_FILES=${RUN_FILES} >> ${PROJECT_SETTINGS}
