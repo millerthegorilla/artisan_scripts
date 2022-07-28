@@ -146,7 +146,7 @@ while (( "$#" )); do
     create)
       labels=()
       iarray=()
-      alllabels=('variables' 'directories' 'network' 'images' 'containers' 'systemd')
+      alllabels=('variables' 'directories' 'network' 'pull' 'build' 'containers' 'systemd')
       parray=( "${@:2}" )
       if [[ ${#parray} -gt 0 ]]
       then
@@ -159,9 +159,10 @@ while (( "$#" )); do
               vars['variables']=0
               vars['directories']=1
               vars['network']=2
-              vars['images']=3
-              vars['containers']=4
-              vars['systemd']=5
+              vars['pull']=3
+              vars['build']=4
+              vars['containers']=5
+              vars['systemd']=6
               i=0
               for j in "${parray[@]}"
               do
@@ -211,9 +212,17 @@ while (( "$#" )); do
                   exit $?
                 fi
             ;;
-            'IMAGES')
+            'PULL')
                 echo -e "\nI will now download and provision container images, if they are not already present.\n"
-                ${SCRIPTS_ROOT}/scripts/initial_provision.sh -r
+                ${SCRIPTS_ROOT}/scripts/image_acq -r
+                if [[ $? -ne 0 ]]
+                then
+                  exit $?
+                fi
+            ;;
+            'BUILD')
+                echo -e "\nI will now download and provision container images, if they are not already present.\n"
+                ${SCRIPTS_ROOT}/scripts/image_build.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?

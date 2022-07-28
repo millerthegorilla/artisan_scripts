@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "./source.sh"
+source "${BASH_SOURCE}/source.sh"
 
 function build_maria()
 {
