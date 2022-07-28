@@ -8,8 +8,9 @@ fi
 
 source ${PROJECT_SETTINGS}
 
+echo debug 1 initial_provision
 ./image_acq.sh
-
+echo debug 2 initial_provision
 for custom_image in $(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "custom.sh" | sort)
 do
    /bin/bash "${SCRIPTS_ROOT}/${custom_image}"
