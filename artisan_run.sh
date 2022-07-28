@@ -8,13 +8,12 @@ fi
 
 PARAMS=""
 
-set +a
-SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+export SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
-    source ${SCRIPTS_ROOT}/options
+    export $(grep -v '^#' ${SCRIPTS_ROOT}/options | xargs)
 fi
-set -a
 
 function install_check()
 {
