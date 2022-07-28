@@ -38,7 +38,7 @@ function run_files()
 {
     for file in $(find {CONTAINER_SCRIPTS_ROOT}/containers -type f -name "${1}.sh" | sort)
     do
-        /bin/bash ${SCRIPTS_ROOT}/${file}
+        /bin/bash "${file}"
     done
 }
 

@@ -13,7 +13,7 @@ echo debug 1 initial_provision
 echo debug 2 initial_provision
 for custom_image in $(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "custom.sh" | sort)
 do
-   /bin/bash "${SCRIPTS_ROOT}/${custom_image}"
+   /bin/bash "${custom_image}"
 done
 # cp ${SCRIPTS_ROOT}/scripts/image_acq.sh /home/${USER_NAME}/image_acq.sh
 # cp ${SCRIPTS_ROOT}/.proj /home/${USER_NAME}/.proj

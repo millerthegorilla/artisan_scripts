@@ -7,7 +7,7 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-for dirfile in $(find {CONTAINER_SCRIPTS_ROOT}/containers -type f -name "directories.sh" | sort)
+for dirfile in $(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "directories.sh" | sort)
 do
-    /bin/bash ${SCRIPTS_ROOT}/${dirfile}
+    /bin/bash "${dirfile}"
 done

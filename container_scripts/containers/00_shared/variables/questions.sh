@@ -26,7 +26,8 @@ done
 echo "PROJECT_NAME=${PROJECT_NAME}" >> ${L_S_FILE}
 
 # USER_NAME
-until id ${USER_NAME};
+USER_NAME=${RANDOM}
+until id ${USER_NAME} >/dev/null 2>&1;
 do
     read -p "Standard/service user account name ['artisan_sysd'] : " USER_NAME
     USER_NAME=${USER_NAME:-"artisan_sysd"}
