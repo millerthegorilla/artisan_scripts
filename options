@@ -1,5 +1,5 @@
 TERMINAL_CMD="gnome-terminal --"
 DEFAULT_PROJECT_FILE=
 PROJECT_SETTINGS="${SCRIPTS_ROOT}/.PROJECT_SETTINGS"
-RUN_FILES={"pre", "run", "post"}
+RUN_FILES='{"pre", "run", "post"}'
 LOCAL_SETTINGS_FILE="./settings.sh"
