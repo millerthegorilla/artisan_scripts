@@ -146,7 +146,7 @@ while (( "$#" )); do
     create)
       labels=()
       iarray=()
-      alllabels=('variables' 'directories' 'network' 'pull' 'build' 'containers' 'systemd')
+      alllabels=('variables' 'templates' 'directories' 'network' 'pull' 'build' 'containers' 'systemd')
       parray=( "${@:2}" )
       if [[ ${#parray} -gt 0 ]]
       then
@@ -157,12 +157,13 @@ while (( "$#" )); do
               # labels=${parray[@]:1}
               declare -A vars
               vars['variables']=0
-              vars['directories']=1
-              vars['network']=2
-              vars['pull']=3
-              vars['build']=4
-              vars['containers']=5
-              vars['systemd']=6
+              vars['templates']=1
+              vars['directories']=2
+              vars['network']=3
+              vars['pull']=4
+              vars['build']=5
+              vars['containers']=6
+              vars['systemd']=7
               i=0
               for j in "${parray[@]}"
               do
@@ -191,6 +192,14 @@ while (( "$#" )); do
             'VARIABLES')
                 echo -e "\nOkay, lets find out more about you...\n"
                 ${SCRIPTS_ROOT}/scripts/get_variables.sh
+                if [[ $? -ne 0 ]]
+                then
+                  exit $?
+                fi
+            ;;
+            'TEMPLATES')
+                echo -e "\nOkay, lets find out more about you...\n"
+                ${SCRIPTS_ROOT}/scripts/templates.sh
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
