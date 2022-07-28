@@ -11,9 +11,9 @@ PARAMS=""
 SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
-  -a
+  set -a
     source ${SCRIPTS_ROOT}/options
-  +a
+  set +a
 fi
 
 function install_check()
