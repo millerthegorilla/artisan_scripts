@@ -124,6 +124,7 @@ while (( "$#" )); do
       find . -type d | xargs chown ${SUDO_USER}:${SUDO_USER}
       find . -type f | xargs chown ${SUDO_USER}:${SUDO_USER}
       find ./settings_files -type d | xargs chmod 750
+      find ./settings_files -type d | xargs chown root:root
       chmod 0550 ./artisan_run.sh
       install_check
       exit $?
