@@ -8,13 +8,13 @@ fi
 
 PARAMS=""
 
-+a
+set +a
 SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
     source ${SCRIPTS_ROOT}/options
 fi
--a
+set -a
 
 function install_check()
 {
