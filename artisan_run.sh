@@ -8,21 +8,13 @@ fi
 
 PARAMS=""
 
-set -a
 SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
+  -a
     source ${SCRIPTS_ROOT}/options
+  +a
 fi
-if [[ -e ${SCRIPTS_ROOT}/.PROJECT_SETTINGS ]]
-then
-    source ${SCRIPTS_ROOT}/.PROJECT_SETTINGS
-fi
-
-CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts"
-LOCAL_SETTINGS_FILE=${LOCAL_SETTINGS_FILE}
-PROJECT_SETTINGS=${PROJECT_SETTINGS}
-set +a
 
 function install_check()
 {
