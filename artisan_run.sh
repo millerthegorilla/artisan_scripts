@@ -214,7 +214,7 @@ while (( "$#" )); do
             ;;
             'PULL')
                 echo -e "\nI will now download and provision container images, if they are not already present.\n"
-                ${SCRIPTS_ROOT}/scripts/image_acq -r
+                ${SCRIPTS_ROOT}/scripts/image_acq.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
