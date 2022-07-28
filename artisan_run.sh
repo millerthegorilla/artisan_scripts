@@ -20,6 +20,8 @@ then
     done < ${SCRIPTS_ROOT}/options
 fi
 
+echo ${CONTAINER_SCRIPTS_ROOT}
+
 function install_check()
 {
   INSTALLED="installed."
