@@ -110,15 +110,7 @@ while (( "$#" )); do
       exit $?
       ;;
     uninstall)
-      SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-      OWNER_NAME=$(stat -c "%U" ${SCRIPT_DIR})
-      find . | xargs chown ${OWNER_NAME}:${OWNER_NAME}
-      find . -type d | xargs chmod 0775
-      find . -type f | xargs chmod 0660
-      find .git -type d | xargs chmod 755
-      find .git/objects -type f | xargs chmod 664
-      find .git -type f | grep -v /objects/ | xargs chmod 644
-      chmod 0660 ./artisan_run.sh
+      bash ${SCRIPTS_ROOT}/scripts/uninstall.sh -r
       install_check
       exit $?
       ;;
@@ -249,15 +241,7 @@ while (( "$#" )); do
     clean_save_settings)
       ${SCRIPTS_ROOT}/scripts/clean_save_settings.sh
       exit $?
-      ;;
-    replace)
-      ${SCRIPTS_ROOT}/scripts/make_manage_wsgi.sh
-      exit $?
       ;;    
-    reload) 
-      ${SCRIPTS_ROOT}/scripts/reload.sh
-      exit $?
-      ;;
     status)
       #install_check
       if [[ -n "${USER_NAME}" ]]
@@ -280,20 +264,6 @@ while (( "$#" )); do
         echo -e "No project running currently"
       fi
       exit 1
-      ;;
-    manage) ## TODO - if the below variables don't exist then save them.
-      if [[ -z "${DJANGO_CONT_NAME}" ]]
-      then
-        read -p "Enter the name of the container running python/django : " DJANGO_CONT_NAME
-      fi
-      if [[ -z "${PROJECT_NAME}" ]]
-      then
-        read -p "Enter your artisan_scripts project name : " PROJECT_NAME
-      fi
-      shift;
-      COMMANDS="$*"
-      runuser --login ${USER_NAME} -c "podman exec -e COMMANDS=\"$*\" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}\""
-      exit $?
       ;;
     settings)
       if [[ -z "${PROJECT_NAME}" ]]
@@ -361,18 +331,6 @@ while (( "$#" )); do
       runuser --login ${USER_NAME} -P -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u ${USER_NAME})\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=${XDG_RUNTIME_DIR}/bus\" cd; ${2}"
       exit $?
       ;;
-    # output)
-    #   if [[ -z ${USER_NAME} ]]
-    #   then
-    #       read -p "Enter username : " USER_NAME
-    #   fi
-    #   if [[ -z ${DJANGO_CONT_NAME} ]]
-    #   then
-    #       read -p "Enter the name of the django container : " DJANGO_CONT_NAME
-    #   fi
-    #   su ${USER_NAME} -c "cd; podman exec -it ${DJANGO_CONT_NAME} tail -f /tmp/manage_output"
-    #   exit $?
-    #   ;;
     update)
       if [[ -z ${USER_NAME} ]]
       then
@@ -391,71 +349,9 @@ while (( "$#" )); do
           read -p "Enter username : " POD_NAME
       fi
       su ${USER_NAME} -c "cd; podman pod stop ${POD_NAME}; podman image prune --all -f"
-      ${SCRIPTS_ROOT}/scripts/initial_provision.sh
+      ${SCRIPTS_ROOT}/scripts/image_acq.sh
+      ${SCRIPTS_ROOT}/scripts/image_build.sh
       systemctl reboot
-      ;;
-    postgit)
-      if [[ -z ${USER_NAME} ]]
-      then
-          read -p "Enter username : " USER_NAME
-      fi
-      if [[ -z ${PROJECT_NAME} ]]
-      then
-          read -p "Enter project name : " PROJECT_NAME
-      fi
-      if [[ -z ${DJANGO_CONT_NAME} ]]
-      then
-          read -p "Enter django container name : " DJANGO_CONT_NAME
-      fi
-      ${SCRIPTS_ROOT}/scripts/make_manage_wsgi.sh
-      runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /opt/${PROJECT_NAME}&& find /opt/${PROJECT_NAME} -type d -exec chmod 0550 {} + && find /opt/${PROJECT_NAME} -type f -exec chmod 0440 {} +\""
-      runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"chown artisan:artisan -R /etc/opt/${PROJECT_NAME} && find /etc/opt/${PROJECT_NAME} -type f -exec chmod 0440 {} + && find /etc/opt/${PROJECT_NAME} -type d -exec chmod 0550 {} +\""
-      ;;
-    pip)
-      shift;
-      COMMANDS="$*"
-      runuser --login ${USER_NAME} -P -c "podman exec -e PROJECT_NAME=${PROJECT_NAME} -it ${DJANGO_CONT_NAME} bash -c \"runuser -s /bin/bash artisan -c 'source /home/artisan/django_venv/bin/activate && pip ${COMMANDS}'\""
-      exit $?
-      ;;
-    appsrc)
-      if [[ -z ${USER_NAME} ]]
-      then
-          read -p "Enter username : " USER_NAME
-      fi
-      read -p "File with github addresses : " -e GITFILE
-      read -p "Directory to clone into : " -e GITDIR
-      LINES=$(cat ${GITFILE})
-      for line in $LINES
-      do
-        runuser --login ${USER_NAME} -P -c "git -C ${GITDIR} clone ${line}"
-      done
-      exit $?
-      ;;
-    tests_on)
-      if [[ -z ${MARIA_CONT_NAME} ]]
-      then
-        echo "No database container is found!";
-        exit 1;
-      fi
-      read -p "Database root password? : " ROOT_PWD
-      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c \"echo 'grant all on *.* to ${DB_USER}@${DB_HOST}; flush privileges;' | mysql -uroot -p${ROOT_PWD}\""
-      exit $?
-      ;;
-    tests_off)
-      if [[ -z ${MARIA_CONT_NAME} ]]
-      then
-        echo "No database container is found!";
-        exit 1;
-      fi
-      read -p "Database root password? : " ROOT_PWD
-      runuser --login ${USER_NAME} -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c  \"echo 'revoke all privileges, grant option from ${DB_USER}@${DB_HOST}; flush privileges;' | mysql -uroot -p${ROOT_PWD}\""
-      if [[ ${DEBUG} == "TRUE" ]]
-      then
-        runuser --login dev -P -c "podman exec -it mariadb_cont bash -c \"echo 'GRANT DROP, CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, LOCK TABLES ON ${DB_NAME}.* TO ${DB_USER}@${DB_HOST} IDENTIFIED BY \\\"${DB_PASSWORD}\\\"; flush privileges;' | mysql -uroot -p${ROOT_PWD}\""
-      else
-        runuser --login dev -P -c "podman exec -it mariadb_cont bash -c \"echo 'GRANT CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE ON ${DB_NAME}.* TO ${DB_USER}@${DB_HOST} IDENTIFIED BY \\\"${DB_PASSWORD}\\\"; flush privileges;' | mysql -uroot -p${ROOT_PWD}\""
-      fi
-      exit $?
       ;;
     help|-h|-?|--help)
       echo -e "$ artisan_run command   - where command is one of clean,
