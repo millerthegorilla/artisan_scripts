@@ -32,6 +32,7 @@ function install_check()
         ERROR=": ERR2 $line"
         INSTALLED="not installed!";
         break;
+      fi
     done
     if [[ $INSTALLED == "installed." ]];
     then
@@ -42,6 +43,7 @@ function install_check()
           ERROR=": ERR3 $line"
           INSTALLED="not installed!"
           break;
+        fi
       done
     fi
     if [[ $INSTALLED == "installed." ]];
