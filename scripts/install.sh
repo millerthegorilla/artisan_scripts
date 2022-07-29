@@ -26,6 +26,6 @@ chmod 0550 ${SCRIPTS_ROOT}/scripts
 
 for install in $(find ${CONTAINER_SCRIPTS_ROOT} -type f -name "install$.sh" | sort)
 do
-    bash install -r
+    bash "${install}"
 done
 
