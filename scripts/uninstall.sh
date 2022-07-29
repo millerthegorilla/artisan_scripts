@@ -14,4 +14,4 @@ find . -type f | xargs chmod 0660
 find .git -type d | xargs chmod 755
 find .git/objects -type f | xargs chmod 664
 find .git -type f | grep -v /objects/ | xargs chmod 644
-chmod 0550 ./artisan_run.sh
+chmod 0770 ./artisan_run.sh
