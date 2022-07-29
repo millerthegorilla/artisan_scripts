@@ -1,6 +1,0 @@
-## This template file must end in an empty line...
-PROJECT_NAME=${project_name}
-POD_NAME=${pod_name}
-LOG_DIR=${host_log_dir}
-DJANGO_PROJECT_NAME=${django_project_name}
-DEBUG=${DEBUG}

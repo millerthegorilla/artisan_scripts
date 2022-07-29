@@ -2,7 +2,7 @@ source ${PROJECT_SETTINGS}
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 
-custom_tag=get_tag ${BASH_SOURCE}
+custom_tag=get_tag ${CURRENT_DIR}
 
 function build_django()
 {

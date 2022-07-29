@@ -5,13 +5,9 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-if [[ -z "${SCRIPTS_ROOT}" ]]
-then
-    echo "Error!  SCRIPTS_ROOT must be defined"
-    exit 1
-fi
+SYSTEMD_UNIT_DIR="${CURRENT_DIR}/unit_files"
 
-cd ${SCRIPTS_ROOT}/systemd
+pushd ${SYSTEMD_UNIT_DIR}
 cp -a * /etc/systemd/user/
 
 FILES=*
@@ -21,6 +17,9 @@ do
   if [[ -e /etc/systemd/user/${f} ]]
   then
       chcon -u system_u -t systemd_unit_file_t /etc/systemd/user/${f}
+      runuser --login ${USER_NAME} -c "${XDESK} systemctl --user enable ${f}"
   fi
 done
-cd ${SCRIPTS_ROOT}
+
+runuser --login ${USER_NAME} -c "${XDESK} systemctl --user daemon-reload"
+popd

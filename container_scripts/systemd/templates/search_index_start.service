@@ -1,0 +1,18 @@
+[Unit]
+Description=manage.py runserver in terminal
+Documentation=https://github.com/millerthegorilla/artisan_scripts
+Wants=network.target
+After=network-online.target
+Requires=container-${ELASTIC_CONT_NAME}.service
+Requires=container-${DJANGO_CONT_NAME}.service
+BindsTo=container-${ELASTIC_CONT_NAME}.service
+After=container-${ELASTIC_CONT_NAME}.service
+After=container-${DJANGO_CONT_NAME}.service
+
+[Service]
+Restart=on-failure
+TimeoutStopSec=70
+ExecStart=/usr/bin/podman exec -e PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/" -it ${DJANGO_CONT_NAME} bash -c "source /home/artisan/django_venv/bin/activate; python -u /opt/${PROJECT_NAME}/manage.py search_index --rebuild"
+
+[Install]
+WantedBy=graphical.target default.target

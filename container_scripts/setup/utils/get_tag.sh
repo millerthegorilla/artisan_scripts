@@ -2,7 +2,8 @@
 
 function get_tag()
 {
-	source $(dirname ${1})/../image/source.sh
+	echo debug 1 get_tag custom_tag= ${CUSTOM_TAG}
+	source ${1}/../image/source.sh
 	if [[ -n "${CUSTOM_TAG}" ]];
 	then
 		tag=${CUSTOM_TAG}

@@ -9,7 +9,8 @@ fi
 PARAMS=""
 
 set -a
-export SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+CURRENT_DIR=$(dirname ${BASH_SOURCE})
 if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
   source ${SCRIPTS_ROOT}/options
@@ -252,9 +253,7 @@ while (( "$#" )); do
                 done
                 if [[ ${SYSD} == "TRUE" ]]
                 then
-                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_generate.sh -r
-                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_init.sh -r 
-                    SCRIPTS_ROOT=${SCRIPTS_ROOT} ${SCRIPTS_ROOT}/scripts/systemd_user_enable.sh -r
+                    ${SCRIPTS_ROOT}/scripts/systemd.sh -r
                 fi
             ;;
             *)

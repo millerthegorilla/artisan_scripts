@@ -1,6 +1,0 @@
-container-*
-pod-*
-gunicorn_start.service
-manage_start.service
-qcluster_start.service
-.django_container_id

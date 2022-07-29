@@ -35,3 +35,11 @@ fi
 
 # prune any miscellaneous images that may have been left over during builds.
 runuser --login ${USER_NAME} -c "podman image prune -f"
+
+runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"
+if [[ $? != 0 ]]
+then
+    echo -n "Finished Cleaning."
+else
+    echo -n "Finished Cleaning but **pod still exists**"
+fi 
