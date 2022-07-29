@@ -52,7 +52,7 @@ function install_check()
       do
         if [[ ${line} ]];
         then
-          ERROR=": ERR4 $line"
+          ERROR=": ERR4 - executable found - $line"
           INSTALLED="not installed!";
           break;
         fi
