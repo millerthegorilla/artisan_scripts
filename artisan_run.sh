@@ -20,56 +20,37 @@ set +a
 function install_check()
 {
   INSTALLED="installed."
- # should have used a case statement.... doh.
-    for line in $(find . -type d);
+    if [[ "550" -ne $(stat -c '%a' ${SCRIPTS_ROOT}/artisan_run.sh) ]];
+    then
+      ERROR=": ERR1 artisan_run.sh"
+      INSTALLED="not installed"
+    fi
+    for line in $(find ${SCRIPTS_ROOT}/scripts -type d);
     do
-      if [[ ${line:0:6} != "./.git" \
-             && ${line:0:26} != "./dockerfiles/django/media" \
-             && ${line:0:16} != "./settings_files"
-             && ${line:0:19} != "./container_scripts" \
-             && "555" -ne $(stat -c '%a' ${line}) ]];
-      then
-        ERROR=": ERR1 $line"
-        INSTALLED="not installed!";
-        break;
-      elif [[ ${line:0:6} == "./.git" && "550" -ne $(stat -c '%a' ${line}) ]];
+      if [[ "550" -ne $(stat -c '%a' ${line}) ]];
       then
         ERROR=": ERR2 $line"
         INSTALLED="not installed!";
         break;
-      elif [[ ${line:0:26} == "./dockerfiles/django/media" && "770" -ne $(stat -c '%a' ${line}) ]];
-      then
-        ERROR=": ERR3 $line"
-        INSTALLED="not installed!";
-        break;
-      fi
     done
     if [[ $INSTALLED == "installed." ]];
     then
-      for line in $(find -type f -name "*.sh")
+      for line in $(find ${SCRIPTS_ROOT}/scripts -type f)
       do
-        if [[ ${line:0:18} != "./templates/maria/" \
-             && ${line:0:20} != "./container_scripts/" \
-             && "550" -ne $(stat -c '%a' ${line}) ]];
+        if [[ "440" -ne $(stat -c '%a' ${line}) ]];
         then
-          ERROR=": ERR4 $line"
+          ERROR=": ERR3 $line"
           INSTALLED="not installed!"
           break;
-        elif [[ ${line:0:18} == "./templates/maria/" && "440" -ne $(stat -c '%a' ${line}) ]];
-        then
-          ERROR=": ERR5 $line"
-          INSTALLED="not installed!"
-          break;
-        fi
       done
     fi
     if [[ $INSTALLED == "installed." ]];
     then
-      for line in $(find ./dockerfiles/django/media -type d)
+      for line in $(find ${CONTAINER_SCRIPTS_ROOT} -type f -executable)
       do
-        if [[  "770" -ne $(stat -c '%a' ${line}) ]];
+        if [[ ${line} ]];
         then
-          ERROR=": ERR6 $line"
+          ERROR=": ERR4 $line"
           INSTALLED="not installed!";
           break;
         fi
@@ -77,11 +58,11 @@ function install_check()
     fi
     if [[ $INSTALLED == "installed." ]];
     then
-      for line in $(find ./dockerfiles/django/media -type f)
+      for line in $(find ${SCRIPTS_ROOT}/.git -type d)
       do
-        if [[  "440" -ne $(stat -c '%a' ${line}) ]];
+        if [[  "550" -ne $(stat -c '%a' ${line}) ]];
         then
-          ERROR=": ERR7 $line"
+          ERROR=": ERR5 $line"
           INSTALLED="not installed!";
           break;
         fi
@@ -89,11 +70,23 @@ function install_check()
     fi;
     if [[ $INSTALLED == "installed." ]];
     then
-      for line in $(find ./dockerfiles/django/media -type f) 
+      for line in $(find ${SCRIPTS_ROOT}/.git/objects -type f) 
       do
-        if [[  "440" -ne $(stat -c '%a' ${line}) ]];
+        if [[ "444" -ne $(stat -c '%a' ${line}) ]];
         then
-          ERROR=": ERR8 $line"
+          ERROR=": ERR6 $line"
+          INSTALLED="not installed!";
+          break;
+        fi
+     done
+   fi
+   if [[ $INSTALLED == "installed." ]];
+    then
+      for line in $(find ${SCRIPTS_ROOT}/.git -type f | grep -v /objects/ ) 
+      do
+        if [[ "640" -ne $(stat -c '%a' ${line}) ]];
+        then
+          ERROR=": ERR7 $line"
           INSTALLED="not installed!";
           break;
         fi
@@ -110,23 +103,7 @@ fi
 while (( "$#" )); do
   case "$1" in
     install)
-      find . -type d | xargs chmod 0555
-      find . -type f | xargs chmod 0444
-      find ./container_scripts -type f -name "*.sh" | xargs chmod 0660
-      find ./container_scripts -type d | xargs chmod 0775
-      find ./scripts -type f -name "*.sh" | xargs chmod 0550
-      find .git -type d | xargs chmod 0550
-      find .git/objects -type f | xargs chmod 444
-      find .git -type f | grep -v /objects/ | xargs chmod 644
-      chmod 0440 templates/maria/maria_prod.sh
-      chmod 0440 templates/maria/maria_dev.sh
-      find ./dockerfiles/django/media -type d | xargs chmod 770
-      find ./dockerfiles/django/media -type f | xargs chmod 440
-      find . -type d | xargs chown ${SUDO_USER}:${SUDO_USER}
-      find . -type f | xargs chown ${SUDO_USER}:${SUDO_USER}
-      find ./settings_files -type d | xargs chmod 750
-      find ./settings_files -type d | xargs chown root:root
-      chmod 0550 ./artisan_run.sh
+      ${SCRIPTS_ROOT}/scripts/install.sh -r
       install_check
       exit $?
       ;;
@@ -136,11 +113,10 @@ while (( "$#" )); do
       find . | xargs chown ${OWNER_NAME}:${OWNER_NAME}
       find . -type d | xargs chmod 0775
       find . -type f | xargs chmod 0660
-      find ./scripts -type f -name "*.sh" | xargs chmod 0660
       find .git -type d | xargs chmod 755
       find .git/objects -type f | xargs chmod 664
       find .git -type f | grep -v /objects/ | xargs chmod 644
-      chmod 0775 ./artisan_run.sh
+      chmod 0660 ./artisan_run.sh
       install_check
       exit $?
       ;;
@@ -192,7 +168,7 @@ while (( "$#" )); do
           case "${i^^}" in
             'VARIABLES')
                 echo -e "\nOkay, lets find out more about you...\n"
-                ${SCRIPTS_ROOT}/scripts/get_variables.sh
+                bash ${SCRIPTS_ROOT}/scripts/get_variables.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -200,7 +176,7 @@ while (( "$#" )); do
             ;;
             'TEMPLATES')
                 echo -e "\nOkay, lets find out more about you...\n"
-                ${SCRIPTS_ROOT}/scripts/templates.sh
+                bash ${SCRIPTS_ROOT}/scripts/templates.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -208,7 +184,7 @@ while (( "$#" )); do
             ;;
             'DIRECTORIES')
                 echo -e "\nNow I will create necessary directtories.\n"
-                ${SCRIPTS_ROOT}/scripts/create_directories.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/create_directories.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -216,7 +192,7 @@ while (( "$#" )); do
             ;;
             'NETWORK')
                 echo -e "\nNow for general network settings.\n"
-                ${SCRIPTS_ROOT}/scripts/create_network.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/create_network.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -224,7 +200,7 @@ while (( "$#" )); do
             ;;
             'PULL')
                 echo -e "\nI will now download and provision container images, if they are not already present.\n"
-                ${SCRIPTS_ROOT}/scripts/image_acq.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/image_acq.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -232,7 +208,7 @@ while (( "$#" )); do
             ;;
             'BUILD')
                 echo -e "\nI will now download and provision container images, if they are not already present.\n"
-                ${SCRIPTS_ROOT}/scripts/image_build.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/image_build.sh -r
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -240,7 +216,7 @@ while (( "$#" )); do
             ;;
             'CONTAINERS')
                 echo -e "\n and now I will create the containers...\n"
-                ${SCRIPTS_ROOT}/scripts/create_all.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/create_all.sh -r
             ;;
             'SYSTEMD')
                 echo -e "\n fancy some systemd?...\n"
@@ -253,7 +229,7 @@ while (( "$#" )); do
                 done
                 if [[ ${SYSD} == "TRUE" ]]
                 then
-                    ${SCRIPTS_ROOT}/scripts/systemd.sh -r
+                    bash ${SCRIPTS_ROOT}/scripts/systemd.sh -r
                 fi
             ;;
             *)
