@@ -8,14 +8,5 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-if [[ -z "${DJANGO_CONT_NAME}" ]]
-then
-  read -p "Enter the name of the container running python/django : " DJANGO_CONT_NAME
-fi
-if [[ -z "${PROJECT_NAME}" ]]
-then
-  read -p "Enter your artisan_scripts project name : " PROJECT_NAME
-fi
-shift;
 COMMANDS="$*"
 runuser --login ${USER_NAME} -c "podman exec -e COMMANDS=\"$*\" -e PROJECT_NAME=${PROJECT_NAME} -e PYTHONPATH=\"/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/\" -it ${DJANGO_CONT_NAME} bash -c \"cd opt/${PROJECT_NAME}; python manage.py ${COMMANDS}\""

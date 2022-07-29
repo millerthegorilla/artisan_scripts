@@ -241,7 +241,12 @@ while (( "$#" )); do
     clean_save_settings)
       ${SCRIPTS_ROOT}/scripts/clean_save_settings.sh
       exit $?
-      ;;    
+      ;; 
+    custom)
+      shift;      
+      bash $(find ${CONTAINER_SCRIPTS_ROOT}/containers -name "${1}.sh")
+      exit $?
+      ;;   
     status)
       #install_check
       if [[ -n "${USER_NAME}" ]]
