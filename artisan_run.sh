@@ -10,7 +10,7 @@ PARAMS=""
 
 set -a
 SCRIPTS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-CURRENT_DIR=$(dirname ${BASH_SOURCE})
+CURRENT_DIR=$(dirname $(realpath ${BASH_SOURCE}))
 if [[ -e ${SCRIPTS_ROOT}/options ]]
 then
   source ${SCRIPTS_ROOT}/options
