@@ -7,6 +7,8 @@ fi
 
 source ${PROJECT_SETTINGS}
 
+echo debug 1 40_maria image/custom.sh current_dir = ${CURRENT_DIR}
+
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 custom_tag=get_tag ${CURRENT_DIR}
 CURRENT_VARS="${CURRENT_DIR}/current_vars"
