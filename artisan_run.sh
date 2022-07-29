@@ -193,7 +193,7 @@ while (( "$#" )); do
                 fi
             ;;
             'PULL')
-                echo -e "\nI will now download and provision container images, if they are not already present.\n"
+                echo -e "\nI will now download container images, if they are not already present.\n"
                 bash ${SCRIPTS_ROOT}/scripts/image_acq.sh -r
                 if [[ $? -ne 0 ]]
                 then
@@ -201,7 +201,7 @@ while (( "$#" )); do
                 fi
             ;;
             'BUILD')
-                echo -e "\nI will now download and provision container images, if they are not already present.\n"
+                echo -e "\nI will now build any custom container images, if they are not already present.\n"
                 bash ${SCRIPTS_ROOT}/scripts/image_build.sh -r
                 if [[ $? -ne 0 ]]
                 then

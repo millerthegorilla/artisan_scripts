@@ -1,7 +1,13 @@
+#!/bin/bash
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 source ${PROJECT_SETTINGS}
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
-
 custom_tag=get_tag ${CURRENT_DIR}
 
 function build_django()

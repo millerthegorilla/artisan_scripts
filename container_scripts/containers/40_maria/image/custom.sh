@@ -1,6 +1,13 @@
 #!/bin/bash
 
-source "$(dirname ${BASH_SOURCE})/source.sh"
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+source ${PROJECT_SETTINGS}
+
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 custom_tag=get_tag ${CURRENT_DIR}
 CURRENT_VARS="${CURRENT_DIR}/current_vars"
 
@@ -10,7 +17,7 @@ function build_maria()
    then
       rm ${CURRENT_VARS}
    fi
-   cp ${CURRENT_DIR}/dockerfiles/dockerfile_maria /home/${USER_NAME}/dockerfile_maria
+   cp ${CURRENT_DIR}/dockerfiles/dockerfile /home/${USER_NAME}/dockerfile_maria
    cp ${CURRENT_DIR}/dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
    chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
    runuser --login ${USER_NAME} -c "podman build --tag='${custom_tag}' -f='dockerfile_maria'"
