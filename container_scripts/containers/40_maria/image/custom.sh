@@ -6,6 +6,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 source ${PROJECT_SETTINGS}
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 
 echo debug 1 40_maria image/custom.sh current_dir = ${CURRENT_DIR}
 

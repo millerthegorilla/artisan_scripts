@@ -2,6 +2,8 @@
 
 source ${PROJECT_SETTINGS}
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+
 SYSTEMD_UNIT_DIR="${CURRENT_DIR}/unit_files"
 
 if [[ -d ${SYSTEMD_UNIT_DIR} ]];

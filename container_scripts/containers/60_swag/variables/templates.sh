@@ -2,6 +2,8 @@
 
 source ${PROJECT_SETTINGS}
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+
 if [[ ${DEBUG} == "FALSE" ]]
 then
     

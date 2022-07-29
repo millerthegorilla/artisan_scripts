@@ -10,6 +10,8 @@ fi
 
 source ${PROJECT_SETTINGS}
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+
 cat ${CURRENT_DIR}/../variables/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.py
 cat ${CURRENT_DIR}/../templates/django/wsgi.py | envsubst > ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
 chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/manage.py ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py

@@ -5,6 +5,10 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+source ${PROJECT_SETTINGS}
+
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+
 SYSTEMD_UNIT_DIR="${CURRENT_DIR}/unit_files"
 
 pushd ${SYSTEMD_UNIT_DIR}

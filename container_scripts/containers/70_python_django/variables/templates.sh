@@ -2,6 +2,8 @@
 
 source ${PROJECT_SETTINGS}
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+
 if [[ ${DEBUG} == "TRUE" ]]
 then
 	cat ${CURRENT_DIR}/templates/dockerfile/dockerfile_dev | envsubst '$DOCKERFILE_APP_NAMES' > ${CURRENT_DIR}/../image/dockerfiles/dockerfile_dev

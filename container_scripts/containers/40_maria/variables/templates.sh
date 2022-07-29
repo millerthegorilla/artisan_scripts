@@ -1,8 +1,9 @@
 #!/bin/bash
 
 source ${PROJECT_SETTINGS}
+source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 
-echo ${CURRENT_DIR}
+echo debug 1 40_maria variables templates.sh current_dir = ${CURRENT_DIR}
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
