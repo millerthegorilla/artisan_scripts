@@ -105,7 +105,7 @@ fi
 while (( "$#" )); do
   case "$1" in
     install)
-      ${SCRIPTS_ROOT}/scripts/install.sh -r
+      bash ${SCRIPTS_ROOT}/scripts/install.sh -r
       install_check
       exit $?
       ;;
