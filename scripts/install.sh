@@ -22,6 +22,7 @@ find ${SCRIPTS_ROOT}/settings_files -type d -exec chown root:root -- {} + \
 find ${SCRIPTS_ROOT}/settings_files -type f -exec chown root:root -- {} + \
                                             -exec chmod 0440 -- {} +
 chmod 0550 ${SCRIPTS_ROOT}/artisan_run.sh
+chmod 0550 ${SCRIPTS_ROOT}/scripts
 
 for install in $(find ${CONTAINER_SCRIPTS_ROOT} -type f -name "install$.sh" | sort)
 do
