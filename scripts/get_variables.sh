@@ -54,9 +54,11 @@ function check_for_project_settings()
         then
             echo "local .PROJECT_SETTINGS exists and is not empty"
             new_file="TRUE"
-            for file in $(find -type f -maxdepth 1 ${SCRIPTS_ROOT}/settings_files)
+            for file in $(find ${SCRIPTS_ROOT}/settings_files -maxdepth 1 | grep -v ".git_ignore")
             do
-                if ! diff ${PROJECT_SETTINGS} file;
+                if ! diff test1/test1 test1/jim.sh &>/dev/null; then   >&2 echo "different"; else echo "same"; fi
+
+                if diff -q ${PROJECT_SETTINGS} file &>/dev/null;
                 then
                     new_file="${file}";
                     break;
