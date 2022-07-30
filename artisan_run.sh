@@ -163,7 +163,7 @@ while (( "$#" )); do
           case "${i^^}" in
             'VARIABLES')
                 echo -e "\nOkay, lets find out more about you...\n"
-                bash ${SCRIPTS_ROOT}/scripts/get_variables.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/get_variables.sh
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -171,7 +171,7 @@ while (( "$#" )); do
             ;;
             'TEMPLATES')
                 echo -e "\nOkay, lets find out more about you...\n"
-                bash ${SCRIPTS_ROOT}/scripts/templates.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/templates.sh
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -179,7 +179,7 @@ while (( "$#" )); do
             ;;
             'DIRECTORIES')
                 echo -e "\nNow I will create necessary directtories.\n"
-                bash ${SCRIPTS_ROOT}/scripts/create_directories.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/create_directories.sh
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -187,7 +187,7 @@ while (( "$#" )); do
             ;;
             'NETWORK')
                 echo -e "\nNow for general network settings.\n"
-                bash ${SCRIPTS_ROOT}/scripts/create_network.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/create_network.sh
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -195,7 +195,7 @@ while (( "$#" )); do
             ;;
             'PULL')
                 echo -e "\nI will now download container images, if they are not already present.\n"
-                bash ${SCRIPTS_ROOT}/scripts/image_acq.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/image_acq.sh
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -203,7 +203,7 @@ while (( "$#" )); do
             ;;
             'BUILD')
                 echo -e "\nI will now build any custom container images, if they are not already present.\n"
-                bash ${SCRIPTS_ROOT}/scripts/image_build.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/image_build.sh
                 if [[ $? -ne 0 ]]
                 then
                   exit $?
@@ -215,7 +215,7 @@ while (( "$#" )); do
             ;;
             'CONTAINERS')
                 echo -e "\n and now I will create the containers...\n"
-                bash ${SCRIPTS_ROOT}/scripts/create_all.sh -r
+                bash ${SCRIPTS_ROOT}/scripts/create_all.sh
             ;;
             'SYSTEMD')
                 echo -e "\n fancy some systemd?...\n"
@@ -228,7 +228,7 @@ while (( "$#" )); do
                 done
                 if [[ ${SYSD} == "TRUE" ]]
                 then
-                    bash ${SCRIPTS_ROOT}/scripts/systemd.sh -r
+                    bash ${SCRIPTS_ROOT}/scripts/systemd.sh
                 fi
             ;;
             *)
