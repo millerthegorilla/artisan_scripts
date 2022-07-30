@@ -8,8 +8,6 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-bash ${CONTAINER_SCRIPTS_ROOT}/settings/choose_settings.sh -r
-
 function run_files()
 {
     for file in $(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "${1}.sh" | sort)
@@ -22,5 +20,6 @@ run_files=${RUN_FILES}
 
 for file in ${run_files[@]}
 do
+    echo debug 1 create_all.sh file=${file}
     run_files ${file}
 done
