@@ -16,6 +16,8 @@ function run_files()
     done
 }
 
+echo debug 2 create_all.sh run_files =${RUN_FILES[@]}
+
 for file in ${RUN_FILES[@]}
 do
     echo debug 1 create_all.sh file=${file}
