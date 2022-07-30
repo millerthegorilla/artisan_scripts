@@ -8,10 +8,9 @@ fi
 source ${PROJECT_SETTINGS}
 source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
 
-echo debug 1 40_maria image/custom.sh current_dir = ${CURRENT_DIR}
-
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
-custom_tag=get_tag "${CURRENT_DIR}"
+custom_tag=$(get_tag "${CURRENT_DIR}")
+
 CURRENT_VARS="${CURRENT_DIR}/current_vars"
 
 function build_maria()
