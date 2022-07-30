@@ -16,10 +16,7 @@ function run_files()
     done
 }
 
-echo debug 2 create_all.sh RUN_FILES=${RUN_FILES}
-run_files=${RUN_FILES}
-
-for file in ${run_files[@]}
+for file in ${RUN_FILES[@]}
 do
     echo debug 1 create_all.sh file=${file}
     run_files ${file}

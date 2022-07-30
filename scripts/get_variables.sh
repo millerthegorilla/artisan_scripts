@@ -53,8 +53,23 @@ function check_for_project_settings()
         if grep -q '[^[:space:]]' ${PROJECT_SETTINGS};
         then
             echo "local .PROJECT_SETTINGS exists and is not empty"
-            echo "Moving it to PROJECT_SETTINGS_OLD"
-            mv ${PROJECT_SETTINGS} ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS_OLD.$(date +%d-%m-%y_%T)
+            new_file="TRUE"
+            for file in $(find -type f -maxdepth 1 ${SCRIPTS_ROOT}/settings_files)
+            do
+                if ! diff ${PROJECT_SETTINGS} file;
+                then
+                    new_file="${file}";
+                    break;
+                fi
+            done
+            if [[ "${new_file}" == "TRUE" ]]
+            then
+                echo "Moving it to PROJECT_SETTINGS_OLD"
+                mv ${PROJECT_SETTINGS} ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS_OLD.$(date +%d-%m-%y_%T)
+            else
+                echo "File already exists as ${new_file}.  Deleting."
+                rm ${PROJECT_SETTINGS}
+            fi
             make_project_settings
         fi
     fi
