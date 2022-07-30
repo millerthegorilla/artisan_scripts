@@ -215,7 +215,7 @@ while (( "$#" )); do
             ;;
             'CONTAINERS')
                 echo -e "\n and now I will create the containers...\n"
-                bash ${SCRIPTS_ROOT}/scripts/create_all.sh
+                bash ${SCRIPTS_ROOT}/scripts/create_containers.sh
             ;;
             'SYSTEMD')
                 echo -e "\n fancy some systemd?...\n"
