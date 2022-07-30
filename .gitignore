@@ -1,7 +1,4 @@
-.images/*
-!.images/.gitignore
-.proj
-.archive
-.env
-*/.env
-*/**/.env
+.PROJECT_SETTINGS
+settings_files/**/*
+!settings_files/env_files
+!settings_files/env_files/.gitignore
