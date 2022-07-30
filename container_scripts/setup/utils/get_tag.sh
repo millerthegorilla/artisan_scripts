@@ -3,7 +3,7 @@
 function get_tag()
 {
 	echo debug 1 get_tag custom_tag= ${CUSTOM_TAG}
-	source ${1}/../image/source.sh
+	source ${1}/source.sh
 	if [[ -n "${CUSTOM_TAG}" ]];
 	then
 		tag=${CUSTOM_TAG}
