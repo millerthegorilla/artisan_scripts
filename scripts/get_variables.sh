@@ -52,13 +52,11 @@ function check_for_project_settings()
     then
         if grep -q '[^[:space:]]' ${PROJECT_SETTINGS};
         then
-            echo "local .PROJECT_SETTINGS exists and is not empty"
+            echo -e "local .PROJECT_SETTINGS exists and is not empty"
             new_file="TRUE"
             for file in $(find ${SCRIPTS_ROOT}/settings_files -maxdepth 1 | grep -v ".git_ignore")
             do
-                if ! diff test1/test1 test1/jim.sh &>/dev/null; then   >&2 echo "different"; else echo "same"; fi
-
-                if diff -q ${PROJECT_SETTINGS} file &>/dev/null;
+                if diff -q ${PROJECT_SETTINGS} ${file} &>/dev/null;
                 then
                     new_file="${file}";
                     break;
@@ -66,10 +64,10 @@ function check_for_project_settings()
             done
             if [[ "${new_file}" == "TRUE" ]]
             then
-                echo "Moving it to PROJECT_SETTINGS_OLD"
+                echo -e "Moving it to PROJECT_SETTINGS_OLD"
                 mv ${PROJECT_SETTINGS} ${SCRIPTS_ROOT}/settings_files/PROJECT_SETTINGS_OLD.$(date +%d-%m-%y_%T)
             else
-                echo "File already exists as ${new_file}.  Deleting."
+                echo -e "File already exists as ${new_file}.  Deleting current settings.\n"
                 rm ${PROJECT_SETTINGS}
             fi
             make_project_settings
