@@ -26,7 +26,7 @@ function settings_copy()
 
     echo "Enter number"
     read input
-    cp ${CONTAINER_SCRIPTS_ROOT}/settings/${1}/${file[${input}]} ${SCRIPTS_ROOT}/settings/settings.py
+    cp ${CONTAINER_SCRIPTS_ROOT}/settings/${1}/${file[${input}]} ${CONTAINER_SCRIPTS_ROOT}/settings/settings.py
 }
 
 if [[ "${DEBUG}" == "TRUE" ]] 

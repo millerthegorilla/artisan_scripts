@@ -8,7 +8,7 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-${CONTAINER_SCRIPTS_ROOT}/settings/choose_settings.sh -r
+bash ${CONTAINER_SCRIPTS_ROOT}/settings/choose_settings.sh -r
 
 function run_files()
 {
