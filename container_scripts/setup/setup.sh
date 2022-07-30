@@ -1,7 +1,3 @@
 #!/bin/bash
 
-function CD()
-{
-    echo $(dirname $(realpath $(pwd)));
-}
-CURRENT_DIR=$(CD)
+CURRENT_DIR=echo $(dirname $(realpath $(pwd)));
