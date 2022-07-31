@@ -8,7 +8,7 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-if [[ "${DEBUG}" == "FALSE" ]]
+if [[ "${DEBUG}" == "TRUE" ]]
 then
     exit 0
 fi

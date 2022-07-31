@@ -6,6 +6,11 @@ then
    exit 1
 fi
 
+if [[ "${DEBUG}" == "TRUE" ]]
+then
+    exit 0
+fi
+
 source ${PROJECT_SETTINGS}
 
 runuser --login ${USER_NAME} -c "podman volume create ${SWAG_VOL_NAME}"

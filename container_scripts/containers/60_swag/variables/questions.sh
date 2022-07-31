@@ -4,6 +4,7 @@ L_S_FILE=${1}
 
 source ${CONTAINER_SCRIPTS_ROOT}/containers/00_shared/variables/settings.sh
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
@@ -55,7 +56,7 @@ echo "SWAG_CONT_NAME=${SWAG_CONT_NAME}" >> ${L_S_FILE}
 
 # SWAG_IMAGE
 
-SWAG_IMAGE=$(get_tag $BASH_SOURCE)
+SWAG_IMAGE=$(get_tag ${CURRENT_DIR})
 
 echo "SWAG_IMAGE=${SWAG_IMAGE}" >> ${L_S_FILE}
 

@@ -2,7 +2,7 @@
 
 source ${PROJECT_SETTINGS}
 
-source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 custom_tag=$(get_tag ${CURRENT_DIR})

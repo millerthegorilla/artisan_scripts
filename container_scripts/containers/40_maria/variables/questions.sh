@@ -4,6 +4,7 @@ L_S_FILE=${1}
 
 source ${CONTAINER_SCRIPTS_ROOT}/containers/00_shared/variables/settings.sh
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/make_secret.sh
 
 # DB_NAME
@@ -58,6 +59,6 @@ MARIA_CONT_NAME="maria_cont"
 echo "MARIA_CONT_NAME=${MARIA_CONT_NAME}" >> ${L_S_FILE}
 
 # MARIA_IMAGE
-MARIA_IMAGE=$(get_tag $BASH_SOURCE)
+MARIA_IMAGE=$(get_tag ${CURRENT_DIR})
 
 echo "MARIA_IMAGE=${MARIA_IMAGE}" >> ${L_S_FILE}

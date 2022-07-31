@@ -2,7 +2,7 @@
 
 source ${PROJECT_SETTINGS}
 
-source ${CONTAINER_SCRIPTS_ROOT}/setup/setup.sh
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 if [[ ${DEBUG} == "FALSE" ]]
 then

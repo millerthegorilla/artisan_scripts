@@ -4,6 +4,7 @@ L_S_FILE=${1}
 
 source ${CONTAINER_SCRIPTS_ROOT}/containers/00_shared/variables/settings.sh
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 # XDESK
 if [[ $(type Xorg > /dev/null 2>&1 | echo $?) -eq 0 ]]
@@ -77,7 +78,7 @@ DJANGO_CONT_NAME="redis_cont"
 echo "DJANGO_CONT_NAME=${DJANGO_CONT_NAME}" >> ${L_S_FILE}
 
 # DJANGO_IMAGE
-DJANGO_IMAGE=$(get_tag $BASH_SOURCE)
+DJANGO_IMAGE=$(get_tag ${CURRENT_DIR})
 
 echo "DJANGO_IMAGE=${DJANGO_IMAGE}" >> ${L_S_FILE}
 
