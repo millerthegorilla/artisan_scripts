@@ -6,6 +6,12 @@ function get_tag()
 	if [[ -n "${CUSTOM_TAG}" ]];
 	then
 		tag=${CUSTOM_TAG}
+		if [[ ${DEBUG} == "TRUE" ]];
+		then
+			tag="${tag}_debug"
+		else
+			tag="${tag}_prod"
+		fi
 	elif [[ -n "${TAG}" ]];
 	then
 		tag=${TAG}
@@ -14,10 +20,5 @@ function get_tag()
 		exit 1
 	fi
 
-	if [[ ${DEBUG} == "TRUE" ]];
-	then
-		echo "${tag}_debug"
-	else
-		echo "${tag}_prod"
-	fi
+	echo "${tag}"
 }
