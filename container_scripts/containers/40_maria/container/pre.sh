@@ -8,4 +8,4 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-runuser --login ${USER_NAME} -c "podman volume create ${DB_VOL_NAME}"
+runuser --login ${USER_NAME} -c "podman volume create ${DB_VOL}"

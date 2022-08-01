@@ -13,7 +13,7 @@ then
    rm -rf ${CURRENT_DIR}/../image/dockerfile/maria.sh
 fi
 
-if [[ -n "${DB_VOL_NAME}" ]];
+if [[ -n "${DB_VOL}" ]];
 then
-   runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL_NAME}"
+   runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL}"
 fi
