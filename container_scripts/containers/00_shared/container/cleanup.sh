@@ -54,9 +54,12 @@ then
 fi
 
 # REMOVE SAVED SETTINGS FILE
-rm ${CONTAINER_SCRIPTS_ROOT}/settings/settings.py
+if [[ -e ${CONTAINER_SCRIPTS_ROOT}/settings/setting.py ]];
+then
+    rm ${CONTAINER_SCRIPTS_ROOT}/settings/settings.py
+fi
 
-# REMOVE DIRECTORIES AND FILES UNDER /etc/opt
+# REMOVE DIRECTORIES AND FILE[S UNDER /etc/opt
 if [[ ${DEBUG} == "FALSE" ]]
 then
     if [ -n ${CODE_PATH} ];

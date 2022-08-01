@@ -7,7 +7,9 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-rm ${SCRIPTS_ROOT}/dockerfiles/maria.sh
+if [[ -e ${CURRENT_DIR}/../image/dockerfile/maria.sh ]];
+then
+   rm -rf ${CURRENT_DIR}/../image/dockerfile/maria.sh
+fi
 
-# 
 runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL_NAME}"
