@@ -102,6 +102,11 @@ if [[ "$1" != "install" && "$1" != "uninstall" ]]; then
     install_check;
 fi
 
+if ! [[ -s ${PROJECT_SETTINGS} ]];
+then
+  echo -e "**!! PROJECT_SETTINGS is EMPTY !!**"
+fi
+
 while (( "$#" )); do
   case "$1" in
     install)
