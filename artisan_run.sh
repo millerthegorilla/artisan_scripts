@@ -245,11 +245,11 @@ while (( "$#" )); do
       exit $? 
       ;;
     clean)
-      ${SCRIPTS_ROOT}/scripts/cleanup.sh
+      bash ${SCRIPTS_ROOT}/scripts/cleanup.sh
       exit $?
       ;;
     clean_save_settings)
-      ${SCRIPTS_ROOT}/scripts/clean_save_settings.sh
+      bash ${SCRIPTS_ROOT}/scripts/clean_save_settings.sh
       exit $?
       ;; 
     custom)
