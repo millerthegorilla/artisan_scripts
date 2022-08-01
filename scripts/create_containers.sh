@@ -14,9 +14,9 @@ for container in $(ls -d ${CONTAINER_SCRIPTS_ROOT}/containers/*)
 do
     for run_file in "${run_files[@]}"
     do
-        if [[ -f "container/${run_file}.sh" ]]
+        if [[ -f "${container}/${run_file}.sh" ]]
         then
-            bash "container/${run_file}.sh"
+            bash "${container}/${run_file}.sh"
         fi
     done
 done
