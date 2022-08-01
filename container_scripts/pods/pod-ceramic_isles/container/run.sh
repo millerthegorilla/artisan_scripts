@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ${SCRIPTS_ROOT}/.proj
+source ${PROJECT_SETTINGS}
 
 if [[ "${DEBUG}" == "TRUE" ]]
 then
