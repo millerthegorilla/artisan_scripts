@@ -6,23 +6,14 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 source ${PROJECT_SETTINGS}
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 # REMOVE TEMPLATED FILES
 if [[ ${DEBUG} == "FALSE" ]];
 then
-   rm settings/gunicorn.conf.py
+   rm ${CONTAINER_SCRIPTS_ROOT}/settings/gunicorn.conf.py
 else
-   rm ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django_dev
-fi
-
-if [[ ! -n "$DJANGO_PROJECT_NAME" ]]
-then
-    if [ -n ${CODE_PATH} ];
-    then
-        PN=$(basename $(dirname $(find ${CODE_PATH} -name "asgi.py")))
-    fi
-    read -p "enter the name of the django project folder (where wsgi.py resides) [${PN}] : " -e DJANGO_PROJECT_NAME
-    DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME:-${PN}}
+   rm ${CURRENT_DIR}/../image/dockerfile/dockerfile
 fi
 
 if [ -n ${CODE_PATH} ];
