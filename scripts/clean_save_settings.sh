@@ -15,7 +15,7 @@ select yn in "Yes" "No"; do
     esac
 done
 
-FILES=${find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "settings.sh" | sort}
+FILES=$(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "settings.sh" | sort)
 
 if [[ SAVE == "TRUE" ]];
 then
