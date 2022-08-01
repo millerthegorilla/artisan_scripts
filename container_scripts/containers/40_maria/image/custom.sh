@@ -10,7 +10,7 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 custom_tag=$(get_tag "${CURRENT_DIR}")
 
-CURRENT_VARS="${CURRENT_DIR}/current_vars"
+EXISTING_IMAGE_VARS="${CURRENT_DIR}/existing_image_vars"
 
 function build_maria()
 {
@@ -22,9 +22,9 @@ function build_maria()
    cp ${CURRENT_DIR}/dockerfile/maria.sh /home/${USER_NAME}/maria.sh
    chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
    runuser --login ${USER_NAME} -c "podman build --tag='${custom_tag}' -f='dockerfile_maria'"
-   echo -e "DBNAME=${DB_NAME}" > ${CURRENT_VARS}
-   echo -e "DBUSER=${DB_USER}" >> ${CURRENT_VARS} 
-   echo -e "DBHOST=${DB_HOST}" >> ${CURRENT_VARS} 
+   echo -e "DBNAME=${DB_NAME}" > ${EXISTING_IMAGE_VARS}
+   echo -e "DBUSER=${DB_USER}" >> ${EXISTING_IMAGE_VARS} 
+   echo -e "DBHOST=${DB_HOST}" >> ${EXISTING_IMAGE_VARS} 
    rm /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
 }
 
@@ -32,9 +32,9 @@ runuser --login ${USER_NAME} -c "podman image exists ${custom_tag}"
 
 if [[ $? -eq 0 ]]
 then
-    if [[ -e ${CURRENT_VARS} ]]
+    if [[ -e ${EXISTING_IMAGE_VARS} ]]
     then
-        source ${CURRENT_VARS}
+        source ${EXISTING_IMAGE_VARS}
         if [[ ${DBNAME} != ${DB_NAME} || ${DBUSER} != ${DB_USER} || ${DBHOST} != ${DB_HOST} ]]
         then
             build_maria
