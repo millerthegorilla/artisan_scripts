@@ -6,7 +6,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 source ${PROJECT_SETTINGS}
-source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 if [[ -e ${CURRENT_DIR}/../image/dockerfile/maria.sh ]];
 then
