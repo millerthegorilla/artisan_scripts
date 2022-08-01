@@ -202,7 +202,6 @@ while (( "$#" )); do
             'PULL')
                 echo -e "\nI will now download container images, if they are not already present.\n"
                 bash ${SCRIPTS_ROOT}/scripts/image_acq.sh
-                wait
                 if [[ $? -ne 0 ]]
                 then
                   exit $?

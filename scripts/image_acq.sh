@@ -11,4 +11,4 @@ do
         runuser ${USER_NAME} -l -c "podman pull ${SOURCE} &"
     fi
 done
-wait
+wait $$
