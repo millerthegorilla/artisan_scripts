@@ -6,13 +6,13 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-	cat ${CURRENT_DIR}/templates/dockerfile/dockerfile_dev | envsubst '$DOCKERFILE_APP_NAMES' > ${CURRENT_DIR}/../image/dockerfiles/dockerfile_dev
+	cat ${CURRENT_DIR}/templates/dockerfile/dockerfile_dev | envsubst '$DOCKERFILE_APP_NAMES' > ${CURRENT_DIR}/../image/dockerfile/dockerfile_dev
 else
 	set -a
 	    NUM_OF_WORKERS=$(($(nproc --all) * 2 + 1))
 	set +a
 	cat ${CURRENT_DIR}/templates/gunicorn/gunicorn.conf.py | envsubst > ${CONTAINER_SCRIPTS_ROOT}/settings/gunicorn.conf.py
-    cat ${CURRENT_DIR}/templates/gunicorn/init | envsubst > ${CONTAINER_SCRIPTS_ROOT}/../image/dockerfiles/django/init
+    cat ${CURRENT_DIR}/templates/gunicorn/init | envsubst > ${CONTAINER_SCRIPTS_ROOT}/../image/dockerfile/django/init
 fi
 
 cat ${CURRENT_DIR}/templates/env/settings_env | envsubst > ${CONTAINER_SCRIPTS_ROOT}/settings/settings_env

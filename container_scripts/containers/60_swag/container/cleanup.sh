@@ -6,9 +6,14 @@ then
    exit 1
 fi
 
+source ${PROJECT_SETTINGS}
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
+
 if [[ ${DEBUG} == "FALSE" ]];
 then
-   runuser --login ${USER_NAME} -c "podman volume rm ${SWAG_VOL_NAME}"
-
-   rm dockerfiles/swag/default
+   if [[ -n ${SWAG_VOL_NAME} ]];
+   then
+      runuser --login ${USER_NAME} -c "podman volume rm ${SWAG_VOL_NAME}"
+   fi
+   rm ${CURRENT_DIR}/../image/dockerfile/swag/default
 fi

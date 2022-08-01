@@ -18,8 +18,8 @@ function build_maria()
    then
       rm ${CURRENT_VARS}
    fi
-   cp ${CURRENT_DIR}/dockerfiles/dockerfile /home/${USER_NAME}/dockerfile_maria
-   cp ${CURRENT_DIR}/dockerfiles/maria.sh /home/${USER_NAME}/maria.sh
+   cp ${CURRENT_DIR}/dockerfile/dockerfile /home/${USER_NAME}/dockerfile_maria
+   cp ${CURRENT_DIR}/dockerfile/maria.sh /home/${USER_NAME}/maria.sh
    chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/dockerfile_maria /home/${USER_NAME}/maria.sh
    runuser --login ${USER_NAME} -c "podman build --tag='${custom_tag}' -f='dockerfile_maria'"
    echo -e "DBNAME=${DB_NAME}" > ${CURRENT_VARS}

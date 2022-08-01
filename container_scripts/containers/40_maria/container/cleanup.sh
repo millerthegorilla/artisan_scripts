@@ -13,5 +13,7 @@ then
    rm -rf ${CURRENT_DIR}/../image/dockerfile/maria.sh
 fi
 
-echo debug 1 maria cleanup.sh db_vol_name ${DB_VOL_NAME}
-runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL_NAME}"
+if [[ -n "${DB_VOL_NAME}" ]];
+then
+   runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL_NAME}"
+fi
