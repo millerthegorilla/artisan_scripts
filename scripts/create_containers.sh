@@ -14,7 +14,7 @@ for container in $(ls -d ${CONTAINER_SCRIPTS_ROOT}/containers/*)
 do
     for run_file in "${run_files[@]}"
     do
-        if [[ -f "${container}/coontainer/${run_file}.sh" ]]
+        if [[ -f "${container}/container/${run_file}.sh" ]]
         then
             echo debug 1 create_containers.sh inside if 
             bash "${container}/container/${run_file}.sh"
