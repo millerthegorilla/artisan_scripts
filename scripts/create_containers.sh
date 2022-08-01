@@ -14,10 +14,11 @@ for container in $(ls -d ${CONTAINER_SCRIPTS_ROOT}/containers/*)
 do
     for run_file in "${run_files[@]}"
     do
-        echo debug create_containers file listing = $(ls -al "${container}/container/${run_file}.sh")
         if [[ -f "${container}/coontainer/${run_file}.sh" ]]
         then
+            echo debug 1 create_containers.sh inside if 
             bash "${container}/container/${run_file}.sh"
+            echo debug 2 create_containers output = $?
         fi
     done
 done
