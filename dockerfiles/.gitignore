@@ -1,5 +1,0 @@
-/swag/default
-!/django/.gitignore
-!/django/media
-/django/start.sh
-maria.sh

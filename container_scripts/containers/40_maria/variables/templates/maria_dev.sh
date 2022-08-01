@@ -9,4 +9,4 @@ then
     mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, DROP, LOCK TABLES on ${db_name}.* TO ${db_user}@${db_host} identified by '${DB_PASSWORD}'; flush privileges;"
 fi
 
-rm -f /tmp/.finished
+rm -f /tmp/.finished #TODO - do I stil use this?
