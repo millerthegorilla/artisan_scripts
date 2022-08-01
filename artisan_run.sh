@@ -117,7 +117,7 @@ while (( "$#" )); do
     create)
       labels=()
       iarray=()
-      alllabels=('variables' 'templates' 'directories' 'network' 'pull' 'build' 'settings' 'containers' 'systemd')
+      alllabels=('variables' 'templates' 'directories' 'network' 'pull' 'build' 'settings' 'pods' 'containers' 'systemd')
       parray=( "${@:2}" )
       if [[ ${#parray} -gt 0 ]]
       then
@@ -134,8 +134,9 @@ while (( "$#" )); do
               vars['pull']=4
               vars['build']=5
               vars['settings']=6
-              vars['containers']=7
-              vars['systemd']=8
+              vars['pods']=7
+              vars['containers']=8
+              vars['systemd']=9
               i=0
               for j in "${parray[@]}"
               do
@@ -212,6 +213,10 @@ while (( "$#" )); do
             'SETTINGS')
                 echo -e "\n please choose the settings file you want to use.\n"
                 bash ${SCRIPTS_ROOT}/scripts/settings.sh
+            ;;
+            'PODS')
+                echo -e "\n I will create the pods.\n"
+                bash ${SCRIPTS_ROOT}/scripts/create_pods.sh
             ;;
             'CONTAINERS')
                 echo -e "\n and now I will create the containers...\n"

@@ -73,7 +73,7 @@ DJANGO_SECRET_KEY=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)
 echo "DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}"
 
 # DJANGO_CONT_NAME
-DJANGO_CONT_NAME="redis_cont"
+DJANGO_CONT_NAME="django_cont"
 
 echo "DJANGO_CONT_NAME=${DJANGO_CONT_NAME}" >> ${L_S_FILE}
 
