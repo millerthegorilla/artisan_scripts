@@ -56,16 +56,26 @@ HOST_LOG_DIR=${HOST_LOG_DIR:-${USER_DIR}/${PROJECT_NAME}/logs}
 
 echo "HOST_LOG_DIR=${HOST_LOG_DIR}" >> ${L_S_FILE}
 
-# HOST_STATIC_DIR
-# host static dir mounts on to static base root from django and swag conts.
-HOST_STATIC_DIR=/etc/opt/${PROJECT_NAME}/static_files/
+# DJANGO_HOST_STATIC_VOL
+# host static vol mounts on to static base root from django and swag conts.
+DJANGO_HOST_STATIC_VOL=/etc/opt/${PROJECT_NAME}/static_files/
 
-echo "HOST_STATIC_DIR=${HOST_STATIC_DIR}" >> ${L_S_FILE}
+echo "DJANGO_HOST_STATIC_VOL=${DJANGO_HOST_STATIC_VOL}" >> ${L_S_FILE}
 
-# HOST_MEDIA_DIR
-HOST_MEDIA_DIR=/etc/opt/${PROJECT_NAME}/media_files/
+# DJANGO_CONT_STATIC_VOL
+DJANGO_CONT_STATIC_VOL=${DJANGO_HOST_STATIC_VOL}
 
-echo "HOST_MEDIA_DIR=${HOST_MEDIA_DIR}" >> ${L_S_FILE}
+echo "DJANGO_CONT_STATIC_VOL=${DJANGO_CONT_STATIC_VOL}" >> ${L_S_FILE}
+
+# DJANGO_HOST_MEDIA_VOL
+DJANGO_HOST_MEDIA_VOL=/etc/opt/${PROJECT_NAME}/media_files/
+
+echo "DJANGO_HOST_MEDIA_VOL=${DJANGO_HOST_MEDIA_VOL}" >> ${L_S_FILE}
+
+# DJANGO_CONT_MEDIA_VOL
+DJANGO_CONT_MEDIA_VOL=${DJANGO_HOST_MEDIA_VOL}
+
+echo "DJANGO_CONT_MEDIA_VOL=${DJANGO_CONT_MEDIA_VOL}" >> ${L_S_FILE}
 
 ## DJANGO_SECRET_KEYGEN
 DJANGO_SECRET_KEY=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)
@@ -82,7 +92,7 @@ DJANGO_IMAGE=$(get_tag ${CURRENT_DIR})
 
 echo "DJANGO_IMAGE=${DJANGO_IMAGE}" >> ${L_S_FILE}
 
-# DIRECTORY MOUNTS
+# DOCKERFILE_APP_NAMES
 if [[ ${DEBUG} == "TRUE" ]]
 then
     echo -e 'mount app source code directories? - note that repository name must be indentical to the contained app name.'
@@ -126,10 +136,12 @@ then
         DOCKERFILE_APP_NAMES="RUN "
         for app_name in $(ls ${SRC_CODE_PATH});
         do 
-             DOCKERFILE_APP_NAMES="${DOCKERFILE_APP_NAMES}mkdir -p /opt/${PROJECT_NAME}/${app_name}; "
+             DOCKERFILE_APP_NAMES="${DOCKERFILE_APP_NAMES}; mkdir -p /opt/${PROJECT_NAME}/${app_name}; "
         done
     fi
 fi
+
+echo "DOCKERFILE_APP_NAMES=\"${DOCKERFILE_APP_NAMES}\"" >> ${L_S_FILE}
 
 # MOUNT_SRC_CODE
 echo "MOUNT_SRC_CODE=${MOUNT_SRC_CODE}" >> ${L_S_FILE}
@@ -139,6 +151,3 @@ echo "MOUNT_GIT=${MOUNT_GIT}" >> ${L_S_FILE}
 
 # SRC_CODE_PATH
 echo "SRC_CODE_PATH=${SRC_CODE_PATH}" >> ${L_S_FILE}
-
-# DOCKERFILE_APP_NAMES
-echo "DOCKERFILE_APP_NAMES=${DOCKERFILE_APP_NAMES}" >> ${L_S_FILE}
