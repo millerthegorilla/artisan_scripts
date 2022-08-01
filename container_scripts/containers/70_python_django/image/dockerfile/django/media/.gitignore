@@ -1,0 +1,8 @@
+!./cache
+!./cache/*
+!./default_avatars
+!./default_avatars/*
+!./uploads
+!./uploads/*
+!./static_images
+!./static_images/*
