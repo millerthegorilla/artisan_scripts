@@ -15,8 +15,8 @@ do
     for run_file in "${run_files[@]}"
     do
         if [[ -f "container/${run_file}.sh" ]]
-        do
+        then
             bash "container/${run_file}.sh"
-        done
+        fi
     done
 done
