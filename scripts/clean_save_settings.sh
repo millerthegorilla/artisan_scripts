@@ -7,7 +7,7 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-echo -e "Do you want to save settings first before you clear them? : "
+echo -e "Do you want to save your local partial settings first before you clear them? : "
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) SAVE="TRUE"; break;;
@@ -15,22 +15,14 @@ select yn in "Yes" "No"; do
     esac
 done
 
-FILES=$(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "settings.sh" | sort)
-
 if [[ SAVE == "TRUE" ]];
 then
 	FILEPATH=${SCRIPTS_ROOT}/settings_files/project_settings.${PROJECT_NAME}.$(date +%d-%m-%y_%T)
-	touch FILEPATH
-	for file in ${FILES}
+	for file in $(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "settings.sh" | sort)
 	do
-		cat ${file} >> ${FILEPATH}
+		cat ${file} > ${FILEPATH}
+	    rm ${file}
+	    touch ${file}
+	    chmod 0600 ${file}
 	done
 fi
-
-for file in ${FILES}
-do
-	FILEPATH=$(dirname ${file})
-	rm ${file}
-	touch ${FILEPATH}/settings.sh
-	chmod 0600 ${FILEPATH}/settings.sh
-done

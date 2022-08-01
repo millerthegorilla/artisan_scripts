@@ -11,9 +11,15 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 # REMOVE TEMPLATED FILES
 if [[ ${DEBUG} == "FALSE" ]];
 then
-   rm ${CONTAINER_SCRIPTS_ROOT}/settings/gunicorn.conf.py
+    if [[ -f ${CONTAINER_SCRIPTS_ROOT}/settings/gunicorn.conf.py ]];
+    then
+        rm ${CONTAINER_SCRIPTS_ROOT}/settings/gunicorn.conf.py
+    fi
 else
-   rm ${CURRENT_DIR}/../image/dockerfile/dockerfile
+    if [[ -f ${CURRENT_DIR}/../image/dockerfile/dockerfile ]];
+    then
+        rm ${CURRENT_DIR}/../image/dockerfile/dockerfile
+    fi
 fi
 
 if [ -n ${CODE_PATH} ];
