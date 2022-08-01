@@ -39,7 +39,7 @@ runuser --login ${USER_NAME} -c "podman image prune -f"
 runuser --login ${USER_NAME} -c "podman pod exists ${POD_NAME}"
 if [[ $? != 0 ]]
 then
-    echo -n "Finished Cleaning."
+    echo -e "Finished Cleaning.\n"
 else
-    echo -n "Finished Cleaning but **pod still exists**"
+    echo -e "Finished Cleaning but **pod still exists**"
 fi 

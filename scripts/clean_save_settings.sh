@@ -8,7 +8,7 @@ fi
 source ${PROJECT_SETTINGS}
 
 echo -e "Do you want to save settings first before you clear them? : "
-select  in "Yes" "No"; do
+select yn in "Yes" "No"; do
     case $yn in
         Yes ) SAVE="TRUE"; break;;
         No ) SAVE="FALSE"; break;;

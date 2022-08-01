@@ -20,5 +20,5 @@ cat ${CURRENT_DIR}/templates/env/settings_env | envsubst > ${CONTAINER_SCRIPTS_R
 cat ${CURRENT_DIR}/templates/django/manage.py | envsubst > ${CODE_PATH}/manage.py
 chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/manage.py
 
-cat ${CURRENT_DIR}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${django_project_name}/wsgi.py
-chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/${django_project_name}/wsgi.py
+cat ${CURRENT_DIR}/templates/django/wsgi.py | envsubst > ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
+chown ${USER_NAME}:${USER_NAME} ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
