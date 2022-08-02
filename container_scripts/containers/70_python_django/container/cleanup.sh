@@ -24,12 +24,13 @@ fi
 
 if [ -n ${CODE_PATH} ];
 then
-    if [[ ${DEBUG} == "TRUE" ]]
+    if [[ -f ${CODE_PATH}/manage.py ]];
     then
         rm ${CODE_PATH}/manage.py
+    fi
+    if [[ -f ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py ]];
+    then
         rm ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
-    else
-        rm -rf ${CODE_PATH}/manage.py ${CODE_PATH}/${DJANGO_PROJECT_NAME}/wsgi.py
     fi
 fi
 
@@ -57,7 +58,7 @@ then
     fi
 fi
 
-if [[ -d ${CODE_PATH]} ]];
+if [[ -d ${CODE_PATH} ]];
 then
     find ${CODE_PATH} -type l -exec rm {} +
 fi

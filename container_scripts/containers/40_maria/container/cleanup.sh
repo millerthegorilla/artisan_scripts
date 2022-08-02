@@ -15,5 +15,8 @@ fi
 
 if [[ -n "${DB_VOL}" ]];
 then
-   runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL}"
+   if ! runuser --login ${USER_NAME} -c "podman volume exists ${DB_VOL}";
+   then
+      runuser --login ${USER_NAME} -c "podman volume rm ${DB_VOL}"
+   fi
 fi

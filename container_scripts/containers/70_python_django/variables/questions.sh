@@ -56,6 +56,11 @@ HOST_LOG_DIR=${HOST_LOG_DIR:-${USER_DIR}/${PROJECT_NAME}/logs}
 
 echo "HOST_LOG_DIR=${HOST_LOG_DIR}" >> ${L_S_FILE}
 
+# CONT_LOG_DIR
+DJANGO_CONT_LOG_DIR="/var/log/${PROJECT_NAME}/"
+
+echo "DJANGO_CONT_LOG_DIR=${DJANGO_CONT_LOG_DIR}" >> ${L_S_FILE}
+
 # DJANGO_HOST_STATIC_VOL
 # host static vol mounts on to static base root from django and swag conts.
 DJANGO_HOST_STATIC_VOL=/etc/opt/${PROJECT_NAME}/static_files/

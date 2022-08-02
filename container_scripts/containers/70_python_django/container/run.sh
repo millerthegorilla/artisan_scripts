@@ -22,7 +22,7 @@ then
             APP_MOUNTS="${APP_MOUNTS} -v ${SRC_CODE_PATH}/${app_name}/${app_name}:/opt/${PROJECT_NAME}/${app_name}:Z"
         done
         p_string="podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} ${APP_MOUNTS} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}"
-        
+        echo debug 3 python_django run.sh p_string = ${p_string}
         runuser --login ${USER_NAME} -P -c "${p_string}"
         for app_name in $(ls ${SRC_CODE_PATH});
         do 
