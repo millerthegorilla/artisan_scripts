@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $(runuser --login artisan_sysd -P -c "podman exec -it mariadb_cont bash -c \"mariadb-show -uroot -p${MARIADB_ROOT_PASSWORD} ${db_name}\"" > /dev/null 2>&1; echo $?) -eq 1 ]]
+if [[ $(runuser --login artisan_sysd -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c \"mariadb-show -uroot -p${MARIADB_ROOT_PASSWORD} ${db_name}\"" > /dev/null 2>&1; echo $?) -eq 1 ]]
 then
     mysql -uroot  -p${MARIADB_ROOT_PASSWORD} -h'localhost' -e "delete from mysql.global_priv where user='root' and host='%'; flush privileges;"
 
