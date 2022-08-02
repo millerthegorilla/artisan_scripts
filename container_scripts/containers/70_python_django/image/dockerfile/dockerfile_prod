@@ -1,0 +1,27 @@
+# build command is: podman build --tag='python:django' -f='dockerfile_django'
+FROM docker.io/library/python:latest
+ARG PROJECT_NAME=${PROJECT_NAME}
+ARG STATIC_DIR=${STATIC_DIR}
+ARG MEDIA_DIR=${MEDIA_DIR}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV DJANGO_SETTINGS_MODULE=settings
+ENV PYTHONPATH="/etc/opt/${PROJECT_NAME}/settings/:/opt/${PROJECT_NAME}/"
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y libmagic1 libmagickwand-dev libjpeg62-turbo-dev zlib1g-dev python3-pil python3-pil.imagetk
+RUN rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /opt/${PROJECT_NAME} /var/log/${PROJECT_NAME} /etc/opt/${PROJECT_NAME}/settings ${STATIC_DIR} ${MEDIA_DIR} ${MEDIA_DIR}/media/
+RUN chmod 0770 -R ${MEDIA_DIR}
+RUN useradd -m artisan
+RUN chown -R artisan:artisan /opt/${PROJECT_NAME} /var/log/${PROJECT_NAME} /etc/opt/${PROJECT_NAME}/settings ${STATIC_DIR} ${MEDIA_DIR}
+RUN mkdir /home/artisan/django_venv
+RUN chown artisan:artisan /home/artisan/django_venv
+ENV VIRTUAL_ENV=/home/artisan/django_venv
+RUN su artisan -c "python -m venv $VIRTUAL_ENV"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+COPY ./pip_requirements_prod /tmp/pip_requirements
+RUN su artisan -c "python -m pip install --upgrade pip" && su artisan -c "pip install wheel && pip install -r /tmp/pip_requirements"
+RUN rm -r /tmp/pip_requirements
+RUN touch /tmp/manage_output && chmod 0666 /tmp/manage_output
+COPY ./django/init /init
+RUN chmod +x /init
+CMD /init
