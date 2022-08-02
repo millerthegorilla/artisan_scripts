@@ -19,6 +19,7 @@ ENV VIRTUAL_ENV=/home/artisan/django_venv
 RUN su artisan -c "python -m venv $VIRTUAL_ENV"
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY ./pip_requirements_prod /tmp/pip_requirements
+RUN chmod o+r /tmp/pip_requirements
 RUN su artisan -c "python -m pip install --upgrade pip" && su artisan -c "pip install wheel && pip install -r /tmp/pip_requirements"
 RUN rm -r /tmp/pip_requirements
 RUN touch /tmp/manage_output && chmod 0666 /tmp/manage_output

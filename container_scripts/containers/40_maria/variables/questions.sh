@@ -37,7 +37,7 @@ echo "DB_VOL=${DB_VOL}" >> ${L_S_FILE}
 
 # MARIADB_ROOT_PASSWORD
 # make_secret MARIADB_ROOT_PASSWORD
-MARIADB_ROOT_PASSWORD="$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)"
+MARIADB_ROOT_PASSWORD="$(tr -dc 'a-z0-9' < /dev/random | head -c32)"
 
 echo "MARIADB_ROOT_PASSWORD=\"${MARIADB_ROOT_PASSWORD}\"" >> ${L_S_FILE}
 
@@ -45,7 +45,7 @@ echo "MARIADB_ROOT_PASSWORD=\"${MARIADB_ROOT_PASSWORD}\"" >> ${L_S_FILE}
 # TODO check if DB_PASSWORD exists before deleting it.
 PASSWORD_LENGTH=32
 
-DB_PASSWORD="$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)"
+DB_PASSWORD="$(tr -dc 'a-z0-9' < /dev/random | head -c32)"
 # echo debug 1 maria variables DB_PASSWORD = ${DB_PASSWORD}
 # if [[ $(runuser --login ${USER_NAME} -c "podman secret inspect DB_PASSWORD &>/dev/null"; echo $?) == 0 ]]
 # then
