@@ -8,13 +8,16 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-if [[ ! -d ${HOST_LOG_DIR} ]]
+if [[ ! -d ${HOST_LOG_DIR}/django ]];
 then
-    mkdir -p ${HOST_LOG_DIR}
-    mkdir ${HOST_LOG_DIR}/django
-    mkdir ${HOST_LOG_DIR}/gunicorn
-    chown ${USER_NAME}:${USER_NAME} ${HOST_LOG_DIR}/django ${HOST_LOG_DIR}/gunicorn
+    mkdir -p ${HOST_LOG_DIR}/django
 fi
+if [[ ! -d ${HOST_LOG_DIR}/gunicorn ]];
+then
+    mkdir ${HOST_LOG_DIR}/gunicorn
+fi
+
+chown ${USER_NAME}:${USER_NAME} ${HOST_LOG_DIR}/django ${HOST_LOG_DIR}/gunicorn
 
 cp ${CONTAINER_SCRIPTS_ROOT}/settings/settings_env /etc/opt/${PROJECT_NAME}/settings/.env
 chown ${USER_NAME}:${USER_NAME} /etc/opt/${PROJECT_NAME}/settings/.env
