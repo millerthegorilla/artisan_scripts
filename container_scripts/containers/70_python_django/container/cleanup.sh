@@ -56,3 +56,8 @@ then
         rm -rf ${DJANGO_HOST_MEDIA_VOL}/media/uploads/*
     fi
 fi
+
+if [[ -d ${CODE_PATH]} ]];
+then
+    find ${CODE_PATH} -type l -exec rm {} +
+fi

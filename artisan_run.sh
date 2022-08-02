@@ -17,6 +17,11 @@ then
 fi
 set +a
 
+if [[ -f ${PROJECT_SETTINGS} ]];
+then
+    source ${PROJECT_SETTINGS}
+fi
+
 function install_check()
 {
   INSTALLED="installed."
