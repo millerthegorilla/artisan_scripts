@@ -30,12 +30,12 @@ then
     runuser --login ${USER_NAME} -c "podman image exists \"${custom_tag}\""
     if [[ ! $? -eq 0 ]]
     then
-        build_django dockerfile_django_dev pip_requirements_dev debug
+        build_django dockerfile_dev pip_requirements_dev debug
     fi
 else
     runuser --login ${USER_NAME} -c "podman image exists \"${custom_tag}\""
     if [[ ! $? -eq 0 ]]
     then
-        build_django dockerfile_django_prod pip_requirements_prod prod
+        build_django dockerfile_prod pip_requirements_prod prod
     fi
 fi
