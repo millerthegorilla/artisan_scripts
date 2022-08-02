@@ -1,12 +1,12 @@
 #!/bin/bash
 
-if [[ $(runuser --login artisan_sysd -P -c "podman exec -it ${MARIA_CONT_NAME} bash -c \"mariadb-show -uroot -p${MARIADB_ROOT_PASSWORD} ${db_name}\"" > /dev/null 2>&1; echo $?) -eq 1 ]]
+if ! mariadb-show -uroot -p${MARIADB_ROOT_PASSWORD} | grep ${DB_NAME} &>/dev/null;
 then
     mysql -uroot  -p${MARIADB_ROOT_PASSWORD} -h'localhost' -e "delete from mysql.global_priv where user='root' and host='%'; flush privileges;"
 
-    mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "CREATE DATABASE ${db_name} CHARSET utf8;"
+    mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "CREATE DATABASE ${DB_NAME} CHARSET utf8;"
     
-    mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, LOCK on ${db_name}.* TO ${db_user}@${db_host} identified by '${DB_PASSWORD}'; flush privileges;"
+    mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "grant CREATE, ALTER, INDEX, SELECT, UPDATE, INSERT, DELETE, LOCK on ${DB_NAME}.* TO ${DB_USER}@${DB_HOST} identified by '${DB_PASSWORD}'; flush privileges;"
 fi
 
 rm -f /tmp/.finished

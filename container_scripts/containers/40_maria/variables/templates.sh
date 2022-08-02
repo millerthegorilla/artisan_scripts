@@ -6,7 +6,7 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 if [[ ${DEBUG} == "TRUE" ]]
 then
-    cat ${CURRENT_DIR}/templates/maria_dev.sh | envsubst '$db_user:$db_host:$db_name' > ${CURRENT_DIR}/../image/dockerfile/maria.sh  #TODO make function get container dir
+    cat ${CURRENT_DIR}/templates/maria_dev.sh | envsubst > ${CURRENT_DIR}/../image/dockerfile/maria.sh
  else
-    cat ${CURRENT_DIR}/templates/maria_prod.sh | envsubst '$db_user:$db_host:$db_name' > ${CURRENT_DIR}/../image/dockerfile/maria.sh
+    cat ${CURRENT_DIR}/templates/maria_prod.sh | envsubst > ${CURRENT_DIR}/../image/dockerfile/maria.sh
 fi
