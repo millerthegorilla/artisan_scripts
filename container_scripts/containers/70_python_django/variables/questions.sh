@@ -48,7 +48,7 @@ fi
 read -p "Media base root [${MBR}] : " MEDIA_BASE_ROOT
 MEDIA_BASE_ROOT=${MEDIA_BASE_ROOT:-${MBR}}
 
-echo "MEDIA_BASE_ROOT=${MEDIA_BASE_ROOT}"
+echo "MEDIA_BASE_ROOT=${MEDIA_BASE_ROOT}" >> ${L_S_FILE}
 
 # HOST_LOG_DIR
 read -p "Host log dir [${USER_DIR}/${PROJECT_NAME}/logs] : " HOST_LOG_DIR
@@ -85,7 +85,7 @@ echo "DJANGO_CONT_MEDIA_VOL=${DJANGO_CONT_MEDIA_VOL}" >> ${L_S_FILE}
 ## DJANGO_SECRET_KEYGEN
 DJANGO_SECRET_KEY=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)
 
-echo "DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}"
+echo "DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}" >> ${L_S_FILE}
 
 # DJANGO_CONT_NAME
 DJANGO_CONT_NAME="django_cont"

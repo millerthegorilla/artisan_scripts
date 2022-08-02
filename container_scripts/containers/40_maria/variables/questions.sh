@@ -39,7 +39,7 @@ DB_VOL=${DB_VOL:-${db_vol_name}}
 echo "DB_VOL=${DB_VOL}" >> ${L_S_FILE}
 
 # MARIADB_ROOT_PASSWORD
-make_secret MARIADB_ROOT_PASSWORD
+# make_secret MARIADB_ROOT_PASSWORD
 MARIADB_ROOT_PASSWORD="$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)"
 
 # DB_PASSWORD
