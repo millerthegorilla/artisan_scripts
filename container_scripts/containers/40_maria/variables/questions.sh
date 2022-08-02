@@ -19,7 +19,7 @@ db_user=${DB_NAME}_user
 read -p "Your django database username [${db_user}]: " DB_USER
 DB_USER=${DB_USER:-${db_user}}
 
-echo "SDB_USER=${DB_USER}" >> ${L_S_FILE}
+echo "DB_USER=${DB_USER}" >> ${L_S_FILE}
 
 # DB_HOST
 db_host=127.0.0.1
