@@ -1,9 +1,9 @@
 source ${PROJECT_SETTINGS}
 
-runuser --login ${USER_NAME} -c "podman exec -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} \
-                                                                   -e DB_HOST=${DB_HOST} \
-                                                                   -e DB_PASSWORD=${DB_PASSWORD} \
-                                                                   -e MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD} \
+runuser --login ${USER_NAME} -c "podman exec -e DB_NAME=\"${DB_NAME}\" -e DB_USER=\"${DB_USER}\" \
+                                                                   -e DB_HOST=\"${DB_HOST}\" \
+                                                                   -e DB_PASSWORD=\"${DB_PASSWORD}\" \
+                                                                   -e MARIADB_ROOT_PASSWORD=\"${MARIADB_ROOT_PASSWORD}\" \
                                                                    -it ${MARIA_CONT_NAME} bash -c '/maria.sh'"
 echo "init script output = " $?
 runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'rm /maria.sh'"

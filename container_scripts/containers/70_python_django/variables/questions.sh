@@ -141,7 +141,7 @@ then
         DOCKERFILE_APP_NAMES="RUN "
         for app_name in $(ls ${SRC_CODE_PATH});
         do 
-             DOCKERFILE_APP_NAMES="${DOCKERFILE_APP_NAMES}; mkdir -p /opt/${PROJECT_NAME}/${app_name}; "
+             DOCKERFILE_APP_NAMES="${DOCKERFILE_APP_NAMES} mkdir -p /opt/${PROJECT_NAME}/${app_name};"
         done
     fi
 fi
