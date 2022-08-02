@@ -12,8 +12,11 @@ done
 if [[ imgs_remove -eq 1 ]]
 then
     IMAGES=$(grep -whorP "(TAG)+=\K.*" ${CONTAINER_SCRIPTS_ROOT}/containers/ | sed s'/\n/ /')
-    debug 1 cleanup.sh IMAGES= ${IMAGES}
-	runuser --login ${USER_NAME} -c "podman rmi ${IMAGES}"
+    echo debug 1 cleanup.sh IMAGES= ${IMAGES}
+    for image in ${IMAGES}
+    do
+	   runuser --login ${USER_NAME} -c "podman rmi ${image}"
+    done
 fi
 
 runuser --login ${USER_NAME} -c "podman volume prune -f"

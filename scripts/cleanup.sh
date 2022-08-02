@@ -7,12 +7,12 @@ fi
 
 bash ${SCRIPTS_ROOT}/scripts/clean_save_settings.sh
 
-for cleanup in $(find ${CONTAINER_SCRIPTS_ROOT}/pods/ -type f -name "cleanup.sh" | sort)
+for pod_cleanup in $(find ${CONTAINER_SCRIPTS_ROOT}/pods/ -type f -name "cleanup.sh" | sort)
 do
-    bash ${cleanup}
+    bash ${pod_cleanup}
 done
 
-for cleanup in $(find ${CONTAINER_SCRIPTS_ROOT} -type f -name "cleanup.sh" -not -path "container_scripts/pods/*" | sort)
+for cont_cleanup in $(find ${CONTAINER_SCRIPTS_ROOT} -type f -name "cleanup.sh" -not -path "container_scripts/pods/*" | sort)
 do
-    bash ${cleanup}
+    bash ${cont_cleanup}
 done
