@@ -7,8 +7,3 @@ container_scripts/containers/*/variables/settings.sh
 container_scripts/containers/*/image/existing_image_vars
 .PROJECT_SETTINGS
 settings_files
-settings_files/**/*
-settings_files/.gitignore
-settings_files/env_files
-settings_files/env_files/*
-settings_files/env_files/.gitignore
