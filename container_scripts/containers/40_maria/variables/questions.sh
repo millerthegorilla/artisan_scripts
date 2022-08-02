@@ -40,18 +40,19 @@ echo "DB_VOL=${DB_VOL}" >> ${L_S_FILE}
 
 # MARIADB_ROOT_PASSWORD
 make_secret MARIADB_ROOT_PASSWORD
+MARIADB_ROOT_PASSWORD="$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)"
 
 # DB_PASSWORD
 # TODO check if DB_PASSWORD exists before deleting it.
 PASSWORD_LENGTH=32
 
-DB_PASSWORD=$(< /dev/random tr -dc _A-Z-a-z-0-9 | head -c${PASSWORD_LENGTH};)
-echo debug 1 maria variables DB_PASSWORD = ${DB_PASSWORD}
-if [[ $(runuser --login ${USER_NAME} -c "podman secret inspect DB_PASSWORD &>/dev/null"; echo $?) == 0 ]]
-then
-    runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
-fi
-echo -n ${DB_PASSWORD} | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
+DB_PASSWORD="$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)"
+# echo debug 1 maria variables DB_PASSWORD = ${DB_PASSWORD}
+# if [[ $(runuser --login ${USER_NAME} -c "podman secret inspect DB_PASSWORD &>/dev/null"; echo $?) == 0 ]]
+# then
+#     runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
+# fi
+# echo -n ${DB_PASSWORD} | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
 
 # MARIA_CONT_NAME
 MARIA_CONT_NAME="maria_cont"
