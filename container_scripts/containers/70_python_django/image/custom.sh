@@ -16,13 +16,12 @@ function build_django()
 {
   echo -e "\n*** Building custom django image.  This can take a *long* time... ***\n"
   mkdir -p /home/${USER_NAME}/django && cp -ar ${CURRENT_DIR}/dockerfile/django/* /home/${USER_NAME}/django/
+  cp ${CURRENT_DIR}/dockerfile/${1} /home/${USER_NAME}/django/${1}
+  cp ${CURRENT_DIR}/dockerfile/${2} /home/${USER_NAME}/django/${2}
   chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/django
-  cp ${CURRENT_DIR}/dockerfile/${1} /home/${USER_NAME}/${1}
-  cp ${CURRENT_DIR}/dockerfile/${2} /home/${USER_NAME}/${2}
-  echo "media dir is " ${DJANGO_HOST_MEDIA_VOL}
-  runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --build-arg=STATIC_DIR=${DJANGO_HOST_STATIC_VOL} --build-arg=MEDIA_DIR=${DJANGO_HOST_MEDIA_VOL} --tag=\"${custom_tag}\" -f=${1} ./"
-  rm /home/${USER_NAME}/${1} /home/${USER_NAME}/${2}
-  rm -r /home/${USER_NAME}/django
+  runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --build-arg=STATIC_DIR=${DJANGO_HOST_STATIC_VOL} --build-arg=MEDIA_DIR=${DJANGO_HOST_MEDIA_VOL} --tag=\"${custom_tag}\" -f=/home/${USER_NAME}/django/${1} /home/dev/django/"
+ # rm /home/${USER_NAME}/django/${1} /home/${USER_NAME}/django/${2}
+ # rm -r /home/${USER_NAME}/django
 }
 
 if [[ ${DEBUG} == "TRUE" ]]
