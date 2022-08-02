@@ -6,20 +6,21 @@ then
    exit 1
 fi
 
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh
+
+function get_variables()
+{
+    for container in $(ls -d ${1})
+    do
+        local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh" | tail -n 1)
+        bash ${container}/variables/questions.sh ${local_settings_file}
+        cat ${local_settings_file} >> ${PROJECT_SETTINGS}
+        unset local_settings_file
+    done
+}
+
 function get_variables_and_make_project_file()
 {
-    source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/local_settings.sh
-
-    function get_variables()
-    {
-        for container in $(ls -d ${1})
-        do
-            local_settings_file=$(local_settings ${LOCAL_SETTINGS_FILE} "${container}/variables/questions.sh" | tail -n 1)
-            bash ${container}/variables/questions.sh ${local_settings_file}
-            cat ${local_settings_file} >> ${PROJECT_SETTINGS}
-            unset local_settings_file
-        done
-    }
 
     get_variables "${CONTAINER_SCRIPTS_ROOT}/containers/*"
     get_variables "${CONTAINER_SCRIPTS_ROOT}/pods/*"
@@ -93,7 +94,9 @@ else
     get_variables_and_make_project_file
 fi
 
-if [[ "${project_settings}" != "${SCRIPTS_ROOT}/.PROJECT_SETTINGS" ]]
+if [[ -n "${project_settings}" && "${project_settings}" != "${SCRIPTS_ROOT}/.PROJECT_SETTINGS" ]]
 then
+    echo debug 2 scripts/get_variables.sh project_settings= ${project_settings}
+
     cat ${project_settings} >> ${PROJECT_SETTINGS}
 fi
