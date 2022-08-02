@@ -83,9 +83,9 @@ DJANGO_CONT_MEDIA_VOL=${DJANGO_HOST_MEDIA_VOL}
 echo "DJANGO_CONT_MEDIA_VOL=${DJANGO_CONT_MEDIA_VOL}" >> ${L_S_FILE}
 
 ## DJANGO_SECRET_KEYGEN
-DJANGO_SECRET_KEY=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)
+DJANGO_SECRET_KEY="$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)"
 
-echo "DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}" >> ${L_S_FILE}
+echo "DJANGO_SECRET_KEY=\"${DJANGO_SECRET_KEY}\"" >> ${L_S_FILE}
 
 # DJANGO_CONT_NAME
 DJANGO_CONT_NAME="django_cont"

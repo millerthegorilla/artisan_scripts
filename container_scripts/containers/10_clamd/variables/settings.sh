@@ -1,0 +1,2 @@
+CLAM_CONT_NAME=clamav_cont
+CLAM_IMAGE=clamav:latest

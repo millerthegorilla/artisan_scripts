@@ -21,9 +21,6 @@ DB_USER=${DB_USER:-${db_user}}
 
 echo "SDB_USER=${DB_USER}" >> ${L_S_FILE}
 
-
-echo "DB_PASSWORD=${DB_PASSWORD}" >> ${L_S_FILE}
-
 # DB_HOST
 db_host=127.0.0.1
 read -p "Your django database host address [${db_host}] : " DB_HOST
@@ -42,6 +39,8 @@ echo "DB_VOL=${DB_VOL}" >> ${L_S_FILE}
 # make_secret MARIADB_ROOT_PASSWORD
 MARIADB_ROOT_PASSWORD="$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)"
 
+echo "MARIADB_ROOT_PASSWORD=\"${MARIADB_ROOT_PASSWORD}\"" >> ${L_S_FILE}
+
 # DB_PASSWORD
 # TODO check if DB_PASSWORD exists before deleting it.
 PASSWORD_LENGTH=32
@@ -53,6 +52,8 @@ DB_PASSWORD="$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/random | head -c50)"
 #     runuser --login ${USER_NAME} -c "podman secret rm DB_PASSWORD"
 # fi
 # echo -n ${DB_PASSWORD} | runuser --login "${USER_NAME}" -c "podman secret create \"DB_PASSWORD\" -"
+
+echo "DB_PASSWORD=\"${DB_PASSWORD}\"" >> ${L_S_FILE}
 
 # MARIA_CONT_NAME
 MARIA_CONT_NAME="maria_cont"

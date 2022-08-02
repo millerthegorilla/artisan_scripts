@@ -54,11 +54,12 @@ function check_for_project_settings()
         then
             echo -e "local .PROJECT_SETTINGS exists and is not empty"
             new_file="TRUE"
-            for file in $(find ${SCRIPTS_ROOT}/settings_files -maxdepth 1 | grep -v ".git_ignore")
+            for settings_file in $(find ${SCRIPTS_ROOT}/settings_files -maxdepth 1 -type f | grep -v ".git_ignore")
             do
-                if diff -q ${PROJECT_SETTINGS} ${file} &>/dev/null;
+		echo debug get_variables.sh settings_file=${settings_file}
+                if diff -q ${PROJECT_SETTINGS} ${settings_file} &>/dev/null;
                 then
-                    new_file="${file}";
+                    new_file="${settings_file}";
                     break;
                 fi
             done
