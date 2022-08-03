@@ -35,12 +35,11 @@ then
 fi
 
 # REMOVE MEDIA FILES AND DIRECTORIES
-echo -e "remove media files (choose a number) [ Yes ] ?"
+echo -e "Keep media files (choose a number) ?"
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) mediafiles_remove=1; break;;
-        No ) mediafiles_remove=0; break;;
-        * ) mediafiles_remove=1; break;
+        Yes ) mediafiles_remove=0; break;;
+        No ) mediafiles_remove=1; break;;
     esac
 done
 

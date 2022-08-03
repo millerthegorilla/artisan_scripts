@@ -9,7 +9,7 @@ fi
 source ${PROJECT_SETTINGS}
 
 # REMOVE CODE?
-echo -e "remove code (choose a number) [ No ] ?"
+echo -e "Remove code (choose a number) ?"
 
 select yn in "Yes" "No"; do
     case $yn in
@@ -40,7 +40,7 @@ then
 fi
 
 # SAVE AND REMOVE SETTINGS ENV FILE
-echo -e "save settings/.env (choose a number) [ No ] ?"
+echo -e "Save settings/.env (choose a number) ?"
 
 select yn in "Yes" "No"; do
     case $yn in
@@ -83,13 +83,12 @@ else
 fi
 
 # REMOVE LOGS
-echo -e "remove logs or save logs and remove logs dir (choose a number) [ Yes ]?"
+echo -e "Keep logs or not or save logs and remove logs dir (choose a number)?"
 select yn in "Yes" "No" "Save"; do
     case $yn in
-        Yes ) logs_remove=1; break;;
-        No ) logs_remove=0; break;;
+        Yes ) logs_remove=0; break;;
+        No ) logs_remove=1; break;;
         Save ) logs_remove=2; break;;
-        * ) logs_remove=1; break;;
     esac
 done
 
@@ -107,11 +106,11 @@ remove_logs_dir()
         
     if [[ -n "${PROJECT_NAME}" ]]
     then
-        echo -e "remove ${USER_DIR}/${PROJECT_NAME} (choose a number)?"
+        echo -e "Keep ${USER_DIR}/${PROJECT_NAME} (choose a number)?"
         select yn in "Yes" "No"; do
             case $yn in
-                Yes ) remove_home=1; break;;
-                No ) remove_home=0; break;;
+                Yes ) remove_home=0; break;;
+                No ) remove_home=1; break;;
             esac
         done
         if [[ remove_home==1 ]]

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-
-echo -e "remove all podman images (choose a number)?"
+echo -e "Remove all podman images (choose a number)?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) imgs_remove=1; break;;
