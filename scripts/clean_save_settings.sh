@@ -12,13 +12,12 @@ select yn in "Yes" "No"; do
     case $yn in
         Yes ) SAVE="TRUE"; break;;
         No ) SAVE="FALSE"; break;;
-		* ) SAVE="FALSE"; break;;
     esac
 done
 
 if [[ SAVE == "TRUE" ]];
 then
-	FILEPATH=${SCRIPTS_ROOT}/settings_files/project_settings.${PROJECT_NAME}.$(date +%d-%m-%y_%T)
+	FILEPATH=${SCRIPTS_ROOT}/settings_files/project_settings.partial.${PROJECT_NAME}.$(date +%d-%m-%y_%T)
 	for file in $(find ${CONTAINER_SCRIPTS_ROOT}/containers -type f -name "settings.sh" | sort)
 	do
 		cat ${file} > ${FILEPATH}

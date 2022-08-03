@@ -17,7 +17,7 @@ then
 fi
 set +a
 
-if [[ -f ${PROJECT_SETTINGS} ]];
+if [[ -s ${PROJECT_SETTINGS} ]];
 then
     source ${PROJECT_SETTINGS}
 fi
@@ -270,11 +270,11 @@ while (( "$#" )); do
       ;;   
     status)
       #install_check
-      if [[ -n "${USER_NAME}" ]]
+      if [[ -s "${PROJECT_SETTINGS}" ]]
       then
-          echo -e "User is ${USER_NAME}"
+          echo -e "PROJECT_SETTINGS file exists and is not empty!"
       else
-          echo -e "User is unset!"
+          echo -e "PROJECT_SETTINGS file is empty!"
       fi
       if [[ -n ${POD_NAME} ]]
       then
@@ -283,11 +283,8 @@ while (( "$#" )); do
               echo -e "pod ${POD_NAME} exists!  State is $(runuser --login ${USER_NAME} -c "podman pod inspect ${POD_NAME}" | grep -m1 State)"
               exit 0
           else
-              echo -e "pod ${POD_NAME} doesn't exist - but there are settings files - you might want to clean up dot settings files manually, or run artisan_run clean"
-              exit 1
+            echo -e "No project running currently"
           fi
-      else
-        echo -e "No project running currently"
       fi
       exit 1
       ;;

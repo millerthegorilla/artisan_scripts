@@ -96,7 +96,5 @@ fi
 
 if [[ -n "${project_settings}" && "${project_settings}" != "${SCRIPTS_ROOT}/.PROJECT_SETTINGS" ]]
 then
-    echo debug 2 scripts/get_variables.sh project_settings= ${project_settings}
-
     cat ${project_settings} >> ${PROJECT_SETTINGS}
 fi

@@ -10,9 +10,6 @@ source ${CONTAINER_SCRIPTS_ROOT}/containers/00_shared/variables/settings.sh
 #     echo -e "      ** warning **\n\nIt is not reccommended to use a service account when using debug mode.\n  If you wish to continue, use ./artisan_run.sh output to display the output from the runserver command.\nAlternatively, and better still (more secure), use a standard user account.\n"
 # fi
 
-echo -e "Enter your....\n"
-read -p "Site name as used in the website header/logo : " site_name
-
 pod_name=${PROJECT_NAME}_pod
 read -p "Pod name [${pod_name}] : " POD_NAME
 POD_NAME=${POD_NAME:-${pod_name}}
