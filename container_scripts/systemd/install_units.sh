@@ -11,7 +11,7 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 SYSTEMD_UNIT_DIR="${CURRENT_DIR}/unit_files"
 
-if [[ -z ${SYSTEMD_UNIT_DIR} ]];
+if [[ ! -d ${SYSTEMD_UNIT_DIR} ]];
 then
     mkdir -p ${SYSTEMD_UNIT_DIR};
 fi
