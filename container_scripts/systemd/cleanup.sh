@@ -19,7 +19,7 @@ done
 
 if [[ ${SYSD} == "TRUE" ]]
 then
-    pushd ${SYSTEMD_UNIT_DIR}
+    pushd ${SYSTEMD_UNIT_DIR} &>/dev/null
 
     FILES=*
     for f in ${FILES}
@@ -31,7 +31,7 @@ then
       fi
     done
 
-    popd
+    popd &>/dev/null
 
     rm -rf ${SYSTEMD_UNIT_DIR}
 fi
