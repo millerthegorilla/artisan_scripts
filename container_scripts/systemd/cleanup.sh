@@ -26,7 +26,7 @@ then
     do
       if [[ -e /etc/systemd/user/${f} ]]
       then
-          machinectl ${USER_NAME}@.host $(which bash) -c "systemctl disable ${f}"
+          machinectl shell ${USER_NAME}@.host $(which bash) -c "systemctl disable ${f}"
           rm -rf /etc/systemd/user/${f}
       fi
     done
