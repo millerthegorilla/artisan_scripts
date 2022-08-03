@@ -8,14 +8,16 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 SYSTEMD_UNIT_DIR="${CURRENT_DIR}/unit_files"
 
-if [[ -d ${SYSTEMD_UNIT_DIR} ]];
+if [[ ! -d ${SYSTEMD_UNIT_DIR} ]];
 then
-	if [[ $(ls -A ${SYSTEMD_UNIT_DIR}) ]];
-	then
-		echo -e "systemd unit_file directory is not empty.  Moving systemd unit_file directory."
-		mv ${SYSTEMD_UNIT_DIR} ${SYSTEMD_UNIT_DIR}.$(date +%d-%m-%y_%T)
-		mkdir ${SYSTEMD_UNIT_DIR}
-	fi
+    mkdir -p ${SYSTEMD_UNIT_DIR};
+fi
+
+if [[ $(ls -A ${SYSTEMD_UNIT_DIR}) ]];
+then
+	echo -e "systemd unit_file directory is not empty.  Moving systemd unit_file directory."
+	mv ${SYSTEMD_UNIT_DIR} ${SYSTEMD_UNIT_DIR}.$(date +%d-%m-%y_%T)
+	mkdir ${SYSTEMD_UNIT_DIR}
 fi
 
 if [[ ${DEBUG} == "TRUE" ]]
