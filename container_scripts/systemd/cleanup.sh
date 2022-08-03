@@ -9,11 +9,12 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 SYSTEMD_UNIT_DIR="${CURRENT_DIR}/unit_files"
 
-echo -e "Uninstall and remove systemd unit files? : "
+echo -e "Uninstall and remove systemd unit files [ Yes ] ?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) SYSD="TRUE"; break;;
         No ) SYSD="FALSE"; break;;
+        * ) SYSD="TRUE"; break;;
     esac
 done
 

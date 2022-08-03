@@ -7,11 +7,12 @@ fi
 
 source ${PROJECT_SETTINGS}
 
-echo -e "Do you want to save your local partial settings first before you clear them? : "
+echo -e "Do you want to save your local partial settings first before you clear them [ No ] ?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) SAVE="TRUE"; break;;
         No ) SAVE="FALSE"; break;;
+		* ) SAVE="FALSE"; break;;
     esac
 done
 

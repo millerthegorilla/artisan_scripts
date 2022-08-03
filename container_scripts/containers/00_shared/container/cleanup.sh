@@ -9,12 +9,13 @@ fi
 source ${PROJECT_SETTINGS}
 
 # REMOVE CODE?
-echo -e "remove code (choose a number)?"
+echo -e "remove code (choose a number) [ No ] ?"
 
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) code_remove=1; break;;
         No ) code_remove=0; break;;
+        * ) code_remove=0; break;;
     esac
 done
 
@@ -39,12 +40,13 @@ then
 fi
 
 # SAVE AND REMOVE SETTINGS ENV FILE
-echo -e "save settings/.env (choose a number)?"
+echo -e "save settings/.env (choose a number) [ No ] ?"
 
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) save_sets=1; break;;
         No ) save_sets=0; break;;
+        * ) save_sets=0; break;;
     esac
 done
 
@@ -81,12 +83,13 @@ else
 fi
 
 # REMOVE LOGS
-echo -e "remove logs or save logs and remove logs dir (choose a number)?"
+echo -e "remove logs or save logs and remove logs dir (choose a number) [ Yes ]?"
 select yn in "Yes" "No" "Save"; do
     case $yn in
         Yes ) logs_remove=1; break;;
         No ) logs_remove=0; break;;
         Save ) logs_remove=2; break;;
+        * ) logs_remove=1; break;;
     esac
 done
 
