@@ -5,16 +5,16 @@ source ${PROJECT_SETTINGS}
   #                                                                 -e DB_PASSWORD=\"${DB_PASSWORD}\" \
    #                                                                -e MARIADB_ROOT_PASSWORD=\"${MARIADB_ROOT_PASSWORD}\" \
     #                                                               -it ${MARIA_CONT_NAME} bash -c '/maria.sh'"
-#echo "init script output = " $?
-runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'rm /maria.sh'"
-# echo -n "Waiting for mariadb restart..."
-# until ! runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'ls /tmp/.finished'" > /dev/null 2>&1
-# do
-# 	echo -n "."
-# done
+echo "init script output = " $?
+runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'rm /docker-entrypoint-initdb.d/maria.sh'"
+echo -n "Waiting for mariadb restart..."
+until ! runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'ls /tmp/.finished'" > /dev/null 2>&1
+do
+	echo -n "."
+done
 
-#runuser --login ${USER_NAME} -c "podman stop ${MARIA_CONT_NAME}"
-#runuser --login ${USER_NAME} -c "podman start ${MARIA_CONT_NAME}"
+runuser --login ${USER_NAME} -c "podman stop ${MARIA_CONT_NAME}"
+runuser --login ${USER_NAME} -c "podman start ${MARIA_CONT_NAME}"
 
 # echo "Waiting for Databas:e container to be ready"
 # read -p "Enter your MYSQL_ROOT_PASSWORD : " mysql_root_password
