@@ -6,5 +6,5 @@ RUN touch /tmp/.finished
 RUN chmod 0666 /tmp/.finished
 # RUN chown mysql:mysql /tmp/.finished
 # RUN chown mysql:mysql /docker-entrypoint-initdb.d/maria.sh
-RUN chmod 0550 /maria.sh
+RUN chmod 0550 /docker-entrypoint-initdb.d/maria.sh
 #RUN chown root:root /var/lib/mysql
