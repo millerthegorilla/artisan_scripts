@@ -13,7 +13,7 @@ then
     mkdir -p ${SYSTEMD_UNIT_DIR};
 fi
 
-if [[ $(ls -A ${SYSTEMD_UNIT_DIR}) ]];
+if ! find ${SYSTEMD_UNIT_DIR}) -type f -not -path ${SYSTEMD_UNIT_DIR}/.gitignore;
 then
 	echo -e "systemd unit_file directory is not empty.  Moving systemd unit_file directory."
 	mv ${SYSTEMD_UNIT_DIR} ${SYSTEMD_UNIT_DIR}.$(date +%d-%m-%y_%T)
