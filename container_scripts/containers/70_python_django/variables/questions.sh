@@ -156,3 +156,8 @@ echo "MOUNT_GIT=${MOUNT_GIT}" >> ${L_S_FILE}
 
 # SRC_CODE_PATH
 echo "SRC_CODE_PATH=${SRC_CODE_PATH}" >> ${L_S_FILE}
+
+# SITE NAME
+read -p "Site name as used in the website header/logo : " site_name
+
+echo "SITE_NAME=${site_name}" >> ${L_S_FILE}
