@@ -1,4 +1,13 @@
+#!/bin/bash
+
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 source ${PROJECT_SETTINGS}
+source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 #runuser --login ${USER_NAME} -c "podman exec -e DB_NAME=\"${DB_NAME}\" -e DB_USER=\"${DB_USER}\" \
  #                                                                  -e DB_HOST=\"${DB_HOST}\" \
@@ -15,6 +24,10 @@ runuser --login ${USER_NAME} -c "podman stop ${MARIA_CONT_NAME}"
 runuser --login ${USER_NAME} -c "podman start ${MARIA_CONT_NAME}"
 runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'rm /docker-entrypoint-initdb.d/maria.sh'"
 
+if [[ -f ${CURRENT_DIR}/../image/dockerfile/maria.sh ]];
+then
+    rm ${CURRENT_DIR}/../image/dockerfile/maria.sh
+fi
 # echo "Waiting for Databas:e container to be ready"
 # read -p "Enter your MYSQL_ROOT_PASSWORD : " mysql_root_password
 # until runuser --login ${USER_NAME} -P -c "podman exec -e ROOT_PASSWORD=\"${mysql_root_password}\" -it \"${MARIA_CONT_NAME}\" bash -c \"mysql\" -uroot  -p\"\${ROOT_PASSWORD}\" -h'localhost' --protocol=tcp -e \"delete from mysql.global_priv where user='root' and host='%'; flush privileges;\" > /dev/null 2>\&"
