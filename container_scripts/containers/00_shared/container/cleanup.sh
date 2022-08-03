@@ -138,3 +138,5 @@ if [[ logs_remove -eq 1 ]]
 then
     remove_logs_dir
 fi
+
+runuser --login ${USER_NAME} -c "podman volume prune -f"

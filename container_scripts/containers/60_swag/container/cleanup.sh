@@ -13,7 +13,10 @@ if [[ ${DEBUG} == "FALSE" ]];
 then
    if [[ -n ${SWAG_VOL_NAME} ]];
    then
-      runuser --login ${USER_NAME} -c "podman volume rm ${SWAG_VOL_NAME}"
+      if runuser --login ${USER_NAME} -c "podman volume exists ${SWAG_VOL_NAME}";
+      then
+         runuser --login ${USER_NAME} -c "podman volume rm ${SWAG_VOL_NAME}"
+      fi
    fi
    rm ${CURRENT_DIR}/../image/dockerfile/swag/default
 fi
