@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source {PROJECT_SETTINGS}
+source ${PROJECT_SETTINGS}
 
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
