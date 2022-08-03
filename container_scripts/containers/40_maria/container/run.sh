@@ -13,5 +13,5 @@ source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 
 tag=$(get_tag ${CURRENT_DIR})
 
-runuser --login ${USER_NAME} -P -c "podman run -dit --name \"${MARIA_CONT_NAME}\" -e MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD} -e MARIADB_PASSWORD=${DB_PASSWORD} -e echo MARIADB_DATABASE=${DB_NAME} -e MARIADB_USER=${DB_USER} -v ${DB_VOL}:/var/lib/mysql:Z --pod \"${POD_NAME}\" ${tag}" --port 3306
+runuser --login ${USER_NAME} -P -c "podman run -dit --name \"${MARIA_CONT_NAME}\" -e MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD} -e MARIADB_PASSWORD=${DB_PASSWORD} -e echo MARIADB_DATABASE=${DB_NAME} -e MARIADB_USER=${DB_USER} -v ${DB_VOL}:/var/lib/mysql:Z --pod \"${POD_NAME}\" ${tag} --port 3306"
 # runuser --login ${USER_NAME} -P -c "podman run -dit --name \"${MARIA_CONT_NAME}\" -e MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD} -e MARIADB_PASSWORD=${DB_PASSWORD} -e echo MARIADB_DATABASE=${DB_NAME} -e MARIADB_USER=${DB_USER} -v ${DB_VOL}:/var/lib/mysql:Z --pod \"${POD_NAME}\" ${tag}"
