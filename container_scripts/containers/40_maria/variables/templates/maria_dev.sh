@@ -7,7 +7,7 @@ echo DB_NAME=${DB_NAME}
 echo DB_USER=${DB_USER}
 echo DB_HOST=${DB_HOST}
 
-if ! mariadb-show -uroot | grep ${DB_NAME} &>/dev/null;
+if mariadb-show -uroot | grep ${DB_NAME} &>/dev/null;
 then
     mysql -uroot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY \"${MARIADB_ROOT_PASSWORD}\"; flush privileges;"
 

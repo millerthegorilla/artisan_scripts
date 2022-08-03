@@ -1,7 +1,9 @@
 #!/bin/bash
 
-if ! mariadb-show -uroot -p${MARIADB_ROOT_PASSWORD} | grep ${DB_NAME} &>/dev/null;
+if mariadb-show -uroot | grep ${DB_NAME} &>/dev/null;
 then
+    mysql -uroot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY \"${MARIADB_ROOT_PASSWORD}\"; flush privileges;"
+
     mysql -uroot  -p${MARIADB_ROOT_PASSWORD} -h'localhost' -e "delete from mysql.global_priv where user='root' and host='%'; flush privileges;"
 
     mysql -uroot -p${MARIADB_ROOT_PASSWORD} -e "CREATE DATABASE ${DB_NAME} CHARSET utf8;"

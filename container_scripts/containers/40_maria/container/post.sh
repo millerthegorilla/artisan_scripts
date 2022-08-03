@@ -11,10 +11,9 @@ until ! runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash
 do
 	echo -n "."
 done
-runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'rm /docker-entrypoint-initdb.d/maria.sh'"
-
 runuser --login ${USER_NAME} -c "podman stop ${MARIA_CONT_NAME}"
 runuser --login ${USER_NAME} -c "podman start ${MARIA_CONT_NAME}"
+runuser --login ${USER_NAME} -c "podman exec -it ${MARIA_CONT_NAME} bash -c 'rm /docker-entrypoint-initdb.d/maria.sh'"
 
 # echo "Waiting for Databas:e container to be ready"
 # read -p "Enter your MYSQL_ROOT_PASSWORD : " mysql_root_password
