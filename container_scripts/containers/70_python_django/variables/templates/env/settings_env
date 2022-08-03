@@ -4,13 +4,13 @@
 ## There is no variable substitution so any bash $variables are for illustrative purposes only.
 ###
 
-PROJECT_NAME=${project_name}
+PROJECT_NAME=${PROJECT_NAME}
 # this is asked for several times also during scripts running
-DJANGO_PROJECT_NAME=${django_project_name}
+DJANGO_PROJECT_NAME=${DJANGO_PROJECT_NAME}
 # this is the root urlconf in settings.py
-BASE_DIR=${base_dir}
+BASE_DIR=${BASE_DIR}
 # this is the dir where the django_artisan code resides, ie /opt/${PROJECT_NAME}
-SECRET_KEY=${DJANGO_SECRET_KEY}
+SECRET_KEY="${DJANGO_SECRET_KEY}"
 # DJANGO secret key
 ALLOWED_HOSTS1=127.0.0.1
 # localhost 
@@ -23,12 +23,12 @@ DB_NAME=${DB_NAME}
 # django db name
 DB_USER=${DB_USER}
 # django db user
-DB_PASSWORD=${DB_PASSWORD}
+DB_PASSWORD="${DB_PASSWORD}"
 # django db password
 DB_HOST=${DB_HOST}
  # because containers are in a pod, 127.0.0.1 is used to communicate
 DB_PORT=3306
-MEMCACHED_ADDRESS=127.0.0.1:11211
+MEMCACHED_ADDRESS="127.0.0.1:11211"
 STATIC_BASE_ROOT=${STATIC_BASE_ROOT}
 MEDIA_BASE_ROOT=${MEDIA_BASE_ROOT}
 # this is the directory that contains links to the static and media files ie /etc/opt/${PROJECT_NAME}/static_files/
@@ -45,8 +45,8 @@ RECAPTCHA_PUBLIC_KEY=${RECAPTCHA_PUBLIC_KEY}
 # google recaptcha pub key  https://developers.google.com/recaptcha/intro
 RECAPTCHA_PRIVATE_KEY=${RECAPTCHA_PRIVATE_KEY}
 # google recaptcha priv key
-CLAMAV_ADDRESS=tcp://127.0.0.1:3310
-ELASTIC_SEARCH_ADDRESS=localhost:9200
+CLAMAV_ADDRESS="tcp://127.0.0.1:3310"
+ELASTIC_SEARCH_ADDRESS="localhost:9200"
 SITE_NAME=${SITE_NAME}
 # SITE_NAME as used on header of web page eg "Ceramic Isles"
 DROPBOX_OAUTH_TOKEN=${DROPBOX_OAUTH_TOKEN}
