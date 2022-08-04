@@ -26,9 +26,9 @@ do
   if [[ -e /etc/systemd/user/${f} ]]
   then
       chcon -u system_u -t systemd_unit_file_t /etc/systemd/user/${f}
-      machinectl shell ${USER_NAME}@.host $(which bash) -c "systemctl --user enable ${f}"
+      runuser ${USER_NAME} -P -c "${XDESK} systemctl --user enable ${f}"
   fi
 done
 
-machinectl shell ${USER_NAME}@.host $(which bash) -c "systemctl --user daemon-reload"
+runuser ${USER_NAME} -P -c "${XDESK} systemctl --user daemon-reload"
 popd
