@@ -13,4 +13,5 @@ runuser --login "${USER_NAME}" -c "mkdir ${USER_DIR}/systemd; cd ${USER_DIR}/sys
 cp ${CURRENT_DIR}/templates/systemd_git_ignore ${SYSTEMD_UNIT_DIR}/.gitignore
 cp ${USER_DIR}/systemd/* ${SYSTEMD_UNIT_DIR}
 chown -R ${USER}:${USER} ${SYSTEMD_UNIT_DIR}
+chmod -R 0444 ${SYSTEMD_UNIT_DIR}
 rm -rf ${USER_DIR}/systemd
