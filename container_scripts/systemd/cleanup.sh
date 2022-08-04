@@ -28,7 +28,8 @@ then
     do
       if [[ -e /etc/systemd/user/${f} ]]
       then
-          runuser --login ${SUDO_USER} -P -c "${XDESK} systemctl --user disable ${f}"
+          echo debug 1 systemd cleanup.sh xdesk="${XDESK}"
+          runuser ${USER_NAME} -P -c "${XDESK} systemctl --user disable ${f}"
           rm -rf /etc/systemd/user/${f}
       fi
     done
