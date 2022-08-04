@@ -28,7 +28,7 @@ then
     do
       if [[ -e /etc/systemd/user/${f} ]]
       then
-          machinectl shell ${USER_NAME}@.host $(which bash) -c "systemctl disable ${f}"
+          runuser --login ${SUDO_USER} -P -c "machinectl shell ${USER_NAME}@.host $(which bash) -c \"systemctl --user disable ${f}\""
           rm -rf /etc/systemd/user/${f}
       fi
     done
