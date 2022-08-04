@@ -9,7 +9,6 @@ source ${PROJECT_SETTINGS}
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/current_dir.sh
 source ${CONTAINER_SCRIPTS_ROOT}/setup/utils/get_tag.sh
 custom_tag=$(get_tag "${CURRENT_DIR}")
-echo debug 1 maria custom.sh  custom_tag=${custom_tag}
 
 EXISTING_IMAGE_VARS="${CURRENT_DIR}/existing_image_vars"
 

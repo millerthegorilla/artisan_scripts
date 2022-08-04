@@ -16,9 +16,7 @@ do
     do
         if [[ -f "${container}/container/${run_file}.sh" ]]
         then
-            echo debug 1 create_containers.sh inside if run_file=${run_file}
             bash "${container}/container/${run_file}.sh"
-            echo debug 2 create_containers output = $?
         fi
     done
 done

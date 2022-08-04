@@ -11,7 +11,6 @@ done
 if [[ imgs_remove -eq 1 ]]
 then
     IMAGES=$(grep -whorP "(TAG)+=\K.*" ${CONTAINER_SCRIPTS_ROOT}/containers/ | sed s'/\n/ /')
-    echo debug 1 cleanup.sh IMAGES= ${IMAGES}
     for image in ${IMAGES}
     do
 	   runuser --login ${USER_NAME} -c "podman rmi ${image}"

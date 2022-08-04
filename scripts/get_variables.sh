@@ -57,7 +57,6 @@ function check_for_project_settings()
             new_file="TRUE"
             for settings_file in $(find ${SCRIPTS_ROOT}/settings_files -maxdepth 1 -type f | grep -v ".git_ignore")
             do
-		echo debug get_variables.sh settings_file=${settings_file}
                 if diff -q ${PROJECT_SETTINGS} ${settings_file} &>/dev/null;
                 then
                     new_file="${settings_file}";
