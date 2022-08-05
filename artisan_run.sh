@@ -264,8 +264,9 @@ while (( "$#" )); do
       exit $?
       ;; 
     custom)
-      shift;      
-      bash $(find ${CONTAINER_SCRIPTS_ROOT}/containers -name "${1}.sh") $@
+      command=${2}
+      shift 2;      
+      bash $(find ${CONTAINER_SCRIPTS_ROOT}/containers -name "${command}.sh") $@
       exit $?
       ;;   
     status)

@@ -35,5 +35,6 @@ then
 
     popd &>/dev/null
 
-    rm -rf ${SYSTEMD_UNIT_DIR}
+    find ${SYSTEMD_UNIT_DIR} -type f -not -path ${SYSTEMD_UNIT_DIR}/.git_empty_dir -exec rm {} +
+
 fi
