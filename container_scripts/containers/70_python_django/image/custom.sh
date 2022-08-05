@@ -20,8 +20,8 @@ function build_django()
   cp ${CURRENT_DIR}/dockerfile/${2} /home/${USER_NAME}/django/${2}
   chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/django
   runuser --login ${USER_NAME} -c "podman build --build-arg=PROJECT_NAME=${PROJECT_NAME} --build-arg=STATIC_DIR=${DJANGO_HOST_STATIC_VOL} --build-arg=MEDIA_DIR=${DJANGO_HOST_MEDIA_VOL} --tag=\"${custom_tag}\" -f=/home/${USER_NAME}/django/${1} /home/dev/django/"
- # rm /home/${USER_NAME}/django/${1} /home/${USER_NAME}/django/${2}
- # rm -r /home/${USER_NAME}/django
+  rm /home/${USER_NAME}/django/${1} /home/${USER_NAME}/django/${2}
+  rm -r /home/${USER_NAME}/django
 }
 
 if [[ ${DEBUG} == "TRUE" ]]

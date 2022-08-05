@@ -21,7 +21,7 @@ The containers are recreated from scratch each time the machine restarts or if t
 You will need the following created and ready...
 * a linux system running a reasonably recently updated podman (tested >=2.2)
 * user account on that system, that, in the case of production, is preferably created
-  with `$useradd -g 2000 (ie not std 1000) -u 2000 -s /sbin/nologin  username`
+  with ```$useradd -g 2000 (ie not std 1000) -u 2000 -s /sbin/nologin  username```
 * a duckdns account, with your token and subdomain address at the ready
 * a gmail account that sends email
 * an app password for that account (you need to set up 2 step verification... https://support.google.com/accounts/answer/185833?hl=en")
@@ -29,9 +29,9 @@ You will need the following created and ready...
 * google recaptcha private key
 * the path to the directory where you have cloned django_artisan : https://github.com/millerthegorilla/django_artisan
 #### optional
-* a top level url, such as www.ceramicisles.org that you own and can access.  You can then point the domain at the duckdns address, or place an nginx reverse proxy or similar at the url address pointing to the duckdns address.  The `./artisan_run create [variables]` will prompt for the top level domain, and configure the swag container automatically.
+* a top level url, such as www.ceramicisles.org that you own and can access.  You can then point the domain at the duckdns address, or place an nginx reverse proxy or similar at the url address pointing to the duckdns address.  The ```./artisan_run create [variables]``` will prompt for the top level domain, and configure the swag container automatically.
 
-I run the production install on a raspberry pi 4b with 8gb of RAM, running fedora coreos (currently).  I have a user created with /sbin/nologin shell, and with lingering enabled (`loginctl --enable-linger $USERNAME`).  I have secured ssh `https://www.redhat.com/sysadmin/eight-ways-secure-ssh`.  I also have installed fail2ban, and have set the firewall to be as restrictive as possible, and have disabled any services that I don't need.
+I run the production install on a raspberry pi 4b with 8gb of RAM, running fedora coreos (currently).  I have a user created with /sbin/nologin shell, and with lingering enabled (```loginctl --enable-linger $USERNAME```).  I have secured ssh ```https://www.redhat.com/sysadmin/eight-ways-secure-ssh```.  I also have installed fail2ban, and have set the firewall to be as restrictive as possible, and have disabled any services that I don't need.
 
 With the immutable file system of coreos, and the rootless configuration of podman, the server should theoretically be quite secure. 
 
@@ -54,66 +54,70 @@ Before running the scripts, download them into a directory in your home folder, 
 Then run the script artisan_run.sh which takes one command to direct it to the correct scripts.
 The commands are clean, create [ variables, directories, images, containers, systemd ], help, install, interact, manage, postgit, refresh, replace, reload, status, settings, or update.
 
-* `./artisan_run clean`
+* ```./artisan_run clean```
 
 If at any point the scripts fail or you break out of them, you can run the script cleanup.sh to remove the containers and to reset the script environment to the beginning.
 
-To clean up completely, run the `./artisan_run clean`, answer yes to code removal, and to image removal, and to log removal.
+To clean up completely, run the ```./artisan_run clean```, answer yes to code removal, and to image removal, and to log removal.
 
-* `./artisan_run create`
+* ```./artisan_run create```
 
 The create verb runs the script create_directories.sh and then checks the podman images, and downloads them and/or builds them as necessary, in the script initial_provision.sh.  Then the script 'create_all.sh' is called which creates and provisions the containers.  Depending on your options, either a development setup will be created, running manage.py on port 8000, or a production setup will be created, opening ports 443 and 80.  In any case the create_directories.sh script will edit and reload sysctl to lower the available port numbers to 80.  Be aware that this can be a ***SECURITY ISSUE***.  As long as you manage your firewall sensibly it should be ok.
 Be aware that on a first install, or if rebuilding the custom image, this command takes a long time, as it builds the custom images from the dockerfiles.   When the custom images have been made, rerunning this command is reasonably quick.
 
-* `./artisan_run create [ variables, templates, directories, network, pull, build, settings, pods, containers, systemd ]` 
+* ```./artisan_run create [ variables, templates, directories, network, pull, build, settings, pods, containers, systemd ]```
 
-Create the appropriate section of the install.  Variables asks for appropriate variables, directories creates the directories, network lowers the ports, pull downloads the images, build builds custom containers, settings chooses the settings file, pods creates any defined pods, containers creates the containers and systemd creates the systemd files that start the containers and installs them.  Once systemd has run either on its own, or as part the create verb, the containers will be replaced at startup of host machine.   In the case of a development install, when you start the host machine, two terminal windows will open when you login, one displaying the output from the runserver command, and the other displaying output from the qcluster that is part of djangoQ.  After systemd install has finished, you can run the runserver command in a shell in the $USERNAME account with `systemctl --user start manage_start.service` and the djangoq cluster with `systemctl --user start qcluster_start.service`.
+Create the appropriate section of the install.  Variables asks for appropriate variables, directories creates the directories, network lowers the ports, pull downloads the images, build builds custom containers, settings chooses the settings file, pods creates any defined pods, containers creates the containers and systemd creates the systemd files that start the containers and installs them.  Once systemd has run either on its own, or as part the create verb, the containers will be replaced at startup of host machine.   In the case of a development install, when you start the host machine, two terminal windows will open when you login, one displaying the output from the runserver command, and the other displaying output from the qcluster that is part of djangoQ.  After systemd install has finished, you can run the runserver command in a shell in the $USERNAME account with ```systemctl --user start manage_start.service``` and the djangoq cluster with ```systemctl --user start qcluster_start.service```.
 
 In the case of a production install, it is best to create the system account with a shell set to /usr/bin/nologin and enable lingering for the account ie loginctl --enable-linger $USERNAME
 
-* `./artisan_run install`
+* ```./artisan_run install```
 
-This verb installs the artisan scripts, making certain that the directories and files are set to their most restrictive permissions.  All artisan_run commands require the commands to be run as root, ie sudo.  So, when you first clone this repository, immediately run `sudo ./artisan_run install`
+This verb installs the artisan scripts, making certain that the directories and files are set to their most restrictive permissions.  All artisan_run commands require the commands to be run as root, ie sudo.  So, when you first clone this repository, immediately run ```sudo ./artisan_run install```
 
-* `./artisan_run uninstall`
+* ```./artisan_run uninstall```
 
 This does the opposite of the install command, and puts files and directories back to the permissions that they had on the remote git repo.  So, when you want to git pull, you need to run this command first, or git will complain about unreachable files etc...
 
-* `./artisan_run interact`
+* ```./artisan_run custom interact```
 
 This command attempts to run the command that follows 'interact' in the correct systemd context of the user account.   There are a few ways to do this, such as `su $USERNAME && command` or `runuser $USERNAME` etc.   For example, I often start a shell in the $USERNAME account and then run the command `podman exec -it container_name bash`, and then work inside the container.
 
-* `./artisan_run manage`
+* ```./artisan_run custom manage```
 
 The manage verb is an alias for running the runserver command inside the podman container, with whatever command follows, ie:
-`sudo ./artisan_run manage makemigrations`
+`sudo ./artisan_run custom manage makemigrations`
 
-* `./artisan_run postgit`
+* ```./artisan_run custom postgit```
 
 This command runs inside the containers and sets the directories and files to the strictest permissions possible.
 
-* `./artisan_run refresh`
+* ```./artisan_run custom pip```
+
+This command allows you to interact with pip inside the django container, using the correct user account/prefix etc.
+
+* ```./artisan_run refresh```
 
 This command deletes and remakes the containers from the images.  It is an alias for `./artisan_run create images`.  When the images have been rebuilt the host machine is restarted.
 
-* `./artisan_run replace`
+* ```./artisan_run custom replace```
 
 This verb takes the manage.py and the wsgi file as templates from artisan_scripts and copies them over to the appropriate locations within the django_artisan folder structure completed with the appropriate options.
 
-* `./artisan_run reload`
+* ```./artisan_run custom reload```
 
 Aimed at production installs, this command kills the gunicorn process, and then restarts it.
 
-* `./artisan_run status`
+* ```./artisan_run status```
 
 This prints some details about the running project, if it is running, the username etc
 
-* `./artisan_run settings`
+* ```./artisan_run custom settings```
 
 Because the settings.py file for django_artisan code base is stored in this codebase, you can create different settings files for different git branches of django_artisan.  So, this verb asks you to choose from a settings file, and then copies that settings file into the project directory appropriately and sets ownership/permissions etc
 To create a settings file, simply copy an existing one and paste it into the appropriate directory, either ${SCRIPTS_ROOT}/settings/development or ${SCRIPTS_ROOT}/settings/production 
 
-* `./artisan_run update`
+* ```./artisan_run update```
 
 This command attempts to run a package update in all of the containers.  When you run the `artisan_run create` command, you can select to update the containers the systemd way, which will check for an updated container in the registry, and pull it and restart the container if one exists.
 https://www.redhat.com/sysadmin/podman-auto-updates-rollbacks
@@ -129,8 +133,19 @@ If you want to add a pip package to the installation, then you can run the comma
 
 ### options
 
-There is a file in the root directory called 'options'.  It currently only has one line which is the command to run a terminal.  I am using Gnome 3, so the TERMINAL_CMD is set to 'gnome-terminal --'.   If you are using xterm, then you will want to edit the file and change TERMINAL_CMD to 'xterm -e' etc etc.
+There is a file in the root directory called 'options'.  I am using Gnome 3, so the TERMINAL_CMD is set to 'gnome-terminal --'.   If you are using xterm, then you will want to edit the file and change TERMINAL_CMD to 'xterm -e' etc etc.
 The TERMINAL_CMD is used to spawn a terminal in the case of using a development install.  In this case when you start your machine, or more likely VM, then as soon as you login a terminal will spawn running the manage.py runserver command.  When you ctrl-C to kill the runserver command, the terminal will shutdown.  If you have systemd unit files installed, then you can simply run 'systemctl --user start manage_start.service' to spawn a new terminal running the dev server.
+
+```CONTAINER_SCRIPTS_ROOT="${SCRIPTS_ROOT}/container_scripts"``` 
+container scripts root is a convenient path to the scripts that have the container information in.  See the podbash project... (https://github.com/millerthegorilla/podbash)
+
+```DEFAULT_PROJECT_FILE=```  this is a path to a file that contains the default project settings.
+
+```PROJECT_SETTINGS="${SCRIPTS_ROOT}/.PROJECT_SETTINGS"``` the environment variable PROJECT_SETTINGS refers to the project settings file throughout the code, and the default is to locate a file in the scripts root called '.PROJECT_SETTINGS'.  If you set a DEFAULT_PROJECT_FILE or select a file from the settings_files directory, or if you manually enter the variables, the settings in each case get copied to the location of PROJECT_SETTINGS in the options file.
+
+RUN_FILES='pre,run,post' - a comma delimited list of the files called in creating the container, in order.
+
+LOCAL_SETTINGS_FILE="./settings.sh" - as you answer questions when defining the project variables, each container's question's answers are stored in the LOCAL_SETTINGS_FILE, which defaults to a file called settings.sh, that is in the same directory as the questions.
 
 ### error output and logs
 
@@ -139,6 +154,8 @@ If you want to see error output whilst in development mode, then you can open a 
 tail -f ${HOME}/${PROJECT_NAME}/logs/django/debug.log
 ```
 In either a production or development install logs are stored in that location.  You can access django logs from that location, according to the settings at the end of settings.py.
+
+the swag container is set to create its logs as ${HOME}/${PROJECT_NAME}/swag_logs
 
 ### directory structure 
 
@@ -165,7 +182,7 @@ In the case of a production setup, when the scripts have finished running, you w
 
 ### customising django_artisan
 
-You can customise the settings of django_artisan, by editing the file settings.py in the settings directory.  Be aware that anywhere that os.getenv is used, are completed by the script ./scripts/get_variables.sh.   Places to customise are the text that is displayed in the header and in the about page - NAVBAR_SPIEL and ABOUT_US_SPIEL or the SITE_LOGO for example.
+You can customise the settings of django_artisan, by editing the file settings.py in the settings directory.  Be aware that anywhere that os.getenv is used the variables are loaded into the environment from /etc/opt/${PROJECT_NAME}/.env.   Places to customise are the text that is displayed in the header and in the about page - NAVBAR_SPIEL and ABOUT_US_SPIEL or the SITE_LOGO for example.
 
 ### Podman
 
@@ -182,50 +199,13 @@ for example, to inspect the database (ie run mysql -uroot -p$PASSWORD).   http:/
 
 ### customising scripts / using artisan_scripts with different projects...
 
-There is no reason that you can't use artisan scripts with a different django project, or even some other project that uses podman containers.  Just fork this project and edit as necessary.
+There is no reason that you can't use artisan scripts with a different django project, just fork this project and edit as necessary.
 
 In the case of django projects, the current python image is used to contain the codebase and to create a venv and pip install the requirements.  There is a different image dockerfile for production and development.  You can find the specific dockerfiles and requirements.txt files in the 'dockerfiles' directory.  For django_artisan there is a custom swag image (which you may want to keep), and a custom database image.
 
-If you want to add a container, or customise an existing container, you can either edit initial_provision.sh to install a new image, or customise/add a script to the container_scripts directory.
-The script create_all.sh, called by the create verb, shells out to a bunch of scripts in that container_scripts directory.  
 
-In each of these scripts are a bunch of podman commands to bring up a container, and to customise it in some way.
+### Podbash
 
-The script get_variables.sh reads user input to get environment variables.  
-
-This then uses the envsubst command to complete a ./templates/env_files/scripts_env and ./templates/env_files/settings_env.
-
-The scripts_env provides environment variables to the scripts, and the settings_env is copied to the directory /etc/opt/$PROJECT_NAME/settings to be read as and when by settings.py (in production, wsgi.py reads the settings into memory, just once, as the server is initialised).
-
-If you want to change any podman image tag then you will need to do so in the script ./initial_provision.sh and also the file ./templates/env_files/scripts_env.
-
-So, the workflow to add some feature to django_artisan, is,
-1. customize the file ${SCRIPTS_ROOT}/container_scripts/run_django_cont.sh
-2. if necessary add pip installation package name to ${SCRIPTS_ROOT}/dockerfiles/pip_requirements*
-3. if necessary add apt package to ${SCRIPTS_ROOT}/dockerfiles/dockerfile_django*
-4. if necessary add a question within the set-a and set+a commands of the script ${SCRIPTS_ROOT}/scripts/get_variables.sh
-5. if you do so, then add to the appropriate template, such as ${SCRIPTS_ROOT}/templates/env_files/settings_env, and put a corresponding import into settings.py ie if you are installing a new setting into settings.py
-6. update the systemd unit file if neccessary.
-
-### App Source Code
-The container_scripts `run_django_cont.sh` mounts the django source code volume inside the container.  Edit the run_django_cont.sh file in the container_scripts directory, look for the line:
-
-```
-runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z ${DJANGO_IMAGE}" 
-```
-and add a new -v path.  This takes two parameters, that are separated by a colon.  The first is the path on the host, and the second is the path inside the container.  Before you do this you need to edit the appropriate dockerfile, `dockerfile_django_dev`, adding the line `RUN mkdir -p /opt/${PROJECT_NAME}/[app_name]`.  This is the container directory that you will mount the app source code into.
-
-So, I git clone my app's source code from github, and then edit the dockerfile to add the mkdir with the appname, and then mount the code directory into that directory, from the host source code directory (the one inside the git repo), using the -v switch to the podman run command.
-```
-runuser --login ${USER_NAME} -P -c "podman run -dit --pod ${POD_NAME} --name ${DJANGO_CONT_NAME} -v ${DJANGO_HOST_STATIC_VOL}:${DJANGO_CONT_STATIC_VOL} -v ${CODE_PATH}:/opt/${PROJECT_NAME}:Z -v /etc/opt/${PROJECT_NAME}/settings:/etc/opt/${PROJECT_NAME}/settings:Z -v ${HOST_LOG_DIR}:${DJANGO_CONT_LOG_DIR}:Z -v /home/dev/src/github_app_repo/app_name:/opt/${PROJECT_NAME}/app_name:Z ${DJANGO_IMAGE}" 
-```
-Note the :Z at the end of the -v switch parameters.  This is to tell selinux that the directory is private and unshared, and waives a bunch of selinux complaints, should you have selinux on your host system.
-<https://docs.podman.io/en/latest/markdown/podman-run.1.html#volume-v-source-volume-host-dir-container-dir-options>
-
-Then before creating the containers, you must delete the existing customised python image.  To do that, run the command `podman images` inside your standard user account, note the name of the custom image, and run the command `podman rmi python:custom_image_tag`.
-Then run `artisan_run.sh clean` and `artisan_run.sh create` and after the long build of the custom image the code base will have the app source code mounted as a directory inside the django project.
-However, you will not be able to access the files of that directory from your host.  You will be able to see the app directory name but none of the files inside.
-So, in order to see the code, you will need to create a symbolic link from the app source directory that is inside the local git repo, to a link named 'app_name_shadow', inside the project directory.  You can then see the shadow copy inside the file browser of your editor or ide, and when you edit the code inside the shadow directory, runserver command will pick up the changes as the files are mounted inside the container's project directory.
-Not ideal, but it works.
+If you want to customise the project then there are instructions on how to do so at https://github.com/millerthegorilla/podbash.
 
 ## Have fun!

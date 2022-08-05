@@ -265,7 +265,7 @@ while (( "$#" )); do
       ;; 
     custom)
       shift;      
-      bash $(find ${CONTAINER_SCRIPTS_ROOT}/containers -name "${1}.sh")
+      bash $(find ${CONTAINER_SCRIPTS_ROOT}/containers -name "${1}.sh") $@
       exit $?
       ;;   
     status)
