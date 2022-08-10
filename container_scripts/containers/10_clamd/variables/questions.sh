@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]
+then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 L_S_FILE=${1}
 
 source ${CONTAINER_SCRIPTS_ROOT}/containers/00_shared/variables/settings.sh
