@@ -1,4 +1,4 @@
-container_scripts/containers/40_maria/image/current_vars
+container_scripts/containers/40_maria/image/existing_image_vars
 container_scripts/containers/40_maria/image/dockerfile/maria.sh
 container_scripts/containers/70_python_django/image/dockerfile/dockerfile_dev
 container_scripts/settings/settings.py
@@ -9,11 +9,9 @@ container_scripts/containers/**/image/existing_image_vars
 settings_files
 artisan_run.sh
 ceramic_isles_app_src_githubs
-container_scripts
 LICENSE
 options
 README.md
 scripts
-settings_files
 todo
 visualized.png
