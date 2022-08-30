@@ -134,7 +134,7 @@ if [[ ! -z "$EXTRA_DOMAINS" ]]
 then
     return_mail=noreply@${EXTRA_DOMAINS}
 else
-    return_mail=noreply@${SITE_ADDRESS}
+    return_mail=noreply@$(basename ${SITE_ADDRESS} | sed s'/www.//')
 fi
 
 read -p "Your app email from address ie [ ${return_mail} ] : " EMAIL_FROM_ADDRESS 
