@@ -22,6 +22,12 @@ then
     source ${PROJECT_SETTINGS}
 fi
 
+if [[ ! -d ${CURRENT_PROJECT_PATH}/settings_files ]];
+then
+    mkdir -p ${CURRENT_PROJECT_PATH}/settings_files/env_files;
+    chmod 0775 ${CURRENT_PROJECT_PATH}/settings_files ${CURRENT_PROJECT_PATH}/settings_files/env_files;
+fi
+
 function install_check()
 {
   INSTALLED="installed."
