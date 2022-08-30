@@ -195,7 +195,7 @@ while (( "$#" )); do
                 fi
             ;;
             'DIRECTORIES')
-                echo -e "\nNow I will create necessary directtories.\n"
+                echo -e "\nNow I will create necessary directories.\n"
                 bash ${SCRIPTS_ROOT}/scripts/create_directories.sh
                 if [[ $? -ne 0 ]]
                 then

@@ -14,7 +14,7 @@ else
 	    NUM_OF_WORKERS=$(($(nproc --all) * 2 + 1))
 	set +a
 	cat ${CURRENT_DIR}/templates/gunicorn/gunicorn.conf.py | envsubst > ${CONTAINER_SCRIPTS_ROOT}/settings/gunicorn.conf.py
-    cat ${CURRENT_DIR}/templates/gunicorn/init | envsubst > ${CONTAINER_SCRIPTS_ROOT}/../image/dockerfile/django/init
+    cat ${CURRENT_DIR}/templates/gunicorn/init | envsubst > ${CURRENT_DIR}/../image/dockerfile/django/init
 fi
 
 cat ${CURRENT_DIR}/templates/env/settings_env | envsubst > ${CONTAINER_SCRIPTS_ROOT}/settings/settings_env
