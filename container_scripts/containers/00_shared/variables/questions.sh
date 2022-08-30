@@ -143,7 +143,7 @@ EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS:-${return_mail}}
 echo "EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}" >> ${L_S_FILE}
 
 # CUSTOM_SALT
-CUSTOM_SALT=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)
+CUSTOM_SALT="$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;)"
 
 echo "CUSTOM_SALT=${CUSTOM_SALT}" >> ${L_S_FILE}
 
