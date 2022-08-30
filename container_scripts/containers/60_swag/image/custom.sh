@@ -18,7 +18,7 @@ function build_swag()
    cp ${CURRENT_DIR}/dockerfile/dockerfile /home/${USER_NAME}/dockerfile
    cp ${CURRENT_DIR}/dockerfile/swag/default /home/${USER_NAME}/default
    cp ${CURRENT_DIR}/dockerfile/swag/nginx /home/${USER_NAME}/nginx
-   runuser --login ${USER_NAME} -c "podman build --tag=${custom_tag} -f='dockerfile' ."
+   runuser --login ${USER_NAME} -c "cd; podman build --tag=${custom_tag} -f='dockerfile' ."
    echo -e "TL_DOMAIN=${EXTRA_DOMAINS}" > ${EXISTING_IMAGE_VARS}
    echo -e "DUCK_DOMAIN=${DUCKDNS_DOMAIN}" >> ${EXISTING_IMAGE_VARS}
    rm /home/${USER_NAME}/dockerfile /home/${USER_NAME}/default /home/${USER_NAME}/nginx
