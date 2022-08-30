@@ -108,7 +108,7 @@ if [[ ${DEBUG} == "TRUE" ]]
 then
     SITE_ADDRESS="http://127.0.0.1/"
 else
-    read -p "Enter the site address including protocol ie https://mydomain.com" SITE_ADDRESS
+    read -p "Enter the site address including protocol ie https://mydomain.com : " SITE_ADDRESS
 fi
 
 echo "SITE_ADDRESS=${SITE_ADDRESS}" >> ${L_S_FILE}

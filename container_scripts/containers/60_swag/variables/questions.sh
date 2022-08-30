@@ -24,7 +24,7 @@ read -p "Email address for letsencrypt certbot : " certbot_email
 echo "CERTBOT_EMAIL=${certbot_email}" >> ${L_S_FILE}
 
 # SWAG_HOST_LOG_DIR
-swhld = "${USER_DIR}/${PROJECT_NAME}/swag_logs"
+swhld="${USER_DIR}/${PROJECT_NAME}/swag_logs"
 read -p "Swag Host log dir (must be different to Host Log Dir) [ ${swhld} ] : " SWAG_HOST_LOG_DIR
 SWAG_HOST_LOG_DIR=${SWAG_HOST_LOG_DIR:-${swhld}}
 
